@@ -7,7 +7,7 @@ exports.createTask = async (req, res, next) => {
         return res.json({ status: false, message: 'Not enough information' })
     }
 
-    await taskModel.create({ title, description, start, end, student, lecturer })
+    await taskModel.create({ title, description, start, end, student, lecturer, status: false })
         .then(() => res.json({ status: true, message: 'Created' }))
         .catch(next)
 }

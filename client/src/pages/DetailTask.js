@@ -1,20 +1,58 @@
 import Layout from '../components/Layout'
 import { useLocation, useNavigate } from 'react-router-dom'
-import React from 'react'
+import axios from 'axios'
+import React, { useState } from 'react'
 import ReactQuill from 'react-quill'
 import { jwtDecode } from 'jwt-decode'
+import { toast } from 'react-toastify'
 
 export default function DetailTask() {
     const token = sessionStorage.getItem('token')
     const location = useLocation()
     const task = location.state
     const navigate = useNavigate()
+    const [file, setFile] = useState(null)
+
+    const handleSubmitTask = async () => {
+        if (!file) return toast.warning("Vui lòng đăng tải theo yêu cầu")
+
+        const formData = new FormData()
+        formData.append("file", file)
+        formData.append("task", task._id)
+
+        await axios.post('http://localhost:8000/api/files/upload-file', formData)
+            .then(res => {
+                if (res.data.status === true) {
+                    toast.success(res.data.message)
+                    navigate('/student')
+                }
+            })
+            .catch(err => console.log(err))
+    }
+
+    const handleDownloadTask = async () => {
+        await axios.get('http://localhost:8000/api/files/download-file/' + task._id)
+            .then(res => {
+                const link = document.createElement("a")
+                link.href = res.data.path
+                document.body.appendChild(link)
+                link.click()
+                if (res.data.status === true) {
+                    toast.success(res.data.message)
+                }
+            })
+            .catch(err => console.log(err))
+    }
+
+    const handleExtendTask = async () => {
+        toast.success('Handle')
+    }
 
     return (
         <Layout>
-            <div className='display-6 mb-4'>Thông tin công việc</div>
             {task ? (
                 <div className='mb-4'>
+                    <div className='display-6 mb-4'>Thông tin công việc</div>
                     <div className='mb-2'>
                         <b className='me-2'>Tên công việc:</b>
                         <i>{task.title}</i>
@@ -33,13 +71,21 @@ export default function DetailTask() {
                             </div>
                         </div>
                     </div>
+                    <div className="mb-2">
+                        <label htmlFor="formFile" className="form-label">Đăng tải nội dung theo yêu cầu</label>
+                        <input disabled={task.status} onChange={e => setFile(e.target.files[0])} className="form-control" type="file" id="formFile" />
+                    </div>
                 </div>
             ) : (
                 <div className='mb-4'>Không tìm thấy công việc.</div>
             )}
             {token && jwtDecode(token).role === 1
-                ? <></>
-                : <button className='btn btn-primary me-2'>Nộp bài</button>
+                ? task.status === true
+                    ? <button onClick={handleDownloadTask} className='btn btn-warning me-2'>Tải về</button>
+                    : <button onClick={handleExtendTask} className='btn btn-info me-2'>Gia hạn</button>
+                : task.status === true
+                    ? <button className='btn btn-success me-2 pe-none'>Đã nộp</button>
+                    : <button onClick={handleSubmitTask} className='btn btn-primary me-2'>Nộp bài</button>
             }
             <button className='btn btn-secondary' onClick={() => navigate(-1)}>Trở lại</button>
         </Layout>

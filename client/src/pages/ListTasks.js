@@ -53,7 +53,10 @@ export default function ListTasks() {
                                 <td>{task.start.substring(0, 10)}</td>
                                 <td>{task.end.substring(0, 10)}</td>
                                 <td>
-                                    <button className="btn btn-primary">Đánh giá</button>
+                                    <Link state={task} to={`/detail-task`}>Chi tiết</Link>
+                                    <span className={`ms-3 ${task.status ? 'text-success' : 'text-danger'}`}>
+                                        {task.status ? 'Đã nộp' : 'Chưa nộp'}
+                                    </span>
                                 </td>
                             </tr>
                         ))}

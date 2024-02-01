@@ -65,7 +65,10 @@ export default function Student() {
                 </div>
                 <div className='mb-2'>
                     <b className='me-2'>Trạng thái:</b>
-                    {register.status === true ? 'Đã xác nhận' : 'Chờ xác nhận'}
+                    <span className={`${register.status ? 'text-success' : 'text-warning'}`}>
+                        {register.status ? 'Đã xác nhận' : 'Chờ xác nhận'}
+                    </span>
+
                 </div>
                 {register.status === false ? <></> : tasks.length > 0 ? <>
                     <div className='display-6 mb-4'>Danh sách công việc</div>
@@ -88,6 +91,9 @@ export default function Student() {
                                     <td>{task.end.substring(0, 10)}</td>
                                     <td>
                                         <Link state={task} to={`/detail-task`}>Chi tiết</Link>
+                                        <span className={`ms-3 ${task.status ? 'text-success' : 'text-danger'}`}>
+                                            {task.status ? 'Đã nộp' : 'Chưa nộp'}
+                                        </span>
                                     </td>
                                 </tr>
                             ))}

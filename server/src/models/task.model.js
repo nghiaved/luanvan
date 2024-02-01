@@ -12,7 +12,8 @@ const taskSchema = new mongoose.Schema({
     lecturer: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
-    }
+    },
+    status: Boolean
 })
 
 const Task = mongoose.models.Task || mongoose.model('Task', taskSchema)
