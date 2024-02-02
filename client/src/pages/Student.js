@@ -37,6 +37,12 @@ export default function Student() {
         fetchApi()
     }, [fetchApi])
 
+    const timeRemaining = (date) => {
+        const timeRemaining = new Date(date).getTime() - Date.now()
+        let days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24))
+        return ++days > 0 ? `Còn ${days} ngày` : 'Đã hết hạn'
+    }
+
     return (
         <Layout>
             {register ? <>
@@ -79,6 +85,7 @@ export default function Student() {
                                 <th scope="col">Tên công việc</th>
                                 <th scope="col">Ngày bắt đầu</th>
                                 <th scope="col">Ngày kết thúc</th>
+                                <th scope="col">Trạng thái</th>
                                 <th scope="col"></th>
                             </tr>
                         </thead>
@@ -90,10 +97,12 @@ export default function Student() {
                                     <td>{task.start.substring(0, 10)}</td>
                                     <td>{task.end.substring(0, 10)}</td>
                                     <td>
+                                        {task.status
+                                            ? <span className='text-success'>Đã nộp</span>
+                                            : <span className='text-danger'>{timeRemaining(task.end)}</span>}
+                                    </td>
+                                    <td>
                                         <Link state={task} to={`/detail-task`}>Chi tiết</Link>
-                                        <span className={`ms-3 ${task.status ? 'text-success' : 'text-danger'}`}>
-                                            {task.status ? 'Đã nộp' : 'Chưa nộp'}
-                                        </span>
                                     </td>
                                 </tr>
                             ))}
