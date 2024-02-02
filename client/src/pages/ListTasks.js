@@ -31,7 +31,7 @@ export default function ListTasks() {
 
     return (
         <Layout>
-            <Link to="/create-topic" className="me-4">Thêm đề tài</Link>
+            <Link state={student} to="/create-task" className="me-4">Thêm công việc</Link>
             <Link to="/list-registers">Danh sách đăng ký</Link>
             <div className='display-6 mt-4'>Công việc của "{student.fullname}"</div>
             {tasks.length > 0 ? <>

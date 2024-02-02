@@ -1,5 +1,6 @@
 const fileModel = require('../models/file.model')
 const taskModel = require('../models/task.model')
+const path = require('path')
 
 exports.uploadFile = async (req, res, next) => {
     const file = {
@@ -21,11 +22,18 @@ exports.downloadFile = async (req, res, next) => {
 
     await fileModel.findOne({ task })
         .then(file => {
-            res.json({
-                status: true,
-                message: 'Downloaded',
-                path: `http://localhost:8000${file.url.replace('src/uploads', '')}`
-            })
+            res.download(path.join(__dirname, `../../${file.url}`))
         })
+        .catch(next)
+}
+
+exports.getFile = async (req, res, next) => {
+    const { task } = req.params
+
+    await fileModel.findOne({ task })
+        .then(file => file
+            ? res.json({ status: true, file })
+            : res.json({ status: false })
+        )
         .catch(next)
 }
