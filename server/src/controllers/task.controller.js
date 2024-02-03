@@ -23,3 +23,18 @@ exports.getTasksByStudentLecturer = async (req, res, next) => {
         .then(tasks => res.json({ status: true, tasks }))
         .catch(next)
 }
+
+exports.extendTask = async (req, res, next) => {
+    const _id = req.params.id
+    const { days } = req.body
+
+    if (!_id || !days) {
+        return res.json({ status: false, message: 'Not enough information' })
+    }
+
+    await taskModel.updateOne({ _id }, { end: days })
+
+    await taskModel.findById(_id)
+        .then(task => res.json({ status: true, task, message: 'Extended' }))
+        .catch(next)
+}

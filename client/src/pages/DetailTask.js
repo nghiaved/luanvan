@@ -10,7 +10,7 @@ import { saveAs } from 'file-saver'
 export default function DetailTask() {
     const token = sessionStorage.getItem('token')
     const location = useLocation()
-    const task = location.state
+    const [task, setTask] = useState(location.state)
     const navigate = useNavigate()
     const [fileUpload, setFileUpload] = useState(null)
     const [file, setFile] = useState(null)
@@ -54,8 +54,27 @@ export default function DetailTask() {
             .catch(err => console.log(err))
     }
 
-    const handleExtendTask = async () => {
-        toast.success('Handle')
+    const handleExtendTask = async (e) => {
+        e.preventDefault()
+        if (!e.target.days) return
+
+        const end = new Date(task.end)
+        const days = end.setDate(end.getDate() + parseInt(e.target.days.value))
+        await axios.patch('http://localhost:8000/api/tasks/extend-task/' + task._id, { days: new Date(days) })
+            .then(res => {
+                if (res.data.status === true) {
+                    setTask(res.data.task)
+                    e.target.close.click()
+                    toast.success(res.data.message)
+                }
+            })
+            .catch(err => console.log(err))
+    }
+
+    const checkExpired = (end) => {
+        const timeRemaining = new Date(end).getTime() - Date.now()
+        let days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24))
+        return ++days > 0 ? false : true
     }
 
     return (
@@ -108,7 +127,7 @@ export default function DetailTask() {
                             </div>
                             : <div className="mb-2">
                                 <label htmlFor="formFile" className="form-label">Đăng tải nội dung theo yêu cầu</label>
-                                <input onChange={e => setFileUpload(e.target.files[0])} className="form-control" type="file" id="formFile" />
+                                <input disabled={checkExpired(task.end)} onChange={e => setFileUpload(e.target.files[0])} className="form-control" type="file" id="formFile" />
                             </div>}
                 </div>
             ) : (
@@ -117,10 +136,36 @@ export default function DetailTask() {
             {token && jwtDecode(token).role === 1
                 ? file
                     ? <button onClick={handleDownloadTask} className='btn btn-warning me-2'>Tải file</button>
-                    : <button onClick={handleExtendTask} className='btn btn-info me-2'>Gia hạn</button>
+                    : <>
+                        <button className='btn btn-info me-2' data-bs-toggle="modal" data-bs-target="#exampleModal">Gia hạn</button>
+                        <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div className="modal-dialog">
+                                <form onSubmit={handleExtendTask} className="modal-content">
+                                    <div className="modal-header">
+                                        <h5 className="modal-title" id="exampleModalLabel">Gia hạn công việc</h5>
+                                        <button name='close' type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div className="modal-body">
+                                        <div className="row">
+                                            <label htmlFor="colFormLabel" className="col col-form-label">Nhập số ngày gia hạn: </label>
+                                            <div className="col">
+                                                <input required name='days' type="number" className="form-control" id="colFormLabel" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button type="reset" className="btn btn-secondary" data-bs-dismiss="modal">Trở lại</button>
+                                        <button type="submit" className="btn btn-primary">Gia hạn</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </>
                 : file
                     ? <button className='btn btn-success me-2 pe-none'>Đã nộp</button>
-                    : <button onClick={handleSubmitTask} className='btn btn-primary me-2'>Nộp bài</button>
+                    : checkExpired(task.end)
+                        ? <button className='btn btn-danger me-2 pe-none'>Đã hết hạn</button>
+                        : <button onClick={handleSubmitTask} className='btn btn-primary me-2'>Nộp bài</button>
             }
             <button className='btn btn-secondary' onClick={() => navigate(-1)}>Trở lại</button>
         </Layout>

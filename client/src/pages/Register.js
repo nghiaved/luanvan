@@ -7,7 +7,7 @@ export default function Register() {
     const handleRegister = async (e) => {
         e.preventDefault()
         await axios.post('http://localhost:8000/api/users/register', {
-            fullname: e.target.fullname.value.toLowerCase(),
+            fullname: e.target.fullname.value,
             username: e.target.username.value.toLowerCase(),
             password: e.target.password.value,
             role: e.target.role.value
