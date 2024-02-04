@@ -2,19 +2,21 @@ import axios from 'axios'
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { socket } from '../utils/socket'
 
 export default function Login() {
     const navigate = useNavigate()
 
     const handleLogin = async (e) => {
         e.preventDefault()
+        const username = e.target.username.value.toLowerCase()
         await axios.post('http://localhost:8000/api/users/login', {
-            username: e.target.username.value.toLowerCase(),
-            password: e.target.password.value
+            username, password: e.target.password.value
         })
             .then(res => {
                 if (res.data.status === true) {
                     sessionStorage.setItem('token', res.data.token)
+                    socket.emit('user-join', username)
                     navigate(0)
                 } else {
                     toast.error(res.data.message)

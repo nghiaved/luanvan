@@ -5,6 +5,8 @@ import React, { useEffect, useState } from 'react'
 import { jwtDecode } from 'jwt-decode'
 import { toast } from 'react-toastify'
 import ReactQuill from 'react-quill'
+import { socket } from '../utils/socket'
+import { useGlobal } from '../utils/useGlobal'
 
 export default function DetailTopic() {
     const token = sessionStorage.getItem('token')
@@ -13,8 +15,14 @@ export default function DetailTopic() {
     const navigate = useNavigate()
     const { slug } = useParams()
     const [register, setRegister] = useState(null)
+    const [state] = useGlobal()
+    const [fetchAgain, setFetchAgain] = useState(false)
 
     useEffect(() => {
+        if (state.fetchAgain !== fetchAgain) {
+            setFetchAgain(state.fetchAgain)
+        }
+
         if (!topic) {
             const fetchTopic = async () => {
                 const res = await axios.get('http://localhost:8000/api/topics/get-topic-by-slug/' + slug)
@@ -26,12 +34,11 @@ export default function DetailTopic() {
         if (token && topic && jwtDecode(token).role !== 1) {
             const fetchRegister = async () => {
                 const res = await axios.get(`http://localhost:8000/api/registers/get-register?topic=${topic._id}&student=${jwtDecode(token)._id}`)
-                if (res.data.register)
-                    setRegister(res.data.register.status)
+                setRegister(res.data.register?.status || null)
             }
             fetchRegister()
         }
-    }, [navigate, slug, topic, token])
+    }, [slug, topic, token, fetchAgain, state.fetchAgain])
 
     const handlSubscribeTopic = async () => {
         if (!token) return navigate('/login')
@@ -52,6 +59,7 @@ export default function DetailTopic() {
 
         if (res.data.status === true) {
             setRegister(false)
+            socket.emit('send-notify', topic.lecturer.username)
             toast.success(res.data.message)
         }
     }

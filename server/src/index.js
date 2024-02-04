@@ -3,6 +3,8 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const path = require('path')
+const http = require('http')
+const { Server } = require('socket.io')
 
 const userRoute = require('./routes/user.route')
 const topicRoute = require('./routes/topic.route')
@@ -31,4 +33,13 @@ app.use('/api/registers', registerRoute)
 app.use('/api/tasks', taskRoute)
 app.use('/api/files', fileRoute)
 
-app.listen(8000, () => console.log(`Server's listening at http://localhost:8000`))
+const server = http.createServer(app)
+
+const io = new Server(server, { cors: { origin: 'http://localhost:3000', methods: ['GET', 'POST'] } })
+
+io.on('connection', socket => {
+    socket.on('user-join', username => socket.join(username))
+    socket.on('send-notify', username => io.to(username).emit('receive-notify', username))
+})
+
+server.listen(8000, () => console.log(`Server's listening at http://localhost:8000`))

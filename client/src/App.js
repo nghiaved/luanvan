@@ -19,9 +19,14 @@ import ListTasks from './pages/ListTasks'
 import DetailTask from './pages/DetailTask'
 import Statistics from './pages/Statistics'
 import { ToastContainer } from 'react-toastify'
+import { socket } from './utils/socket'
+import { useGlobal } from './utils/useGlobal'
+import { useEffect } from 'react'
 
 function App() {
+  const [state, dispatch] = useGlobal()
   const token = sessionStorage.getItem('token')
+
   const navigateWithToken = (page) => {
     if (token) {
       return jwtDecode(token).role === 1
@@ -30,6 +35,17 @@ function App() {
     }
     return <Navigate to="/login" />
   }
+
+  useEffect(() => {
+    if (token) {
+      socket.emit('user-join', jwtDecode(token).username)
+      socket.on('receive-notify', (username) => {
+        if (username === jwtDecode(token).username) {
+          dispatch({ fetchAgain: !state.fetchAgain })
+        }
+      })
+    }
+  }, [dispatch, state.fetchAgain, token])
 
   return (
     <BrowserRouter>

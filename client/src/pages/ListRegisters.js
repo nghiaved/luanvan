@@ -4,11 +4,15 @@ import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { useGlobal } from '../utils/useGlobal'
+import { socket } from '../utils/socket'
 
 export default function ListRegisters() {
     const token = sessionStorage.getItem('token')
     const [registers, setRegisters] = useState([])
     const [action, setAction] = useState({})
+    const [state] = useGlobal()
+    const [fetchAgain, setFetchAgain] = useState(false)
 
     const fetchRegisters = useCallback(async (userId) => {
         await axios.get('http://localhost:8000/api/registers/get-registers-by-lecturer/' + userId)
@@ -21,13 +25,18 @@ export default function ListRegisters() {
     }, [])
 
     useEffect(() => {
-        fetchRegisters(jwtDecode(token)._id)
-    }, [fetchRegisters, token])
+        if (state.fetchAgain !== fetchAgain) {
+            setFetchAgain(state.fetchAgain)
+        }
 
-    const handleAcceptRegister = async (registerId) => {
+        fetchRegisters(jwtDecode(token)._id)
+    }, [fetchRegisters, token, fetchAgain, state.fetchAgain])
+
+    const handleAcceptRegister = async (registerId, username) => {
         await axios.patch(`http://localhost:8000/api/registers/accept-register/${registerId}`)
             .then(res => {
                 if (res.data.status === true) {
+                    socket.emit('send-notify', username)
                     toast.success(res.data.message)
                     fetchRegisters(jwtDecode(token)._id)
                 }
@@ -35,10 +44,11 @@ export default function ListRegisters() {
             .catch(err => console.log(err))
     }
 
-    const handleRefuseRegister = async (registerId) => {
+    const handleRefuseRegister = async (registerId, username) => {
         await axios.delete(`http://localhost:8000/api/registers/refuse-register/${registerId}`)
             .then(res => {
                 if (res.data.status === true) {
+                    socket.emit('send-notify', username)
                     toast.success(res.data.message)
                     fetchRegisters(jwtDecode(token)._id)
                 }
@@ -77,6 +87,7 @@ export default function ListRegisters() {
                                         <Link className='me-2' data-bs-toggle="modal" data-bs-target="#exampleModal"
                                             onClick={() => setAction({
                                                 id: register._id,
+                                                username: register.student.username,
                                                 type: 'primary',
                                                 text: 'Chấp nhận',
                                                 desc: 'chấp nhận',
@@ -85,6 +96,7 @@ export default function ListRegisters() {
                                         <Link data-bs-toggle="modal" data-bs-target="#exampleModal"
                                             onClick={() => setAction({
                                                 id: register._id,
+                                                username: register.student.username,
                                                 type: 'danger',
                                                 text: 'Từ chối',
                                                 desc: 'từ chối',
@@ -103,7 +115,7 @@ export default function ListRegisters() {
                                                     <div className="modal-footer">
                                                         <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Trở lại</button>
                                                         <button type="button" className={`btn btn-${action.type}`} data-bs-dismiss="modal"
-                                                            onClick={() => action.func(action.id)}>
+                                                            onClick={() => action.func(action.id, action.username)}>
                                                             {action.text}
                                                         </button>
                                                     </div>

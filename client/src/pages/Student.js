@@ -4,38 +4,47 @@ import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import ReactQuill from 'react-quill'
 import { Link } from 'react-router-dom'
+import { useGlobal } from '../utils/useGlobal'
 
 export default function Student() {
     const [register, setRegister] = useState(null)
     const [tasks, setTasks] = useState([])
+    const [fetchAgain, setFetchAgain] = useState([])
+    const [state] = useGlobal()
 
     const fetchApi = useCallback(async () => {
         const token = sessionStorage.getItem('token')
         await axios.get('http://localhost:8000/api/registers/get-register-by-student/' + jwtDecode(token)._id)
             .then(async resRegister => {
-                if (resRegister.data.status === true && resRegister.data.register) {
+                if (resRegister.data.status === true) {
                     setRegister(resRegister.data.register)
 
-                    await axios.get('http://localhost:8000/api/tasks/get-tasks-by-student-lecturer', {
-                        params: {
-                            student: jwtDecode(token)._id,
-                            lecturer: resRegister.data.register.lecturer._id
-                        }
-                    })
-                        .then(resTasks => {
-                            if (resTasks.data.status === true) {
-                                setTasks(resTasks.data.tasks)
+                    if (resRegister.data.register) {
+                        await axios.get('http://localhost:8000/api/tasks/get-tasks-by-student-lecturer', {
+                            params: {
+                                student: jwtDecode(token)._id,
+                                lecturer: resRegister.data.register.lecturer._id
                             }
                         })
-                        .catch(err => console.log(err))
+                            .then(resTasks => {
+                                if (resTasks.data.status === true) {
+                                    setTasks(resTasks.data.tasks)
+                                }
+                            })
+                            .catch(err => console.log(err))
+                    }
                 }
             })
             .catch(err => console.log(err))
     }, [])
 
     useEffect(() => {
+        if (state.fetchAgain !== fetchAgain) {
+            setFetchAgain(state.fetchAgain)
+        }
+
         fetchApi()
-    }, [fetchApi])
+    }, [fetchApi, fetchAgain, state.fetchAgain])
 
     const timeRemaining = (date) => {
         const timeRemaining = new Date(date).getTime() - Date.now()
