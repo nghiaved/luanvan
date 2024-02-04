@@ -17,7 +17,7 @@ import Student from './pages/Student'
 import CreateTask from './pages/CreateTask'
 import ListTasks from './pages/ListTasks'
 import DetailTask from './pages/DetailTask'
-import Gantt from './pages/Gantt'
+import Statistics from './pages/Statistics'
 import { ToastContainer } from 'react-toastify'
 
 function App() {
@@ -45,7 +45,7 @@ function App() {
         <Route path='/list-tasks' element={navigateWithToken(<ListTasks />)} />
         <Route path='/student' element={token ? <Student /> : <Navigate to='/' />} />
         <Route path='/detail-task' element={token ? <DetailTask /> : <Navigate to='/' />} />
-        <Route path='/gantt' element={<Gantt />} />
+        <Route path='/statistics' element={<Statistics />} />
         <Route path='/detail-topic/:slug' element={<DetailTopic />} />
       </Routes>
       <ToastContainer />

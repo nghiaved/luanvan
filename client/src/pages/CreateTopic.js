@@ -72,7 +72,7 @@ export default function CreateTopic() {
                     <ReactQuill defaultValue={topic?.description} ref={quillRef} theme="snow" />
                 </div>
                 <button className='btn btn-primary' type='submit'>{topic ? 'Cập nhật' : 'Tạo'} đề tài</button>
-                <button type='reset' className='btn btn-secondary ms-3' onClick={() => navigate(-1)}>Trở lại</button>
+                <button type='reset' className='btn btn-secondary ms-2' onClick={() => navigate(-1)}>Trở lại</button>
             </form>
         </Layout>
     )

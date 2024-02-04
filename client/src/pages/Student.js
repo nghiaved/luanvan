@@ -74,7 +74,6 @@ export default function Student() {
                     <span className={`${register.status ? 'text-success' : 'text-warning'}`}>
                         {register.status ? 'Đã xác nhận' : 'Chờ xác nhận'}
                     </span>
-
                 </div>
                 {register.status === false ? <></> : tasks.length > 0 ? <>
                     <div className='display-6 mb-4'>Danh sách công việc</div>
@@ -98,7 +97,7 @@ export default function Student() {
                                     <td>{task.end.substring(0, 10)}</td>
                                     <td>
                                         {task.status
-                                            ? <span className='text-success'>Đã nộp</span>
+                                            ? <span className='text-success'>Đã nộp {task.points && `(${task.points}đ)`}</span>
                                             : <span className='text-danger'>{timeRemaining(task.end)}</span>}
                                     </td>
                                     <td>

@@ -1,5 +1,5 @@
 import Layout from "../components/Layout"
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import React, { useCallback, useEffect, useState } from "react"
 import { jwtDecode } from "jwt-decode"
 import axios from "axios"
@@ -9,6 +9,7 @@ export default function ListTasks() {
     const location = useLocation()
     const student = location.state
     const [tasks, setTasks] = useState([])
+    const navigate = useNavigate()
 
     const fetchTasks = useCallback(async (userId) => {
         await axios.get('http://localhost:8000/api/tasks/get-tasks-by-student-lecturer', {
@@ -61,7 +62,7 @@ export default function ListTasks() {
                                 <td>{task.end.substring(0, 10)}</td>
                                 <td>
                                     {task.status
-                                        ? <span className='text-success'>Đã nộp</span>
+                                        ? <span className='text-success'>Đã nộp {task.points && `(${task.points}đ)`} </span>
                                         : <span className='text-danger'>{timeRemaining(task.end)}</span>}
                                 </td>
                                 <td>
@@ -71,6 +72,12 @@ export default function ListTasks() {
                         ))}
                     </tbody>
                 </table>
+                <Link state={{ tasks, student }} to='/statistics'>
+                    <button className="btn btn-primary">
+                        Thống kê
+                    </button>
+                </Link>
+                <button className='btn btn-secondary ms-2' onClick={() => navigate(-1)}>Trở lại</button>
             </> : (
                 <div className="mt-4">Bạn chưa thêm công việc nào.</div>
             )}

@@ -77,6 +77,22 @@ export default function DetailTask() {
         return ++days > 0 ? false : true
     }
 
+    const handleEvaluateTask = async (e) => {
+        e.preventDefault()
+        if (!e.target.points) return
+
+        const points = e.target.points.value
+        await axios.patch('http://localhost:8000/api/tasks/evaluate-task/' + task._id, { points })
+            .then(res => {
+                if (res.data.status === true) {
+                    setTask(task => ({ ...task, points }))
+                    e.target.close.click()
+                    toast.success(res.data.message)
+                }
+            })
+            .catch(err => console.log(err))
+    }
+
     return (
         <Layout>
             {task ? (
@@ -135,7 +151,32 @@ export default function DetailTask() {
             )}
             {token && jwtDecode(token).role === 1
                 ? file
-                    ? <button onClick={handleDownloadTask} className='btn btn-warning me-2'>Tải file</button>
+                    ? <>
+                        <button onClick={handleDownloadTask} className='btn btn-warning me-2'>Tải file</button>
+                        <button className='btn btn-info me-2' data-bs-toggle="modal" data-bs-target="#exampleModal">Đánh giá {task.points && 'lại'}</button>
+                        <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div className="modal-dialog">
+                                <form onSubmit={handleEvaluateTask} className="modal-content">
+                                    <div className="modal-header">
+                                        <h5 className="modal-title" id="exampleModalLabel">Đánh giá công việc</h5>
+                                        <button name='close' type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div className="modal-body">
+                                        <div className="row">
+                                            <label htmlFor="colFormLabel" className="col col-form-label">Nhập số điểm (1 - 100): </label>
+                                            <div className="col">
+                                                <input required name='points' type="number" min={0} max={100} className="form-control" id="colFormLabel" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button type="reset" className="btn btn-secondary" data-bs-dismiss="modal">Trở lại</button>
+                                        <button type="submit" className="btn btn-primary">Đánh giá</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </>
                     : <>
                         <button className='btn btn-info me-2' data-bs-toggle="modal" data-bs-target="#exampleModal">Gia hạn</button>
                         <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -149,7 +190,7 @@ export default function DetailTask() {
                                         <div className="row">
                                             <label htmlFor="colFormLabel" className="col col-form-label">Nhập số ngày gia hạn: </label>
                                             <div className="col">
-                                                <input required name='days' type="number" className="form-control" id="colFormLabel" />
+                                                <input required name='days' type="number" min={0} className="form-control" id="colFormLabel" />
                                             </div>
                                         </div>
                                     </div>

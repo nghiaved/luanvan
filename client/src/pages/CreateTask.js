@@ -62,7 +62,7 @@ export default function CreateTask() {
                     </div>
                 </div>
                 <button className='btn btn-primary' type='submit'>Phân công</button>
-                <button type='reset' className='btn btn-secondary ms-3' onClick={() => navigate(-1)}>Trở lại</button>
+                <button type='reset' className='btn btn-secondary ms-2' onClick={() => navigate(-1)}>Trở lại</button>
             </form>
         </Layout>
     )

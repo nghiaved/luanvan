@@ -38,3 +38,18 @@ exports.extendTask = async (req, res, next) => {
         .then(task => res.json({ status: true, task, message: 'Extended' }))
         .catch(next)
 }
+
+exports.evaluateTask = async (req, res, next) => {
+    const _id = req.params.id
+    const { points } = req.body
+
+    if (!_id || !points) {
+        return res.json({ status: false, message: 'Not enough information' })
+    }
+
+    await taskModel.updateOne({ _id }, { points: parseInt(points) })
+
+    await taskModel.findById(_id)
+        .then(task => res.json({ status: true, task, message: 'Evaluated' }))
+        .catch(next)
+}
