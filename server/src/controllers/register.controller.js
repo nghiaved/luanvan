@@ -1,4 +1,5 @@
 const registerModel = require('../models/register.model')
+const messageModel = require('../models/message.model')
 
 exports.createRegister = async (req, res, next) => {
     const { topic, student, lecturer } = req.body
@@ -6,6 +7,14 @@ exports.createRegister = async (req, res, next) => {
     if (!topic || !student || !lecturer) {
         return res.json({ status: false, message: 'Not enough information' })
     }
+
+    await messageModel.create({
+        content: 'đăng ký',
+        topic: topic,
+        sender: student,
+        reader: lecturer,
+        status: false
+    })
 
     await registerModel.create({ topic, student, lecturer, status: false })
         .then(() => res.json({ status: true, message: 'Created' }))
@@ -33,6 +42,16 @@ exports.acceptRegister = async (req, res, next) => {
         return res.json({ status: false, message: 'Not enough information' })
     }
 
+    const register = await registerModel.findById(_id)
+
+    await messageModel.create({
+        content: 'chấp nhận',
+        topic: register.topic,
+        sender: register.lecturer,
+        reader: register.student,
+        status: false
+    })
+
     await registerModel.updateOne({ _id }, { status: true })
         .then(() => res.json({ status: true, message: 'Accepted' }))
         .catch(next)
@@ -44,6 +63,16 @@ exports.refuseRegister = async (req, res, next) => {
     if (!_id) {
         return res.json({ status: false, message: 'Not enough information' })
     }
+
+    const register = await registerModel.findById(_id)
+
+    await messageModel.create({
+        content: 'từ chối',
+        topic: register.topic,
+        sender: register.lecturer,
+        reader: register.student,
+        status: false
+    })
 
     await registerModel.findOneAndDelete({ _id })
         .then(() => res.json({ status: true, message: 'Refused' }))

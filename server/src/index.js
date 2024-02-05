@@ -11,6 +11,7 @@ const topicRoute = require('./routes/topic.route')
 const registerRoute = require('./routes/register.route')
 const taskRoute = require('./routes/task.route')
 const fileRoute = require('./routes/file.route')
+const messageRoute = require('./routes/message.route')
 
 const app = express()
 
@@ -32,6 +33,7 @@ app.use('/api/topics', topicRoute)
 app.use('/api/registers', registerRoute)
 app.use('/api/tasks', taskRoute)
 app.use('/api/files', fileRoute)
+app.use('/api/messages', messageRoute)
 
 const server = http.createServer(app)
 
