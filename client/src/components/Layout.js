@@ -1,13 +1,15 @@
 import { jwtDecode } from 'jwt-decode'
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useGlobal } from '../utils/useGlobal'
+import { toast } from 'react-toastify'
 
 export default function Layout({ children }) {
     const token = sessionStorage.getItem('token')
     const navigate = useNavigate()
     const [messages, setMessages] = useState([])
+    const [newMessages, setNewMessages] = useState(0)
     const [state] = useGlobal()
     const [fetchAgain, setFetchAgain] = useState(false)
 
@@ -16,20 +18,52 @@ export default function Layout({ children }) {
         navigate(0)
     }
 
+    const fetchMessages = useCallback(async () => {
+        const res = await axios.get('http://localhost:8000/api/messages/get-messages/' + jwtDecode(token)._id)
+        setMessages(res.data.messages)
+        const newMessages = res.data.messages.filter(item => item.status === false).length
+        setNewMessages(newMessages)
+    }, [token])
+
     useEffect(() => {
         if (state.fetchAgain !== fetchAgain) {
             setFetchAgain(state.fetchAgain)
         }
 
         if (token) {
-            const fetchMessages = async () => {
-                const res = await axios.get('http://localhost:8000/api/messages/get-messages/' + jwtDecode(token)._id)
-                setMessages(res.data.messages)
-            }
             fetchMessages()
         }
-    }, [token, fetchAgain, state.fetchAgain])
+    }, [token, fetchMessages, fetchAgain, state.fetchAgain])
 
+    const handleReadMessage = async (id) => {
+        const res = await axios.patch('http://localhost:8000/api/messages/read-message/' + id)
+        if (res.data.status === true) {
+            fetchMessages()
+        }
+    }
+
+    const handleReadAllMessages = async () => {
+        const res = await axios.patch('http://localhost:8000/api/messages/read-all-messages/' + jwtDecode(token)._id)
+        if (res.data.status === true) {
+            fetchMessages()
+        }
+    }
+
+    const handleDeleteMessage = async (id) => {
+        const res = await axios.delete('http://localhost:8000/api/messages/delete-message/' + id)
+        if (res.data.status === true) {
+            toast.success(res.data.message)
+            fetchMessages()
+        }
+    }
+
+    const handleDeleteAllMessages = async (id) => {
+        const res = await axios.delete('http://localhost:8000/api/messages/delete-all-messages/' + jwtDecode(token)._id)
+        if (res.data.status === true) {
+            toast.success(res.data.message)
+            fetchMessages()
+        }
+    }
 
     return (
         <div className="layout-wrapper">
@@ -39,14 +73,33 @@ export default function Layout({ children }) {
                     <div className='d-flex align-items-center'>
                         <div className="btn-group me-2">
                             <button type="button" className="btn text-white border-0" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span>({messages.length})</span>
+                                {newMessages > 0 && `(${newMessages})`}
                                 <i className="bi bi-bell-fill"></i>
                             </button>
-                            <ul onClick={e => e.stopPropagation()} className="dropdown-menu dropdown-menu-end">
+                            <ul className={`dropdown-menu dropdown-menu-end ${messages.length === 0 && 'd-none'}`}>
+                                <li className="dropdown-item d-flex justify-content-between">
+                                    <button onClick={handleReadAllMessages} className="dropdown-item p-0" type="button">
+                                        Đọc tất cả
+                                    </button>
+                                    <button onClick={handleDeleteAllMessages} className="dropdown-item p-0 text-end" type="button">
+                                        Xoá tất cả
+                                    </button>
+                                </li>
+                                <li><hr className="dropdown-divider" /></li>
                                 {messages.map(item => (
                                     <li key={item._id} className="dropdown-item d-flex justify-content-between">
-                                        <span>{`${item.sender.fullname} ${item.content} ${item.topic.title}`}</span>
-                                        <i className="bi bi-x text-danger"></i>
+                                        <Link
+                                            onClick={() => handleReadMessage(item._id)}
+                                            className={item.status === true ? 'text-secondary' : 'text-primary'}
+                                            to={jwtDecode(token).role === 1
+                                                ? '/list-registers'
+                                                : `/detail-topic/${item.topic.slug}`}>
+                                            {`${item.sender.fullname} ${item.content} ${item.topic.title}`}
+                                        </Link>
+                                        <i onClick={e => {
+                                            e.stopPropagation()
+                                            handleDeleteMessage(item._id)
+                                        }} className="bi bi-x text-danger btn p-0 ms-2"></i>
                                     </li>
                                 ))}
                             </ul>
