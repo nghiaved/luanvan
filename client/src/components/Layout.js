@@ -91,10 +91,8 @@ export default function Layout({ children }) {
                                         <Link
                                             onClick={() => handleReadMessage(item._id)}
                                             className={item.status === true ? 'text-secondary' : 'text-primary'}
-                                            to={jwtDecode(token).role === 1
-                                                ? '/list-registers'
-                                                : `/detail-topic/${item.topic.slug}`}>
-                                            {`${item.sender.fullname} ${item.content} ${item.topic.title}`}
+                                            to={jwtDecode(token).role === 1 ? '/list-registers' : '/student'}>
+                                            {item.sender.fullname + ' ' + item.content}
                                         </Link>
                                         <i onClick={e => {
                                             e.stopPropagation()

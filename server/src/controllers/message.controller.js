@@ -9,7 +9,6 @@ exports.getMessages = async (req, res, next) => {
 
     await messageModel.find({ reader: id })
         .populate('sender', 'fullname')
-        .populate('topic', 'title slug')
         .then(messages => res.json({ status: true, messages }))
         .catch(next)
 }

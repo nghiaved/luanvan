@@ -9,8 +9,7 @@ exports.createRegister = async (req, res, next) => {
     }
 
     await messageModel.create({
-        content: 'đăng ký',
-        topic: topic,
+        content: 'đã đăng ký đề tài.',
         sender: student,
         reader: lecturer,
         status: false
@@ -45,8 +44,7 @@ exports.acceptRegister = async (req, res, next) => {
     const register = await registerModel.findById(_id)
 
     await messageModel.create({
-        content: 'chấp nhận',
-        topic: register.topic,
+        content: 'đã chấp nhận đăng ký.',
         sender: register.lecturer,
         reader: register.student,
         status: false
@@ -67,8 +65,7 @@ exports.refuseRegister = async (req, res, next) => {
     const register = await registerModel.findById(_id)
 
     await messageModel.create({
-        content: 'từ chối',
-        topic: register.topic,
+        content: 'đã từ chối đăng ký.',
         sender: register.lecturer,
         reader: register.student,
         status: false

@@ -1,5 +1,6 @@
 const fileModel = require('../models/file.model')
 const taskModel = require('../models/task.model')
+const messageModel = require('../models/message.model')
 const path = require('path')
 
 exports.uploadFile = async (req, res, next) => {
@@ -9,6 +10,15 @@ exports.uploadFile = async (req, res, next) => {
         time: new Date(),
         task: req.body.task
     }
+
+    const task = await taskModel.findById(req.body.task)
+
+    await messageModel.create({
+        content: 'đã đăng tải nội dụng.',
+        sender: task.student,
+        reader: task.lecturer,
+        status: false
+    })
 
     await taskModel.updateOne({ _id: req.body.task }, { status: true })
 

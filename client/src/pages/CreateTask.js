@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import Layout from '../components/Layout'
 import ReactQuill from 'react-quill'
+import { socket } from '../utils/socket'
 import { jwtDecode } from 'jwt-decode'
 
 export default function CreateTask() {
@@ -32,6 +33,7 @@ export default function CreateTask() {
         await axios.post('http://localhost:8000/api/tasks/create-task', data)
             .then(res => {
                 if (res.data.status === true) {
+                    socket.emit('send-notify', student.username)
                     toast.success(res.data.message)
                     navigate('/list-tasks', { state: student })
                 }

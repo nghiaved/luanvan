@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import React, { useCallback, useEffect, useState } from 'react'
 import ReactQuill from 'react-quill'
+import { socket } from '../utils/socket'
 import { jwtDecode } from 'jwt-decode'
 import { toast } from 'react-toastify'
 import { saveAs } from 'file-saver'
@@ -36,6 +37,7 @@ export default function DetailTask() {
         await axios.post('http://localhost:8000/api/files/upload-file', formData)
             .then(res => {
                 if (res.data.status === true) {
+                    socket.emit('send-notify', task.lecturer.username)
                     toast.success(res.data.message)
                     fetchFile()
                 }
@@ -64,6 +66,7 @@ export default function DetailTask() {
             .then(res => {
                 if (res.data.status === true) {
                     setTask(res.data.task)
+                    socket.emit('send-notify', task.student.username)
                     e.target.close.click()
                     toast.success(res.data.message)
                 }
@@ -86,6 +89,7 @@ export default function DetailTask() {
             .then(res => {
                 if (res.data.status === true) {
                     setTask(task => ({ ...task, points }))
+                    socket.emit('send-notify', task.student.username)
                     e.target.close.click()
                     toast.success(res.data.message)
                 }
