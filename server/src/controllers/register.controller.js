@@ -101,3 +101,11 @@ exports.getRegisterByStudent = async (req, res, next) => {
         .then(register => res.json({ status: true, register }))
         .catch(next)
 }
+
+exports.getAllRegisters = async (req, res, next) => {
+    const registers = await registerModel.find({ status: true })
+        .populate('topic', 'title')
+        .populate('student', 'fullname')
+        .populate('lecturer', 'fullname')
+    res.json({ status: true, registers })
+}

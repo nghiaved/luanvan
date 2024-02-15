@@ -5,7 +5,11 @@ const userSchema = new mongoose.Schema({
     fullname: String,
     username: String,
     password: String,
-    role: Number
+    role: Number,
+    isAdmin: {
+        type: Boolean,
+        default: false
+    }
 })
 
 userSchema.pre('save', async function () {
