@@ -11,7 +11,7 @@ export default function Home() {
         await axios.get('http://localhost:8000/api/topics/get-all-topics')
             .then(res => {
                 if (res.data.status === true) {
-                    const topics = res.data.topics
+                    const topics = res.data.topics.filter(item => item.status === true)
                     const lecturers = topics.reduce(
                         (unique, item) => unique.includes(item.lecturer.fullname)
                             ? unique : [...unique, item.lecturer.fullname]

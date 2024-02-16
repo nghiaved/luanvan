@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react"
 import AdminLayout from '../components/AdminLayout'
-import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { socket } from '../utils/socket'
 import axios from "axios"
 
 export default function AdminTopics() {
   const [topics, setTopics] = useState([])
-  const [topicId, setTopicId] = useState(null)
+  const [topic, setTopic] = useState(null)
 
   const fetchTopics = useCallback(async () => {
     await axios.get('http://localhost:8000/api/topics/get-all-topics')
@@ -22,8 +22,28 @@ export default function AdminTopics() {
     fetchTopics()
   }, [fetchTopics])
 
-  const handleDeleteTopic = async () => {
-    toast.success(topicId)
+  const handleAcceptTopic = async (topic) => {
+    await axios.patch(`http://localhost:8000/api/topics/accept-topic/${topic._id}`)
+      .then(res => {
+        if (res.data.status === true) {
+          socket.emit('send-notify', topic.lecturer.username)
+          toast.success(res.data.message)
+          fetchTopics()
+        }
+      })
+      .catch(err => console.log(err))
+  }
+
+  const handleRefuseTopic = async () => {
+    await axios.delete(`http://localhost:8000/api/topics/refuse-topic/${topic._id}`)
+      .then(res => {
+        if (res.data.status === true) {
+          socket.emit('send-notify', topic.lecturer.username)
+          toast.success(res.data.message)
+          fetchTopics()
+        }
+      })
+      .catch(err => console.log(err))
   }
 
   return (
@@ -46,7 +66,19 @@ export default function AdminTopics() {
                 <td>{topic.title}</td>
                 <td>{topic.lecturer.fullname}</td>
                 <td>
-                  <Link data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={() => setTopicId(topic._id)}>Xoá</Link>
+                  {topic.status === true
+                    ? <span className="text-success">Đã xác nhận</span>
+                    : <>
+                      <button className='btn btn-primary me-2'
+                        onClick={() => handleAcceptTopic(topic)}>
+                        Xác nhận
+                      </button>
+                      <button className='btn btn-danger'
+                        data-bs-toggle="modal" data-bs-target="#exampleModal"
+                        onClick={() => setTopic(topic)}>
+                        Từ chối
+                      </button>
+                    </>}
                 </td>
               </tr>
             ))}
@@ -64,7 +96,7 @@ export default function AdminTopics() {
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Trở lại</button>
-                <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={handleDeleteTopic}>Xoá</button>
+                <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={handleRefuseTopic}>Xoá</button>
               </div>
             </div>
           </div>

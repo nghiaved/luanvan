@@ -9,7 +9,7 @@ import { useGlobal } from '../utils/useGlobal'
 export default function Student() {
     const [register, setRegister] = useState(null)
     const [tasks, setTasks] = useState([])
-    const [fetchAgain, setFetchAgain] = useState([])
+    const [fetchAgain, setFetchAgain] = useState(false)
     const [state] = useGlobal()
 
     const fetchApi = useCallback(async () => {

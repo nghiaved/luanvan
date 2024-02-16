@@ -3,12 +3,15 @@ import { Link } from 'react-router-dom'
 import React, { useCallback, useEffect, useState } from "react"
 import { jwtDecode } from "jwt-decode"
 import { toast } from 'react-toastify'
+import { useGlobal } from '../utils/useGlobal'
 import axios from "axios"
 
 export default function ListTopics() {
     const token = sessionStorage.getItem('token')
     const [topics, setTopics] = useState([])
     const [topicId, setTopicId] = useState(null)
+    const [fetchAgain, setFetchAgain] = useState(false)
+    const [state] = useGlobal()
 
     const fetchTopics = useCallback(async (userId) => {
         await axios.get('http://localhost:8000/api/topics/get-topics-by-lecturer/' + userId)
@@ -21,8 +24,12 @@ export default function ListTopics() {
     }, [])
 
     useEffect(() => {
+        if (state.fetchAgain !== fetchAgain) {
+            setFetchAgain(state.fetchAgain)
+        }
+
         fetchTopics(jwtDecode(token)._id)
-    }, [fetchTopics, token])
+    }, [fetchTopics, token, fetchAgain, state.fetchAgain])
 
     const handleDeleteTopic = async () => {
         await axios.delete(`http://localhost:8000/api/topics/delete-topic/${topicId}`)
@@ -46,6 +53,7 @@ export default function ListTopics() {
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Tên đề tài</th>
+                            <th scope="col">Trạng thái</th>
                             <th scope="col">Quản lý</th>
                         </tr>
                     </thead>
@@ -54,6 +62,11 @@ export default function ListTopics() {
                             <tr key={topic._id}>
                                 <th scope="row">{++index}</th>
                                 <td>{topic.title}</td>
+                                <td>
+                                    {topic.status === true
+                                        ? <span className="text-success">Đã xác nhận</span>
+                                        : <span className="text-danger">Chờ xác nhận</span>}
+                                </td>
                                 <td>
                                     <Link className="me-4" state={topic} to={`/detail-topic/${topic.slug}`}>Chi tiết</Link>
                                     <Link className="me-4" state={topic} to='/update-topic'>Sửa</Link>

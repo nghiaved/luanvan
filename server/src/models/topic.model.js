@@ -14,6 +14,10 @@ const topicSchema = new mongoose.Schema({
     lecturer: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
+    },
+    status: {
+        type: Boolean,
+        default: false
     }
 })
 
