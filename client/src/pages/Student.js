@@ -116,6 +116,11 @@ export default function Student() {
                             ))}
                         </tbody>
                     </table>
+                    {register.final === undefined || register.final === null ? <></> : register.final === true ? (
+                        <div className='display-6 text-success'>Đề tài của bạn đã hoàn thành!</div>
+                    ) : (
+                        <div className='display-6 text-danger'>Đề tài của bạn đã bị chấm dứt!</div>
+                    )}
                 </> : (
                     <div className="mt-4">Bạn chưa có công việc nào.</div>
                 )}

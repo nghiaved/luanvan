@@ -7,6 +7,7 @@ import { socket } from '../utils/socket'
 import { jwtDecode } from 'jwt-decode'
 import { toast } from 'react-toastify'
 import { saveAs } from 'file-saver'
+import { useGlobal } from '../utils/useGlobal'
 
 export default function DetailTask() {
     const token = sessionStorage.getItem('token')
@@ -15,6 +16,8 @@ export default function DetailTask() {
     const navigate = useNavigate()
     const [fileUpload, setFileUpload] = useState(null)
     const [file, setFile] = useState(null)
+    const [state] = useGlobal()
+    const [fetchAgain, setFetchAgain] = useState(false)
 
     const fetchFile = useCallback(async () => {
         const res = await axios.get(`http://localhost:8000/api/files/get-file/${task._id}`)
@@ -24,8 +27,12 @@ export default function DetailTask() {
     }, [task._id])
 
     useEffect(() => {
+        if (state.fetchAgain !== fetchAgain) {
+            setFetchAgain(state.fetchAgain)
+        }
+
         fetchFile()
-    }, [fetchFile])
+    }, [fetchFile, fetchAgain, state.fetchAgain])
 
     const handleSubmitTask = async () => {
         if (!fileUpload) return toast.warning("Vui lòng đăng tải theo yêu cầu")

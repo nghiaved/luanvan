@@ -109,3 +109,22 @@ exports.getAllRegisters = async (req, res, next) => {
         .populate('lecturer', 'fullname')
     res.json({ status: true, registers })
 }
+
+exports.finalTopic = async (req, res, next) => {
+    const { student } = req.params
+    const { final } = req.body
+
+    if (!student) {
+        return res.json({ status: false, message: 'Not enough information' })
+    }
+
+    await registerModel.findOneAndUpdate({ student }, { final })
+        .then(async register => await messageModel.create({
+            content: `đã ${final ? 'hoàn thành' : 'chấm dứt'} đề tài.`,
+            sender: register.lecturer,
+            reader: register.student,
+            status: false
+        }))
+        .then(() => res.json({ status: true, message: final ? 'Finished' : 'Terminated' }))
+        .catch(next)
+}

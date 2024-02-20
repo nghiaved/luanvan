@@ -13,7 +13,8 @@ const registerSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    status: Boolean
+    status: Boolean,
+    final: Boolean
 })
 
 const Register = mongoose.models.Register || mongoose.model('Register', registerSchema)

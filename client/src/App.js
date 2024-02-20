@@ -77,9 +77,9 @@ function App() {
           <Route path='/list-registers' element={navigateWithToken(<ListRegisters />)} />
           <Route path='/create-task' element={navigateWithToken(<CreateTask />)} />
           <Route path='/list-tasks' element={navigateWithToken(<ListTasks />)} />
+          <Route path='/statistics' element={navigateWithToken(<Statistics />)} />
           <Route path='/student' element={token ? <Student /> : <Navigate to='/' />} />
           <Route path='/detail-task' element={token ? <DetailTask /> : <Navigate to='/' />} />
-          <Route path='/statistics' element={<Statistics />} />
           <Route path='/detail-topic/:slug' element={<DetailTopic />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>}
