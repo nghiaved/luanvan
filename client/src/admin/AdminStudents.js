@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react"
 import AdminLayout from '../components/AdminLayout'
-import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import axios from "axios"
 
 export default function AdminStudents() {
   const [students, setStudents] = useState([])
-  const [studentId, setStudentId] = useState(null)
+  const [student, setStudent] = useState(null)
 
   const fetchStudents = useCallback(async () => {
     await axios.get('http://localhost:8000/api/users/get-all-students')
@@ -22,8 +21,26 @@ export default function AdminStudents() {
     fetchStudents()
   }, [fetchStudents])
 
-  const handleDeleteStudent = async () => {
-    toast.success(studentId)
+  const handleAcceptStudent = async (student) => {
+    await axios.patch(`http://localhost:8000/api/users/accept-user/${student._id}`)
+      .then(res => {
+        if (res.data.status === true) {
+          toast.success(res.data.message)
+          fetchStudents()
+        }
+      })
+      .catch(err => console.log(err))
+  }
+
+  const handleRefuseStudent = async () => {
+    await axios.delete(`http://localhost:8000/api/users/refuse-user/${student._id}`)
+      .then(res => {
+        if (res.data.status === true) {
+          toast.success(res.data.message)
+          fetchStudents()
+        }
+      })
+      .catch(err => console.log(err))
   }
 
   return (
@@ -44,7 +61,19 @@ export default function AdminStudents() {
                 <th scope="row">{++index}</th>
                 <td>{student.fullname}</td>
                 <td>
-                  <Link data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={() => setStudentId(student._id)}>Xoá</Link>
+                  {student.status === true
+                    ? <span className="text-success">Đã xác nhận</span>
+                    : <>
+                      <button className='btn btn-primary me-2'
+                        onClick={() => handleAcceptStudent(student)}>
+                        Xác nhận
+                      </button>
+                      <button className='btn btn-danger'
+                        data-bs-toggle="modal" data-bs-target="#exampleModal"
+                        onClick={() => setStudent(student)}>
+                        Từ chối
+                      </button>
+                    </>}
                 </td>
               </tr>
             ))}
@@ -62,7 +91,7 @@ export default function AdminStudents() {
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Trở lại</button>
-                <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={handleDeleteStudent}>Xoá</button>
+                <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={handleRefuseStudent}>Xoá</button>
               </div>
             </div>
           </div>

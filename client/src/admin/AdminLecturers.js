@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react"
 import AdminLayout from '../components/AdminLayout'
-import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import axios from "axios"
 
 export default function AdminLecturers() {
   const [lecturers, setLecturers] = useState([])
-  const [lecturerId, setLecturerId] = useState(null)
+  const [lecturer, setLecturer] = useState(null)
 
   const fetchLecturers = useCallback(async () => {
     await axios.get('http://localhost:8000/api/users/get-all-lecturers')
@@ -22,8 +21,26 @@ export default function AdminLecturers() {
     fetchLecturers()
   }, [fetchLecturers])
 
-  const handleDeleteLecturer = async () => {
-    toast.success(lecturerId)
+  const handleAcceptLecturer = async (lecturer) => {
+    await axios.patch(`http://localhost:8000/api/users/accept-user/${lecturer._id}`)
+      .then(res => {
+        if (res.data.status === true) {
+          toast.success(res.data.message)
+          fetchLecturers()
+        }
+      })
+      .catch(err => console.log(err))
+  }
+
+  const handleRefuseLecturer = async () => {
+    await axios.delete(`http://localhost:8000/api/users/refuse-user/${lecturer._id}`)
+      .then(res => {
+        if (res.data.status === true) {
+          toast.success(res.data.message)
+          fetchLecturers()
+        }
+      })
+      .catch(err => console.log(err))
   }
 
   return (
@@ -44,7 +61,19 @@ export default function AdminLecturers() {
                 <th scope="row">{++index}</th>
                 <td>{lecturer.fullname}</td>
                 <td>
-                  <Link data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={() => setLecturerId(lecturer._id)}>Xoá</Link>
+                  {lecturer.status === true
+                    ? <span className="text-success">Đã xác nhận</span>
+                    : <>
+                      <button className='btn btn-primary me-2'
+                        onClick={() => handleAcceptLecturer(lecturer)}>
+                        Xác nhận
+                      </button>
+                      <button className='btn btn-danger'
+                        data-bs-toggle="modal" data-bs-target="#exampleModal"
+                        onClick={() => setLecturer(lecturer)}>
+                        Từ chối
+                      </button>
+                    </>}
                 </td>
               </tr>
             ))}
@@ -62,7 +91,7 @@ export default function AdminLecturers() {
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Trở lại</button>
-                <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={handleDeleteLecturer}>Xoá</button>
+                <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={handleRefuseLecturer}>Xoá</button>
               </div>
             </div>
           </div>

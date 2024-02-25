@@ -34,7 +34,7 @@ exports.login = async (req, res, next) => {
             const isMatch = await user.comparePassword(password)
             if (!isMatch) return res.json({ status: false, message: `Password invalid` })
 
-            const tokenData = { _id: user._id, fullname: user.fullname, username, role: user.role }
+            const tokenData = { _id: user._id, fullname: user.fullname, username, role: user.role, status: user.status }
 
             if (user.isAdmin === true) {
                 tokenData.isAdmin = true
@@ -54,4 +54,28 @@ exports.getAllStudents = async (req, res, next) => {
 exports.getAllLecturers = async (req, res, next) => {
     const lecturers = await userModel.find({ role: 1 })
     res.json({ status: true, lecturers })
+}
+
+exports.acceptUser = async (req, res, next) => {
+    const _id = req.params.id
+
+    if (!_id) {
+        return res.json({ status: false, message: 'Not enough information' })
+    }
+
+    await userModel.findByIdAndUpdate(_id, { status: true })
+        .then(() => res.json({ status: true, message: 'Accepted' }))
+        .catch(next)
+}
+
+exports.refuseUser = async (req, res, next) => {
+    const _id = req.params.id
+
+    if (!_id) {
+        return res.json({ status: false, message: 'Not enough information' })
+    }
+
+    await userModel.findByIdAndDelete(_id)
+        .then(() => res.json({ status: true, message: 'Refused' }))
+        .catch(next)
 }

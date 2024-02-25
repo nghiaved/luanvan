@@ -25,6 +25,7 @@ import CreateTask from './pages/CreateTask'
 import ListTasks from './pages/ListTasks'
 import DetailTask from './pages/DetailTask'
 import Statistics from './pages/Statistics'
+import Waiting from './pages/Waiting'
 
 import Dashboard from './admin/Dashboard'
 import AdminStudents from './admin/AdminStudents'
@@ -36,11 +37,20 @@ function App() {
   const [state, dispatch] = useGlobal()
   const token = sessionStorage.getItem('token')
 
-  const navigateWithToken = (page) => {
+  const navigateWithLecturer = (page) => {
     if (token) {
-      return jwtDecode(token).role === 1
+      return jwtDecode(token).role === 1 && jwtDecode(token).status === true
         ? page
-        : <Navigate to="/" />
+        : <Navigate to="/waiting" />
+    }
+    return <Navigate to="/login" />
+  }
+
+  const navigateWithStudent = (page) => {
+    if (token) {
+      return jwtDecode(token).role !== 1 && jwtDecode(token).status === true
+        ? page
+        : <Navigate to="/waiting" />
     }
     return <Navigate to="/login" />
   }
@@ -71,16 +81,17 @@ function App() {
           <Route index element={<Home />} />
           <Route path='/login' element={token ? <Navigate to='/' /> : <Login />} />
           <Route path='/register' element={token ? <Navigate to='/' /> : <Register />} />
-          <Route path='/list-topics' element={navigateWithToken(<ListTopics />)} />
-          <Route path='/create-topic' element={navigateWithToken(<CreateTopic />)} />
-          <Route path='/update-topic' element={navigateWithToken(<CreateTopic />)} />
-          <Route path='/list-registers' element={navigateWithToken(<ListRegisters />)} />
-          <Route path='/create-task' element={navigateWithToken(<CreateTask />)} />
-          <Route path='/list-tasks' element={navigateWithToken(<ListTasks />)} />
-          <Route path='/statistics' element={navigateWithToken(<Statistics />)} />
-          <Route path='/student' element={token ? <Student /> : <Navigate to='/' />} />
-          <Route path='/detail-task' element={token ? <DetailTask /> : <Navigate to='/' />} />
+          <Route path='/list-topics' element={navigateWithLecturer(<ListTopics />)} />
+          <Route path='/create-topic' element={navigateWithLecturer(<CreateTopic />)} />
+          <Route path='/update-topic' element={navigateWithLecturer(<CreateTopic />)} />
+          <Route path='/list-registers' element={navigateWithLecturer(<ListRegisters />)} />
+          <Route path='/create-task' element={navigateWithLecturer(<CreateTask />)} />
+          <Route path='/list-tasks' element={navigateWithLecturer(<ListTasks />)} />
+          <Route path='/statistics' element={navigateWithLecturer(<Statistics />)} />
+          <Route path='/student' element={navigateWithStudent(<Student />)} />
+          <Route path='/detail-task' element={navigateWithStudent(<DetailTask />)} />
           <Route path='/detail-topic/:slug' element={<DetailTopic />} />
+          <Route path='/waiting' element={token ? <Waiting /> : <Navigate to='/' />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>}
       <ToastContainer />
