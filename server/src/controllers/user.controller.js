@@ -79,3 +79,14 @@ exports.refuseUser = async (req, res, next) => {
         .then(() => res.json({ status: true, message: 'Refused' }))
         .catch(next)
 }
+
+exports.getUser = async (req, res, next) => {
+    const { username } = req.params
+
+    if (!username) {
+        return res.json({ status: false, message: 'Not enough information' })
+    }
+
+    const user = await userModel.findOne({ username })
+    res.json({ status: true, user })
+}

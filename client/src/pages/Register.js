@@ -36,7 +36,8 @@ export default function Register() {
                         <input name='username' required autoComplete="off" type="text" className="form-control" placeholder="Tên đăng nhập" />
                     </div>
                     <div className="form-group mb-4">
-                        <input name='password' required autoComplete="off" type="password" className="form-control" placeholder="Mật khẩu" />
+                        <input name='password' required autoComplete="off" maxLength={30} minLength={6}
+                            type="password" className="form-control" placeholder="Mật khẩu" />
                     </div>
                     <div className='d-flex mb-4'>
                         <div className="form-check me-4">

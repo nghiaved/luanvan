@@ -26,6 +26,8 @@ import ListTasks from './pages/ListTasks'
 import DetailTask from './pages/DetailTask'
 import Statistics from './pages/Statistics'
 import Waiting from './pages/Waiting'
+import Account from './pages/Account'
+import Profile from './pages/Profile'
 
 import Dashboard from './admin/Dashboard'
 import AdminStudents from './admin/AdminStudents'
@@ -92,6 +94,8 @@ function App() {
           <Route path='/detail-task' element={navigateWithStudent(<DetailTask />)} />
           <Route path='/detail-topic/:slug' element={<DetailTopic />} />
           <Route path='/waiting' element={token ? <Waiting /> : <Navigate to='/' />} />
+          <Route path='/account' element={token ? <Account /> : <Navigate to='/' />} />
+          <Route path='/profile/:username' element={<Profile />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>}
       <ToastContainer />

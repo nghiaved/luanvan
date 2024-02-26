@@ -52,6 +52,8 @@ export default function AdminLecturers() {
             <tr>
               <th scope="col">#</th>
               <th scope="col">Tên giảng viên</th>
+              <th scope="col">Mã số CB</th>
+              <th scope="col">Thông tin</th>
               <th scope="col">Quản lý</th>
             </tr>
           </thead>
@@ -60,6 +62,14 @@ export default function AdminLecturers() {
               <tr key={lecturer._id}>
                 <th scope="row">{++index}</th>
                 <td>{lecturer.fullname}</td>
+                <td>{lecturer.username}</td>
+                <td>
+                  <button className="btn text-info"
+                    data-bs-toggle="modal" data-bs-target="#infoModal"
+                    onClick={() => setLecturer(lecturer)}>
+                    Chi tiết
+                  </button>
+                </td>
                 <td>
                   {lecturer.status === true
                     ? <span className="text-success">Đã xác nhận</span>
@@ -69,7 +79,7 @@ export default function AdminLecturers() {
                         Xác nhận
                       </button>
                       <button className='btn btn-danger'
-                        data-bs-toggle="modal" data-bs-target="#exampleModal"
+                        data-bs-toggle="modal" data-bs-target="#refuseModal"
                         onClick={() => setLecturer(lecturer)}>
                         Từ chối
                       </button>
@@ -79,11 +89,61 @@ export default function AdminLecturers() {
             ))}
           </tbody>
         </table>
-        <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div className="modal fade" id="infoModal" tabIndex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-body">
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th colSpan={2} scope="col">
+                        <h3 className='text-center'>
+                          Thông tin cá nhân
+                        </h3>
+                      </th>
+                    </tr>
+                  </thead>
+                  {lecturer &&
+                    <tbody className="table-group-divider">
+                      <tr>
+                        <th scope="row">Mã số CB</th>
+                        <td>{lecturer.username}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Họ tên</th>
+                        <td>{lecturer.fullname}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Ngày sinh</th>
+                        <td>{lecturer.birth}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Giới tính</th>
+                        <td>{lecturer.sex}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Khoa</th>
+                        <td>{lecturer.faculty}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Email</th>
+                        <td>{lecturer.email}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Số điện thoại</th>
+                        <td>{lecturer.phone}</td>
+                      </tr>
+                    </tbody>}
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="modal fade" id="refuseModal" tabIndex="-1" aria-labelledby="refuseModalLabel" aria-hidden="true">
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="exampleModalLabel">Xoá giảng viên</h5>
+                <h5 className="modal-title" id="refuseModalLabel">Xoá giảng viên</h5>
                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div className="modal-body">

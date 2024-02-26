@@ -109,9 +109,11 @@ export default function Layout({ children }) {
                             </button>
                             <ul className="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <button className="dropdown-item" type="button">
-                                        Trang cá nhân
-                                    </button>
+                                    <Link to='/account'>
+                                        <button className="dropdown-item" type="button">
+                                            Trang cá nhân
+                                        </button>
+                                    </Link>
                                 </li>
                                 <li><hr className="dropdown-divider" /></li>
                                 <li>

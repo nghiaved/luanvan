@@ -95,7 +95,7 @@ export default function DetailTopic() {
             ) : (
                 <div className='mb-4'>Không tìm thấy đề tài.</div>
             )}
-            {token && jwtDecode(token).role === 1
+            {token && (jwtDecode(token).role === 1 || jwtDecode(token).status === false)
                 ? <></>
                 : register === null
                     ? <>

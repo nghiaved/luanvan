@@ -52,6 +52,8 @@ export default function AdminStudents() {
             <tr>
               <th scope="col">#</th>
               <th scope="col">Tên sinh viên</th>
+              <th scope="col">Mã số SV</th>
+              <th scope="col">Thông tin</th>
               <th scope="col">Quản lý</th>
             </tr>
           </thead>
@@ -60,6 +62,14 @@ export default function AdminStudents() {
               <tr key={student._id}>
                 <th scope="row">{++index}</th>
                 <td>{student.fullname}</td>
+                <td>{student.username}</td>
+                <td>
+                  <button className="btn text-info"
+                    data-bs-toggle="modal" data-bs-target="#infoModal"
+                    onClick={() => setStudent(student)}>
+                    Chi tiết
+                  </button>
+                </td>
                 <td>
                   {student.status === true
                     ? <span className="text-success">Đã xác nhận</span>
@@ -69,7 +79,7 @@ export default function AdminStudents() {
                         Xác nhận
                       </button>
                       <button className='btn btn-danger'
-                        data-bs-toggle="modal" data-bs-target="#exampleModal"
+                        data-bs-toggle="modal" data-bs-target="#refuseModal"
                         onClick={() => setStudent(student)}>
                         Từ chối
                       </button>
@@ -79,11 +89,65 @@ export default function AdminStudents() {
             ))}
           </tbody>
         </table>
-        <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div className="modal fade" id="infoModal" tabIndex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-body">
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th colSpan={2} scope="col">
+                        <h3 className='text-center'>
+                          Thông tin cá nhân
+                        </h3>
+                      </th>
+                    </tr>
+                  </thead>
+                  {student &&
+                    <tbody className="table-group-divider">
+                      <tr>
+                        <th scope="row">Mã số SV</th>
+                        <td>{student.username}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Họ tên</th>
+                        <td>{student.fullname}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Ngày sinh</th>
+                        <td>{student.birth}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Giới tính</th>
+                        <td>{student.sex}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Lớp</th>
+                        <td>{student.class}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Ngành học</th>
+                        <td>{student.major}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Khoá học</th>
+                        <td>{student.course}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Khoa</th>
+                        <td>{student.faculty}</td>
+                      </tr>
+                    </tbody>}
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="modal fade" id="refuseModal" tabIndex="-1" aria-labelledby="refuseModalLabel" aria-hidden="true">
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="exampleModalLabel">Xoá sinh viên</h5>
+                <h5 className="modal-title" id="refuseModalLabel">Xoá sinh viên</h5>
                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div className="modal-body">

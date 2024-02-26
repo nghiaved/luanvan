@@ -13,7 +13,15 @@ const userSchema = new mongoose.Schema({
     isAdmin: {
         type: Boolean,
         default: false
-    }
+    },
+    birth: String,
+    sex: String,
+    class: String,
+    major: String,
+    course: String,
+    faculty: String,
+    email: String,
+    phone: String
 })
 
 userSchema.pre('save', async function () {
