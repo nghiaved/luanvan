@@ -90,3 +90,32 @@ exports.getUser = async (req, res, next) => {
     const user = await userModel.findOne({ username })
     res.json({ status: true, user })
 }
+
+exports.updateInfo = async (req, res, next) => {
+    const _id = req.params.id
+
+    if (!_id) {
+        return res.json({ status: false, message: 'Not enough information' })
+    }
+
+    await userModel.findByIdAndUpdate(_id, req.body)
+        .then(() => res.json({ status: true, message: 'Updated' }))
+        .catch(next)
+}
+
+exports.changePassword = async (req, res, next) => {
+    const _id = req.params.id
+    const { password, newPassword } = req.body
+
+    if (!_id || !password || !newPassword) {
+        return res.json({ status: false, message: 'Not enough information' })
+    }
+
+    const user = await userModel.findById(_id)
+    const isMatch = await user.comparePassword(password)
+    if (!isMatch) return res.json({ status: false, message: `Current password is incorrect` })
+
+    await userModel.updateOne({ _id }, { password: newPassword })
+        .then(() => res.json({ status: true, message: 'Changed' }))
+        .catch(next)
+}

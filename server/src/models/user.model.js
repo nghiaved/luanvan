@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
     },
     birth: String,
     sex: String,
-    class: String,
+    grade: String,
     major: String,
     course: String,
     faculty: String,
@@ -24,11 +24,17 @@ const userSchema = new mongoose.Schema({
     phone: String
 })
 
-userSchema.pre('save', async function () {
+const hashPassword = async function () {
+    let user = {}
+    this._id != null ? user = this : user = this._update
     const salt = await bcrypt.genSalt(10)
-    const hash = await bcrypt.hash(this.password, salt)
-    this.password = hash
-})
+    const hash = await bcrypt.hash(user.password, salt)
+    user.password = hash
+}
+
+userSchema.pre('save', hashPassword)
+
+userSchema.pre('updateOne', hashPassword)
 
 userSchema.methods.comparePassword = async function (userPassword) {
     return await bcrypt.compare(userPassword, this.password)

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Layout from '../components/Layout'
 import { Link } from 'react-router-dom'
 import { jwtDecode } from 'jwt-decode'
+import { toast } from 'react-toastify'
 import axios from 'axios'
 
 export default function Account() {
@@ -15,6 +16,52 @@ export default function Account() {
         }
         fetchUser()
     }, [token])
+
+    const handleUpdateInfo = async (e) => {
+        e.preventDefault()
+
+        const { birth, sex, grade, major, course, faculty, email, phone } = e.target
+
+        await axios.put(`http://localhost:8000/api/users/update-info/${jwtDecode(token)._id}`, {
+            birth: birth?.value,
+            sex: sex?.value,
+            grade: grade?.value,
+            major: major?.value,
+            course: course?.value,
+            faculty: faculty?.value,
+            email: email?.value,
+            phone: phone?.value
+        })
+            .then(res => {
+                if (res.data.status === true) {
+                    toast.success(res.data.message)
+                }
+            })
+            .catch(err => console.log(err))
+    }
+
+    const handleChangePassword = async (e) => {
+        e.preventDefault()
+
+        const { currentPassword, newPassword, renewPassword } = e.target
+
+        if (newPassword.value !== renewPassword.value) {
+            return toast.error('Re-enter incorrect password')
+        }
+
+        await axios.patch(`http://localhost:8000/api/users/change-password/${jwtDecode(token)._id}`, {
+            password: currentPassword.value,
+            newPassword: newPassword.value
+        })
+            .then(res => {
+                if (res.data.status === true) {
+                    toast.success(res.data.message)
+                } else {
+                    toast.error(res.data.message)
+                }
+            })
+            .catch(err => console.log(err))
+    }
 
     return (
         <Layout>
@@ -82,7 +129,7 @@ export default function Account() {
                                             {user.role !== 1 && <>
                                                 <tr>
                                                     <th scope="row">Lớp</th>
-                                                    <td>{user.class}</td>
+                                                    <td>{user.grade}</td>
                                                 </tr>
                                                 <tr>
                                                     <th scope="row">Ngành học</th>
@@ -111,10 +158,7 @@ export default function Account() {
                                     </table>
                                 </div>
                                 <div className="tab-pane fade" id="account-edit">
-                                    <form onSubmit={(e) => {
-                                        e.preventDefault()
-                                        alert('Update account')
-                                    }}>
+                                    <form onSubmit={handleUpdateInfo}>
                                         <div className="row mb-3">
                                             <label htmlFor="birth" className="col-3 col-form-label">Ngày sinh</label>
                                             <div className="col-8">
@@ -131,10 +175,10 @@ export default function Account() {
                                         </div>
                                         {user.role !== 1 && <>
                                             <div className="row mb-3">
-                                                <label htmlFor="class" className="col-3 col-form-label">Lớp</label>
+                                                <label htmlFor="grade" className="col-3 col-form-label">Lớp</label>
                                                 <div className="col-8">
-                                                    <input name='class' required maxLength={30} autoComplete='off'
-                                                        type="text" className="form-control" id="class" defaultValue={user.class} />
+                                                    <input name='grade' required maxLength={30} autoComplete='off'
+                                                        type="text" className="form-control" id="grade" defaultValue={user.grade} />
                                                 </div>
                                             </div>
                                             <div className="row mb-3">
@@ -181,10 +225,7 @@ export default function Account() {
                                     </form>
                                 </div>
                                 <div className="tab-pane fade" id="account-change-password">
-                                    <form onSubmit={(e) => {
-                                        e.preventDefault()
-                                        alert('Change password')
-                                    }}>
+                                    <form onSubmit={handleChangePassword}>
                                         <div className="row mb-3">
                                             <label htmlFor="currentPassword" className="col-4 col-form-label">Mật khẩu hiện tại</label>
                                             <div className="col-6">

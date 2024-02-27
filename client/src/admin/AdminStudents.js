@@ -123,7 +123,7 @@ export default function AdminStudents() {
                       </tr>
                       <tr>
                         <th scope="row">Lớp</th>
-                        <td>{student.class}</td>
+                        <td>{student.grade}</td>
                       </tr>
                       <tr>
                         <th scope="row">Ngành học</th>
