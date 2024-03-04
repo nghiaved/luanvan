@@ -60,75 +60,78 @@ export default function ListRegisters() {
         <Layout>
             <Link to="/list-topics">Danh sách đề tài</Link>
             <div className='display-6 mt-4'>Danh sách đăng ký</div>
-            {registers.length > 0 ? (
-                <table className="table table-hover mt-4">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th>Họ và tên</th>
-                            <th>Tài khoản</th>
-                            <th>Tên đề tài</th>
-                            <th>Thực hiện</th>
-                        </tr>
-                    </thead>
-                    <tbody className="table-group-divider">
-                        {registers.map((register, index) => (
-                            <tr key={register._id}>
-                                <th scope="row">{++index}</th>
-                                <td>{register.student.fullname}</td>
-                                <td>{register.student.username}</td>
-                                <td>{register.topic.title}</td>
-                                <td>
-                                    {register.status === true ? (<>
-                                        <Link state={register.student} to='/create-task'>Phân công</Link>
-                                        <Link className='ms-2' state={register.student} to='/list-tasks'>Công việc</Link>
-                                    </>
-                                    ) : (<>
-                                        <Link className='me-2' data-bs-toggle="modal" data-bs-target="#exampleModal"
-                                            onClick={() => setAction({
-                                                id: register._id,
-                                                username: register.student.username,
-                                                type: 'primary',
-                                                text: 'Chấp nhận',
-                                                desc: 'chấp nhận',
-                                                func: handleAcceptRegister
-                                            })}>Chấp nhận</Link>
-                                        <Link data-bs-toggle="modal" data-bs-target="#exampleModal"
-                                            onClick={() => setAction({
-                                                id: register._id,
-                                                username: register.student.username,
-                                                type: 'danger',
-                                                text: 'Từ chối',
-                                                desc: 'từ chối',
-                                                func: handleRefuseRegister
-                                            })}>Từ chối</Link>
-                                        <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div className="modal-dialog">
-                                                <div className="modal-content">
-                                                    <div className="modal-header">
-                                                        <h5 className="modal-title" id="exampleModalLabel">{action.text} đăng ký</h5>
-                                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div className="modal-body">
-                                                        Bạn có chắc chắn muốn {action.desc} đăng ký này?
-                                                    </div>
-                                                    <div className="modal-footer">
-                                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Trở lại</button>
-                                                        <button type="button" className={`btn btn-${action.type}`} data-bs-dismiss="modal"
-                                                            onClick={() => action.func(action.id, action.username)}>
-                                                            {action.text}
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
+            {registers.length > 0 ? (<>
+                <div className="row mt-4">
+                    {registers.map(register => (
+                        <div key={register._id} className='col-lg-6 mb-4'>
+                            <div className="card">
+                                <div className="card-header">
+                                    <div className="d-flex justify-content-between">
+                                        <b>{register.topic.title}</b>
+                                        <div className="card-text">
+                                            {register.status === true
+                                                ? <span className="text-success">Đã xác nhận</span>
+                                                : <span className="text-danger">Chờ xác nhận</span>}
                                         </div>
-                                    </>)}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            ) : (
+                                    </div>
+                                </div>
+                                <div className="card-body">
+                                    <p className="card-text mb-0">
+                                        Họ tên: {register.student.fullname}
+                                    </p>
+                                    <p className="card-text">
+                                        MSSV: {register.student.username}
+                                    </p>
+                                    <p className='text-end'>
+                                        {register.status === true ? (
+                                            <Link className='ms-2' state={register.student} to='/list-tasks'>Công việc</Link>
+                                        ) : (<>
+                                            <Link className='me-2' data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                                onClick={() => setAction({
+                                                    id: register._id,
+                                                    username: register.student.username,
+                                                    type: 'primary',
+                                                    text: 'Chấp nhận',
+                                                    desc: 'chấp nhận',
+                                                    func: handleAcceptRegister
+                                                })}>Chấp nhận</Link>
+                                            <Link data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                                onClick={() => setAction({
+                                                    id: register._id,
+                                                    username: register.student.username,
+                                                    type: 'danger',
+                                                    text: 'Từ chối',
+                                                    desc: 'từ chối',
+                                                    func: handleRefuseRegister
+                                                })}>Từ chối</Link>
+                                        </>)}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="exampleModalLabel">{action.text} đăng ký</h5>
+                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div className="modal-body">
+                                Bạn có chắc chắn muốn {action.desc} đăng ký này?
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Trở lại</button>
+                                <button type="button" className={`btn btn-${action.type}`} data-bs-dismiss="modal"
+                                    onClick={() => action.func(action.id, action.username)}>
+                                    {action.text}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </>) : (
                 <div className='mt-4'>Chưa có sinh viên nào đăng ký đề tài.</div>
             )}
         </Layout>

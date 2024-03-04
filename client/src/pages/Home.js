@@ -27,6 +27,13 @@ export default function Home() {
         fetchTopics()
     }, [fetchTopics])
 
+    const convertDesc = desc => {
+        desc = desc.replace(/<[^>]*>/g, " ")
+        if (desc.length < 50) return desc
+        desc = desc.substring(0, 50).concat(" ...")
+        return desc
+    }
+
     return (
         <Layout>
             {data.topics?.length > 0 ? (<>
@@ -42,31 +49,29 @@ export default function Home() {
                     <input onChange={e => setFilter(e.target.value)} className="form-control w-25" placeholder="Tìm kiếm..." />
                 </div>
                 <div className='display-6 mb-4'>Danh sách đề tài</div>
-                <table className="table table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Tên đề tài</th>
-                            <th scope="col">Giảng viên</th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody className="table-group-divider">
-                        {data.topics?.filter(item => filter.toLowerCase() === '' ? item
-                            : item.title.toLowerCase().includes(filter.toLowerCase())
-                            || item.lecturer.fullname.toLowerCase().includes(filter.toLowerCase())
-                        ).map((topic, index) => (
-                            <tr key={topic._id}>
-                                <th scope="row">{++index}</th>
-                                <td>{topic.title}</td>
-                                <td>{topic.lecturer.fullname}</td>
-                                <td>
-                                    <Link state={topic} to={`/detail-topic/${topic.slug}`}>Chi tiết</Link>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <div className="row">
+                    {data.topics?.filter(item => filter.toLowerCase() === '' ? item
+                        : item.title.toLowerCase().includes(filter.toLowerCase())
+                        || item.lecturer.fullname.toLowerCase().includes(filter.toLowerCase())
+                    ).map(topic => (
+                        <div key={topic._id} className='col-lg-6 mb-4'>
+                            <div className="card">
+                                <div className="card-header">
+                                    {topic.lecturer.fullname}
+                                </div>
+                                <div className="card-body">
+                                    <h5 className="card-title">{topic.title}</h5>
+                                    <p className="card-text">
+                                        {convertDesc(topic.description)}
+                                    </p>
+                                    <p className='text-end'>
+                                        <Link state={topic} to={`/detail-topic/${topic.slug}`}>Chi tiết</Link>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </>) : (
                 <div className="mt-4">Không tìm thấy đề tài</div>
             )}

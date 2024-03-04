@@ -36,42 +36,45 @@ export default function ListTasks() {
         return ++days > 0 ? `Còn ${days} ngày` : 'Đã hết hạn'
     }
 
+    const convertDesc = desc => {
+        desc = desc.replace(/<[^>]*>/g, " ")
+        if (desc.length < 50) return desc
+        desc = desc.substring(0, 50).concat(" ...")
+        return desc
+    }
+
     return (
         <Layout>
             <Link state={student} to="/create-task" className="me-4">Thêm công việc</Link>
             <Link to="/list-registers">Danh sách đăng ký</Link>
             <div className='display-6 mt-4'>Công việc của "{student.fullname}"</div>
             {tasks.length > 0 ? <>
-                <table className="table table-hover mt-4">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Tên công việc</th>
-                            <th scope="col">Ngày bắt đầu</th>
-                            <th scope="col">Ngày kết thúc</th>
-                            <th scope="col">Trạng thái</th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody className="table-group-divider">
-                        {tasks.map((task, index) => (
-                            <tr key={task._id}>
-                                <th scope="row">{++index}</th>
-                                <td>{task.title}</td>
-                                <td>{task.start.substring(0, 10)}</td>
-                                <td>{task.end.substring(0, 10)}</td>
-                                <td>
-                                    {task.status
-                                        ? <span className='text-success'>Đã nộp {task.points && `(${task.points}đ)`} </span>
-                                        : <span className='text-danger'>{timeRemaining(task.end)}</span>}
-                                </td>
-                                <td>
-                                    <Link state={task} to={`/detail-task`}>Chi tiết</Link>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <div className="row mt-4">
+                    {tasks.map(task => (
+                        <div key={task._id} className='col-lg-6 mb-4'>
+                            <div className="card">
+                                <div className="card-header">
+                                    <div className="d-flex justify-content-between">
+                                        <b>{task.title}</b>
+                                        <div className="card-text">
+                                            {task.status
+                                                ? <span className='text-success'>Đã nộp {task.points && `(${task.points}đ)`} </span>
+                                                : <span className='text-danger'>{timeRemaining(task.end)}</span>}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="card-body">
+                                    <p className="card-text">
+                                        {convertDesc(task.description)}
+                                    </p>
+                                    <p className='text-end'>
+                                        <Link state={task} to={`/detail-task`}>Chi tiết</Link>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
                 <Link state={{ tasks, student }} to='/statistics'>
                     <button className="btn btn-primary">
                         Thống kê

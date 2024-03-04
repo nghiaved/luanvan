@@ -42,40 +42,47 @@ export default function ListTopics() {
             .catch(err => console.log(err))
     }
 
+    const convertDesc = desc => {
+        desc = desc.replace(/<[^>]*>/g, " ")
+        if (desc.length < 50) return desc
+        desc = desc.substring(0, 50).concat(" ...")
+        return desc
+    }
+
     return (
         <Layout>
             <Link to="/create-topic" className="me-4">Thêm đề tài</Link>
             <Link to="/list-registers">Danh sách đăng ký</Link>
             <div className='display-6 mt-4'>Danh sách đề tài</div>
             {topics.length > 0 ? <>
-                <table className="table table-hover mt-4">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Tên đề tài</th>
-                            <th scope="col">Trạng thái</th>
-                            <th scope="col">Quản lý</th>
-                        </tr>
-                    </thead>
-                    <tbody className="table-group-divider">
-                        {topics.map((topic, index) => (
-                            <tr key={topic._id}>
-                                <th scope="row">{++index}</th>
-                                <td>{topic.title}</td>
-                                <td>
-                                    {topic.status === true
-                                        ? <span className="text-success">Đã xác nhận</span>
-                                        : <span className="text-danger">Chờ xác nhận</span>}
-                                </td>
-                                <td>
-                                    <Link className="me-4" state={topic} to={`/detail-topic/${topic.slug}`}>Chi tiết</Link>
-                                    <Link className="me-4" state={topic} to='/update-topic'>Sửa</Link>
-                                    <Link data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={() => setTopicId(topic._id)}>Xoá</Link>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <div className="row mt-4">
+                    {topics.map(topic => (
+                        <div key={topic._id} className='col-lg-6 mb-4'>
+                            <div className="card">
+                                <div className="card-header">
+                                    <div className="d-flex justify-content-between">
+                                        <b>{topic.title}</b>
+                                        <div className="card-text">
+                                            {topic.status === true
+                                                ? <span className="text-success">Đã xác nhận</span>
+                                                : <span className="text-danger">Chờ xác nhận</span>}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="card-body">
+                                    <p className="card-text">
+                                        {convertDesc(topic.description)}
+                                    </p>
+                                    <p className='text-end'>
+                                        <Link className="me-4" state={topic} to={`/detail-topic/${topic.slug}`}>Chi tiết</Link>
+                                        <Link className="me-4" state={topic} to='/update-topic'>Sửa</Link>
+                                        <Link data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={() => setTopicId(topic._id)}>Xoá</Link>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
                 <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div className="modal-dialog">
                         <div className="modal-content">

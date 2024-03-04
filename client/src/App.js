@@ -91,8 +91,8 @@ function App() {
           <Route path='/list-tasks' element={navigateWithLecturer(<ListTasks />)} />
           <Route path='/statistics' element={navigateWithLecturer(<Statistics />)} />
           <Route path='/student' element={navigateWithStudent(<Student />)} />
-          <Route path='/detail-task' element={navigateWithStudent(<DetailTask />)} />
           <Route path='/detail-topic/:slug' element={<DetailTopic />} />
+          <Route path='/detail-task' element={token ? <DetailTask /> : <Navigate to='/' />} />
           <Route path='/waiting' element={token ? <Waiting /> : <Navigate to='/' />} />
           <Route path='/account' element={token ? <Account /> : <Navigate to='/' />} />
           <Route path='/profile/:username' element={<Profile />} />
