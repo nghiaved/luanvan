@@ -56,6 +56,34 @@ a {
     background: #eee;
     width: 50%;
     margin: 0 auto;
+
+    @media (max-width: 991px) {
+        width: 60%;
+    }
+
+    @media (max-width: 767px) {
+        width: 80%;
+    }
+
+    @media (max-width: 575px) {
+        width: 100%;
+    }
+}
+
+.home-filter {
+    width: 25%;
+
+    @media (max-width: 991px) {
+        width: 30%;
+    }
+
+    @media (max-width: 767px) {
+        width: 35%;
+    }
+
+    @media (max-width: 575px) {
+        width: 45%;
+    }
 }
 
 .ql-editor {

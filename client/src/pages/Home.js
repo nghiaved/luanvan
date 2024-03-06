@@ -38,7 +38,7 @@ export default function Home() {
         <Layout>
             {data.topics?.length > 0 ? (<>
                 <div className="d-flex justify-content-between mb-4">
-                    <select onChange={(e) => setFilter(e.target.value)} className="form-select me-4 w-25">
+                    <select onChange={(e) => setFilter(e.target.value)} className="form-select home-filter">
                         <option defaultChecked value=''>Tất cả</option>
                         {data.lecturers?.map((item, index) => (
                             <option value={item} key={index}>
@@ -46,7 +46,7 @@ export default function Home() {
                             </option>
                         ))}
                     </select>
-                    <input onChange={e => setFilter(e.target.value)} className="form-control w-25" placeholder="Tìm kiếm..." />
+                    <input onChange={e => setFilter(e.target.value)} className="form-control home-filter" placeholder="Tìm kiếm..." />
                 </div>
                 <div className='display-6 mb-4'>Danh sách đề tài</div>
                 <div className="row">

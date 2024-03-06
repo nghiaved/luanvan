@@ -87,13 +87,13 @@ export default function Account() {
                                 <Link to={`/profile/${user.username}`} className="btn btn-outline-info">Xem thông tin</Link>
                             </div>
                             <ul className="nav nav-tabs nav-tabs-bordered">
-                                <li className="nav-item">
+                                <li className="nav-item mt-2">
                                     <button className="nav-link active" data-bs-toggle="tab" data-bs-target="#account-overview">Tổng quan</button>
                                 </li>
-                                <li className="nav-item">
+                                <li className="nav-item mt-2">
                                     <button className="nav-link" data-bs-toggle="tab" data-bs-target="#account-edit">Cập nhật thông tin</button>
                                 </li>
-                                <li className="nav-item">
+                                <li className="nav-item mt-2">
                                     <button className="nav-link" data-bs-toggle="tab" data-bs-target="#account-change-password">Đổi mật khẩu</button>
                                 </li>
                             </ul>
