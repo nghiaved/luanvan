@@ -4,6 +4,8 @@ import { useEffect } from 'react'
 import { ToastContainer } from 'react-toastify'
 import { socket } from './utils/socket'
 import { useGlobal } from './utils/useGlobal'
+import Chart from 'chart.js/auto'
+import { CategoryScale } from 'chart.js'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
@@ -34,6 +36,8 @@ import AdminStudents from './admin/AdminStudents'
 import AdminLecturers from './admin/AdminLecturers'
 import AdminTopics from './admin/AdminTopics'
 import AdminProjects from './admin/AdminProjects'
+
+Chart.register(CategoryScale)
 
 function App() {
   const [state, dispatch] = useGlobal()

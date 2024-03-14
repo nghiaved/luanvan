@@ -2,6 +2,7 @@ import Layout from "../components/Layout"
 import { Link } from 'react-router-dom'
 import React, { useCallback, useEffect, useState } from "react"
 import axios from "axios"
+import { Doughnut } from 'react-chartjs-2'
 
 export default function Home() {
     const [data, setData] = useState({})
@@ -57,16 +58,30 @@ export default function Home() {
                         <div key={topic._id} className='col-lg-6 mb-4'>
                             <div className="card">
                                 <div className="card-header">
-                                    {topic.lecturer.fullname}
+                                    <Link to={`/profile/${topic.lecturer.username}`}>
+                                        {topic.lecturer.fullname}
+                                    </Link>
                                 </div>
                                 <div className="card-body">
-                                    <h5 className="card-title">{topic.title}</h5>
-                                    <p className="card-text">
-                                        {convertDesc(topic.description)}
-                                    </p>
-                                    <p className='text-end'>
-                                        <Link state={topic} to={`/detail-topic/${topic.slug}`}>Chi tiết</Link>
-                                    </p>
+                                    <div className="d-flex justify-content-between">
+                                        <div>
+                                            <h5 className="card-title">
+                                                <Link state={topic} to={`/detail-topic/${topic.slug}`}>
+                                                    {topic.title}
+                                                </Link>
+                                            </h5>
+                                            <p className="card-text">{convertDesc(topic.description)}</p>
+                                        </div>
+                                        <div style={{ width: 120, height: 120 }}>
+                                            <Doughnut data={{
+                                                labels: ["Đã đăng ký", "Còn trống",],
+                                                datasets: [{ backgroundColor: ["#3e95cd", "#1c57a5"], data: [2, 1] }]
+                                            }} />
+                                        </div>
+                                    </div>
+                                    <Link state={topic} to={`/detail-topic/${topic.slug}`}>
+                                        <button className="btn btn-outline-primary">Xem thêm</button>
+                                    </Link>
                                 </div>
                             </div>
                         </div>

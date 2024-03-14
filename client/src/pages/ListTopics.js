@@ -61,7 +61,9 @@ export default function ListTopics() {
                             <div className="card">
                                 <div className="card-header">
                                     <div className="d-flex justify-content-between">
-                                        <b>{topic.title}</b>
+                                        <Link className="me-4" state={topic} to={`/detail-topic/${topic.slug}`}>
+                                            <b>{topic.title}</b>
+                                        </Link>
                                         <div className="card-text">
                                             {topic.status === true
                                                 ? <span className="text-success">Đã xác nhận</span>
@@ -74,9 +76,15 @@ export default function ListTopics() {
                                         {convertDesc(topic.description)}
                                     </p>
                                     <p className='text-end'>
-                                        <Link className="me-4" state={topic} to={`/detail-topic/${topic.slug}`}>Chi tiết</Link>
-                                        <Link className="me-4" state={topic} to='/update-topic'>Sửa</Link>
-                                        <Link data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={() => setTopicId(topic._id)}>Xoá</Link>
+                                        <Link className="me-4" state={topic} to={`/detail-topic/${topic.slug}`}>
+                                            <i className="bi bi-file-text"></i>
+                                        </Link>
+                                        <Link className="me-4" state={topic} to='/update-topic'>
+                                            <i className="bi bi-pencil-square text-warning"></i>
+                                        </Link>
+                                        <Link data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={() => setTopicId(topic._id)}>
+                                            <i className="bi bi-trash-fill text-danger"></i>
+                                        </Link>
                                     </p>
                                 </div>
                             </div>
