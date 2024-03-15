@@ -18,6 +18,14 @@ const topicSchema = new mongoose.Schema({
     status: {
         type: Boolean,
         default: false
+    },
+    limit: {
+        type: Number,
+        default: 4
+    },
+    registered: {
+        type: Number,
+        default: 0
     }
 })
 

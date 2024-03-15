@@ -62,7 +62,7 @@ export default function ListTopics() {
                                 <div className="card-header">
                                     <div className="d-flex justify-content-between">
                                         <Link className="me-4" state={topic} to={`/detail-topic/${topic.slug}`}>
-                                            <b>{topic.title}</b>
+                                            <b className="me-2">{topic.title}</b> ({topic.registered} / {topic.limit})
                                         </Link>
                                         <div className="card-text">
                                             {topic.status === true

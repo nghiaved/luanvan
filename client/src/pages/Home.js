@@ -75,7 +75,10 @@ export default function Home() {
                                         <div style={{ width: 120, height: 120 }}>
                                             <Doughnut data={{
                                                 labels: ["Đã đăng ký", "Còn trống",],
-                                                datasets: [{ backgroundColor: ["#3e95cd", "#1c57a5"], data: [2, 1] }]
+                                                datasets: [{
+                                                    backgroundColor: ["#3e95cd", "#1c57a5"],
+                                                    data: [topic.registered, topic.limit - topic.registered]
+                                                }]
                                             }} />
                                         </div>
                                     </div>
