@@ -119,3 +119,13 @@ exports.changePassword = async (req, res, next) => {
         .then(() => res.json({ status: true, message: 'Changed' }))
         .catch(next)
 }
+
+exports.getTokenById = async (req, res, next) => {
+    await userModel.findById(req.params.id)
+        .then(user => {
+            const tokenData = { _id: user._id, fullname: user.fullname, username: user.username, role: user.role, status: user.status }
+            const token = jwt.sign(tokenData, 'secretKey', { expiresIn: '2h' })
+            res.json({ status: true, message: 'Refreshed', token })
+        })
+        .catch(next)
+}

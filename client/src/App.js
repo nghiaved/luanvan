@@ -84,7 +84,13 @@ function App() {
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
         : <Routes>
-          <Route index element={<Home />} />
+          <Route index element={
+            token
+              ? jwtDecode(token).status === true
+                ? <Home />
+                : <Waiting />
+              : <Navigate to='/login' />
+          } />
           <Route path='/login' element={token ? <Navigate to='/' /> : <Login />} />
           <Route path='/register' element={token ? <Navigate to='/' /> : <Register />} />
           <Route path='/list-topics' element={navigateWithLecturer(<ListTopics />)} />

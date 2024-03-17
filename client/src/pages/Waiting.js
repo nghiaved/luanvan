@@ -1,8 +1,25 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Layout from "../components/Layout"
-import { Link } from 'react-router-dom'
+import axios from "axios"
+import { Link, useNavigate } from 'react-router-dom'
+import { jwtDecode } from 'jwt-decode'
 
 export default function Waiting() {
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const token = sessionStorage.getItem('token')
+            const resUser = await axios.get(`http://localhost:8000/api/users/get-user/${jwtDecode(token).username}`)
+            if (resUser.data.status === true && resUser.data.user.status === true) {
+                const resToken = await axios.get(`http://localhost:8000/api/users/get-token-by-id/${resUser.data.user._id}`)
+                sessionStorage.setItem('token', resToken.data.token)
+                navigate(0)
+            }
+        }
+        fetchUser()
+    }, [navigate])
+
     return (
         <Layout>
             <div className='text-center'>
