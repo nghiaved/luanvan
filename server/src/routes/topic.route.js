@@ -1,7 +1,7 @@
 const express = require('express')
 
 const {
-    createTopic, getTopicsByLecturer, getAllTopics, getTopicBySlug, updateTopic, deleteTopic, acceptTopic, refuseTopic
+    createTopic, getTopicsByLecturer, getAllTopics, getTopicBySlug, updateTopic, deleteTopic
 } = require('../controllers/topic.controller')
 
 const router = express.Router()
@@ -12,7 +12,5 @@ router.get('/get-all-topics', getAllTopics)
 router.get('/get-topic-by-slug/:slug', getTopicBySlug)
 router.put('/update-topic/:id', updateTopic)
 router.delete('/delete-topic/:id', deleteTopic)
-router.patch('/accept-topic/:id', acceptTopic)
-router.delete('/refuse-topic/:id', refuseTopic)
 
 module.exports = router

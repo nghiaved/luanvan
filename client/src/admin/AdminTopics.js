@@ -9,7 +9,7 @@ export default function AdminTopics() {
   const [topic, setTopic] = useState(null)
 
   const fetchTopics = useCallback(async () => {
-    await axios.get('http://localhost:8000/api/topics/get-all-topics')
+    await axios.get('http://localhost:8000/api/admin/get-all-topics')
       .then(res => {
         if (res.data.status === true) {
           setTopics(res.data.topics)
@@ -23,7 +23,7 @@ export default function AdminTopics() {
   }, [fetchTopics])
 
   const handleAcceptTopic = async (topic) => {
-    await axios.patch(`http://localhost:8000/api/topics/accept-topic/${topic._id}`)
+    await axios.patch(`http://localhost:8000/api/admin/accept-topic/${topic._id}`)
       .then(res => {
         if (res.data.status === true) {
           socket.emit('send-notify', topic.lecturer.username)
@@ -35,7 +35,7 @@ export default function AdminTopics() {
   }
 
   const handleRefuseTopic = async () => {
-    await axios.delete(`http://localhost:8000/api/topics/refuse-topic/${topic._id}`)
+    await axios.delete(`http://localhost:8000/api/admin/refuse-topic/${topic._id}`)
       .then(res => {
         if (res.data.status === true) {
           socket.emit('send-notify', topic.lecturer.username)

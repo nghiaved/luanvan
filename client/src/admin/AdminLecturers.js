@@ -8,7 +8,7 @@ export default function AdminLecturers() {
   const [lecturer, setLecturer] = useState(null)
 
   const fetchLecturers = useCallback(async () => {
-    await axios.get('http://localhost:8000/api/users/get-all-lecturers')
+    await axios.get('http://localhost:8000/api/admin/get-all-lecturers')
       .then(res => {
         if (res.data.status === true) {
           setLecturers(res.data.lecturers)
@@ -22,7 +22,7 @@ export default function AdminLecturers() {
   }, [fetchLecturers])
 
   const handleAcceptLecturer = async (lecturer) => {
-    await axios.patch(`http://localhost:8000/api/users/accept-user/${lecturer._id}`)
+    await axios.patch(`http://localhost:8000/api/admin/accept-user/${lecturer._id}`)
       .then(res => {
         if (res.data.status === true) {
           toast.success(res.data.message)
@@ -33,7 +33,7 @@ export default function AdminLecturers() {
   }
 
   const handleRefuseLecturer = async () => {
-    await axios.delete(`http://localhost:8000/api/users/refuse-user/${lecturer._id}`)
+    await axios.delete(`http://localhost:8000/api/admin/refuse-user/${lecturer._id}`)
       .then(res => {
         if (res.data.status === true) {
           toast.success(res.data.message)

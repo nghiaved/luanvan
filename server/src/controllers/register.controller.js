@@ -2,7 +2,6 @@ const registerModel = require('../models/register.model')
 const messageModel = require('../models/message.model')
 const topicModel = require('../models/topic.model')
 
-
 exports.createRegister = async (req, res, next) => {
     const { topic, student, lecturer } = req.body
 
@@ -105,14 +104,6 @@ exports.getRegisterByStudent = async (req, res, next) => {
         .populate('lecturer', 'fullname username')
         .then(register => res.json({ status: true, register }))
         .catch(next)
-}
-
-exports.getAllRegisters = async (req, res, next) => {
-    const registers = await registerModel.find({ status: true })
-        .populate('topic', 'title')
-        .populate('student', 'fullname')
-        .populate('lecturer', 'fullname')
-    res.json({ status: true, registers })
 }
 
 exports.finalTopic = async (req, res, next) => {

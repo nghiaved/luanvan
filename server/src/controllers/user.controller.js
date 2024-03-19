@@ -46,40 +46,6 @@ exports.login = async (req, res, next) => {
         .catch(next)
 }
 
-exports.getAllStudents = async (req, res, next) => {
-    const students = await userModel.find({ role: 2 })
-    res.json({ status: true, students })
-}
-
-exports.getAllLecturers = async (req, res, next) => {
-    const lecturers = await userModel.find({ role: 1 })
-    res.json({ status: true, lecturers })
-}
-
-exports.acceptUser = async (req, res, next) => {
-    const _id = req.params.id
-
-    if (!_id) {
-        return res.json({ status: false, message: 'Not enough information' })
-    }
-
-    await userModel.findByIdAndUpdate(_id, { status: true })
-        .then(() => res.json({ status: true, message: 'Accepted' }))
-        .catch(next)
-}
-
-exports.refuseUser = async (req, res, next) => {
-    const _id = req.params.id
-
-    if (!_id) {
-        return res.json({ status: false, message: 'Not enough information' })
-    }
-
-    await userModel.findByIdAndDelete(_id)
-        .then(() => res.json({ status: true, message: 'Refused' }))
-        .catch(next)
-}
-
 exports.getUser = async (req, res, next) => {
     const { username } = req.params
 

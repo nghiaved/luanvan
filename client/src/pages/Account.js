@@ -162,14 +162,14 @@ export default function Account() {
                                         <div className="row mb-3">
                                             <label htmlFor="birth" className="col-3 col-form-label">Ngày sinh</label>
                                             <div className="col-8">
-                                                <input name='birth' required maxLength={30} autoComplete='off'
+                                                <input name='birth' maxLength={15} autoComplete='off'
                                                     type="text" className="form-control" id="birth" defaultValue={user.birth} />
                                             </div>
                                         </div>
                                         <div className="row mb-3">
                                             <label htmlFor="sex" className="col-3 col-form-label">Giới tính</label>
                                             <div className="col-8">
-                                                <input name='sex' required maxLength={30} autoComplete='off'
+                                                <input name='sex' maxLength={10} autoComplete='off'
                                                     type="text" className="form-control" id="sex" defaultValue={user.sex} />
                                             </div>
                                         </div>
@@ -177,21 +177,21 @@ export default function Account() {
                                             <div className="row mb-3">
                                                 <label htmlFor="grade" className="col-3 col-form-label">Lớp</label>
                                                 <div className="col-8">
-                                                    <input name='grade' required maxLength={30} autoComplete='off'
+                                                    <input name='grade' maxLength={20} autoComplete='off'
                                                         type="text" className="form-control" id="grade" defaultValue={user.grade} />
                                                 </div>
                                             </div>
                                             <div className="row mb-3">
                                                 <label htmlFor="major" className="col-3 col-form-label">Ngành học</label>
                                                 <div className="col-8">
-                                                    <input name='major' required maxLength={30} autoComplete='off'
+                                                    <input name='major' maxLength={50} autoComplete='off'
                                                         type="text" className="form-control" id="major" defaultValue={user.major} />
                                                 </div>
                                             </div>
                                             <div className="row mb-3">
                                                 <label htmlFor="course" className="col-3 col-form-label">Khoá học</label>
                                                 <div className="col-8">
-                                                    <input name='course' required maxLength={30} autoComplete='off'
+                                                    <input name='course' maxLength={5} autoComplete='off'
                                                         type="text" className="form-control" id="course" defaultValue={user.course} />
                                                 </div>
                                             </div>
@@ -199,7 +199,7 @@ export default function Account() {
                                         <div className="row mb-3">
                                             <label htmlFor="faculty" className="col-3 col-form-label">Khoa</label>
                                             <div className="col-8">
-                                                <input name='faculty' required maxLength={30} autoComplete='off'
+                                                <input name='faculty' maxLength={50} autoComplete='off'
                                                     type="text" className="form-control" id="faculty" defaultValue={user.faculty} />
                                             </div>
                                         </div>
@@ -207,14 +207,14 @@ export default function Account() {
                                             <div className="row mb-3">
                                                 <label htmlFor="email" className="col-3 col-form-label">Email</label>
                                                 <div className="col-8">
-                                                    <input name='email' required maxLength={30} autoComplete='off'
+                                                    <input name='email' maxLength={30} autoComplete='off'
                                                         type="text" className="form-control" id="email" defaultValue={user.email} />
                                                 </div>
                                             </div>
                                             <div className="row mb-3">
                                                 <label htmlFor="phone" className="col-3 col-form-label">Số điện thoại</label>
                                                 <div className="col-8">
-                                                    <input name='phone' required maxLength={30} autoComplete='off'
+                                                    <input name='phone' maxLength={15} autoComplete='off'
                                                         type="text" className="form-control" id="phone" defaultValue={user.phone} />
                                                 </div>
                                             </div>

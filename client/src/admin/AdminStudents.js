@@ -8,7 +8,7 @@ export default function AdminStudents() {
   const [student, setStudent] = useState(null)
 
   const fetchStudents = useCallback(async () => {
-    await axios.get('http://localhost:8000/api/users/get-all-students')
+    await axios.get('http://localhost:8000/api/admin/get-all-students')
       .then(res => {
         if (res.data.status === true) {
           setStudents(res.data.students)
@@ -22,7 +22,7 @@ export default function AdminStudents() {
   }, [fetchStudents])
 
   const handleAcceptStudent = async (student) => {
-    await axios.patch(`http://localhost:8000/api/users/accept-user/${student._id}`)
+    await axios.patch(`http://localhost:8000/api/admin/accept-user/${student._id}`)
       .then(res => {
         if (res.data.status === true) {
           toast.success(res.data.message)
@@ -33,7 +33,7 @@ export default function AdminStudents() {
   }
 
   const handleRefuseStudent = async () => {
-    await axios.delete(`http://localhost:8000/api/users/refuse-user/${student._id}`)
+    await axios.delete(`http://localhost:8000/api/admin/refuse-user/${student._id}`)
       .then(res => {
         if (res.data.status === true) {
           toast.success(res.data.message)

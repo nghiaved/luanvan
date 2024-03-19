@@ -14,7 +14,7 @@ export default function Waiting() {
             if (resUser.data.status === true && resUser.data.user.status === true) {
                 const resToken = await axios.get(`http://localhost:8000/api/users/get-token-by-id/${resUser.data.user._id}`)
                 sessionStorage.setItem('token', resToken.data.token)
-                navigate(0)
+                navigate('/')
             }
         }
         fetchUser()
