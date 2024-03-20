@@ -3,6 +3,7 @@ import AdminLayout from '../components/AdminLayout'
 import { toast } from 'react-toastify'
 import { socket } from '../utils/socket'
 import axios from "axios"
+import { Link } from "react-router-dom"
 
 export default function AdminTopics() {
   const [topics, setTopics] = useState([])
@@ -56,6 +57,7 @@ export default function AdminTopics() {
               <th scope="col">#</th>
               <th scope="col">Tên đề tài</th>
               <th scope="col">Tên giảng viên</th>
+              <th scope="col">Thông tin</th>
               <th scope="col">Quản lý</th>
             </tr>
           </thead>
@@ -65,6 +67,9 @@ export default function AdminTopics() {
                 <th scope="row">{++index}</th>
                 <td>{topic.title}</td>
                 <td>{topic.lecturer.fullname}</td>
+                <td>
+                  <Link to={`/detail-topic/${topic.slug}`} className='text-info'>Chi tiết</Link>
+                </td>
                 <td>
                   {topic.status === true
                     ? <span className="text-success">Đã xác nhận</span>

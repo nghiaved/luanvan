@@ -63,6 +63,7 @@ export default function Dashboard() {
                                                 data: [home.students[1], home.students[0] - home.students[1]]
                                             }]
                                         }} />
+                                        <p style={{ fontSize: 14 }} className="mt-3 text-end">Số lượng: {home.students[0]}</p>
                                     </div>
                                 )}
                             </div>
@@ -94,6 +95,7 @@ export default function Dashboard() {
                                                 data: [home.lecturers[1], home.lecturers[0] - home.lecturers[1]]
                                             }]
                                         }} />
+                                        <p style={{ fontSize: 14 }} className="mt-3 text-end">Số lượng: {home.lecturers[0]}</p>
                                     </div>
                                 )}
                             </div>
@@ -127,6 +129,7 @@ export default function Dashboard() {
                                                 data: [home.topics[1], home.topics[0] - home.topics[1]]
                                             }]
                                         }} />
+                                        <p style={{ fontSize: 14 }} className="mt-3 text-end">Số lượng: {home.topics[0]}</p>
                                     </div>
                                 )}
                             </div>
@@ -158,6 +161,7 @@ export default function Dashboard() {
                                                 data: [home.registers[1], home.registers[0] - home.registers[1]]
                                             }]
                                         }} />
+                                        <p style={{ fontSize: 14 }} className="mt-3 text-end">Số lượng: {home.registers[0]}</p>
                                     </div>
                                 )}
                             </div>

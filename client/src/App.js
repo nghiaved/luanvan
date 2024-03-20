@@ -81,6 +81,7 @@ function App() {
           <Route path='/lecturers' element={<AdminLecturers />} />
           <Route path='/topics' element={<AdminTopics />} />
           <Route path='/projects' element={<AdminProjects />} />
+          <Route path='/detail-topic/:slug' element={<DetailTopic />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
         : <Routes>

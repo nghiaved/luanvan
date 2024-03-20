@@ -4,11 +4,13 @@ import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import ReactQuill from 'react-quill'
 import { Link } from 'react-router-dom'
+import { ViewMode, Gantt } from "gantt-task-react";
 import { useGlobal } from '../utils/useGlobal'
 
 export default function Student() {
     const [register, setRegister] = useState(null)
     const [tasks, setTasks] = useState([])
+    const [grantt, setGrantt] = useState([])
     const [fetchAgain, setFetchAgain] = useState(false)
     const [state] = useGlobal()
 
@@ -29,6 +31,14 @@ export default function Student() {
                             .then(resTasks => {
                                 if (resTasks.data.status === true) {
                                     setTasks(resTasks.data.tasks)
+                                    const initGrantt = resTasks.data.tasks.map(task => ({
+                                        start: new Date(task.start),
+                                        end: new Date(task.end),
+                                        name: task.title,
+                                        progress: task.points || 0,
+                                        id: task._id
+                                    }))
+                                    setGrantt(initGrantt)
                                 }
                             })
                             .catch(err => console.log(err))
@@ -116,6 +126,17 @@ export default function Student() {
                             ))}
                         </tbody>
                     </table>
+                    <div className='display-6 mb-4'>Biểu đồ đánh giá</div>
+                    <Gantt
+                        tasks={grantt}
+                        viewMode={ViewMode.Week}
+                        listCellWidth=""
+                        columnWidth={100}
+                        rowHeight={50}
+                        barBackgroundColor="#1c57a5"
+                        barProgressColor="#198754"
+                        fontSize={16}
+                    />
                     {register.final === undefined || register.final === null ? <></> : register.final === true ? (
                         <div className='display-6 text-success'>Đề tài của bạn đã hoàn thành!</div>
                     ) : (

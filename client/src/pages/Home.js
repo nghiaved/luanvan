@@ -80,6 +80,7 @@ export default function Home() {
                                                     data: [topic.registered, topic.limit - topic.registered]
                                                 }]
                                             }} />
+                                            <p style={{ fontSize: 14 }} className="mt-3 text-end">Số lượng: {topic.registered}/{topic.limit}</p>
                                         </div>
                                     </div>
                                     <Link state={topic} to={`/detail-topic/${topic.slug}`}>
