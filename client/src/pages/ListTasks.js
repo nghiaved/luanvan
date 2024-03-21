@@ -1,14 +1,18 @@
 import Layout from "../components/Layout"
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import React, { useCallback, useEffect, useState } from "react"
+import { ViewMode, Gantt } from "gantt-task-react";
 import { jwtDecode } from "jwt-decode"
 import axios from "axios"
+import { toast } from 'react-toastify'
+import { socket } from '../utils/socket'
 
 export default function ListTasks() {
     const token = sessionStorage.getItem('token')
     const location = useLocation()
     const student = location.state
     const [tasks, setTasks] = useState([])
+    const [grantt, setGrantt] = useState({})
     const navigate = useNavigate()
 
     const fetchTasks = useCallback(async (userId) => {
@@ -21,6 +25,22 @@ export default function ListTasks() {
             .then(res => {
                 if (res.data.status === true) {
                     setTasks(res.data.tasks)
+                    let totalCompleted = 0
+                    const initGrantt = res.data.tasks.map(task => {
+                        if (task.status === true) ++totalCompleted
+                        return {
+                            start: new Date(task.start),
+                            end: new Date(task.end),
+                            name: task.title,
+                            progress: task.points || 0,
+                            id: task._id
+                        }
+                    })
+                    setGrantt({
+                        data: initGrantt,
+                        totalCount: initGrantt.length,
+                        totalCompleted
+                    })
                 }
             })
             .catch(err => console.log(err))
@@ -43,12 +63,36 @@ export default function ListTasks() {
         return desc
     }
 
+    const handleFinal = async (final) => {
+        const res = await axios.patch(`http://localhost:8000/api/registers/final-topic/${student._id}`, { final })
+        if (res.data.status === true) {
+            socket.emit('send-notify', student.username)
+            toast.success(res.data.message)
+        }
+    }
+
     return (
         <Layout>
             <Link state={student} to="/create-task" className="me-4">Thêm công việc</Link>
-            <Link to="/list-registers">Danh sách đăng ký</Link>
+            <Link to="/list-topics">Danh sách đề tài</Link>
             <div className='display-6 mt-4'>Công việc của "{student.fullname}"</div>
             {tasks.length > 0 ? <>
+                <div className="row my-4">
+                    <Gantt
+                        tasks={grantt.data}
+                        viewMode={ViewMode.Week}
+                        listCellWidth=""
+                        columnWidth={100}
+                        rowHeight={50}
+                        barBackgroundColor="#1c57a5"
+                        barProgressColor="#198754"
+                        fontSize={16}
+                    />
+                    <div className="mt-2 text-end">
+                        <b className='me-2'>Tổng số công việc hoàn thành:</b>
+                        <i>{grantt.totalCompleted}/{grantt.totalCount}</i>
+                    </div>
+                </div>
                 <div className="row mt-4">
                     {tasks.map(task => (
                         <div key={task._id} className='col-lg-6 mb-4'>
@@ -75,11 +119,42 @@ export default function ListTasks() {
                         </div>
                     ))}
                 </div>
-                <Link state={{ tasks, student }} to='/statistics'>
-                    <button className="btn btn-primary">
-                        Thống kê
-                    </button>
-                </Link>
+                <button className='btn btn-primary me-2' data-bs-toggle="modal" data-bs-target="#finishModal">Hoàn thành</button>
+                <div className="modal fade" id="finishModal" tabIndex="-1" aria-labelledby="finishModalLabel" aria-hidden="true">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="terminateModalLabel">Hoàn thành đề tài</h5>
+                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div className="modal-body">
+                                Bạn có chắc chắn muốn hoàn thành đề tài này?
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Trở lại</button>
+                                <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={() => handleFinal(true)}>Hoàn thành</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button className='btn btn-danger me-2' data-bs-toggle="modal" data-bs-target="#terminateModal">Kết thúc</button>
+                <div className="modal fade" id="terminateModal" tabIndex="-1" aria-labelledby="terminateModalLabel" aria-hidden="true">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title" id="terminateModalLabel">Kết thúc đề tài</h5>
+                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div className="modal-body">
+                                Bạn có chắc chắn muốn kết thúc đề tài này?
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Trở lại</button>
+                                <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={() => handleFinal(false)}>Kết thúc</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <button className='btn btn-secondary ms-2' onClick={() => navigate(-1)}>Trở lại</button>
             </> : (
                 <div className="mt-4">Bạn chưa thêm công việc nào.</div>

@@ -92,6 +92,19 @@ exports.getRegister = async (req, res, next) => {
         .catch(next)
 }
 
+exports.getRegisters = async (req, res, next) => {
+    const { topic, lecturer } = req.query
+
+    if (!topic || !lecturer) {
+        return res.json({ status: false, message: 'Not enough information' })
+    }
+
+    await registerModel.find({ topic, lecturer })
+        .populate('student', 'fullname username')
+        .then(registers => res.json({ status: true, registers }))
+        .catch(next)
+}
+
 exports.getRegisterByStudent = async (req, res, next) => {
     const { student } = req.params
 

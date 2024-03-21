@@ -13,6 +13,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-quill/dist/quill.snow.css'
 import 'react-quill/dist/quill.bubble.css'
+import 'gantt-task-react/dist/index.css'
 import './scss/index.scss'
 
 import Login from './pages/Login'
@@ -26,7 +27,6 @@ import Student from './pages/Student'
 import CreateTask from './pages/CreateTask'
 import ListTasks from './pages/ListTasks'
 import DetailTask from './pages/DetailTask'
-import Statistics from './pages/Statistics'
 import Waiting from './pages/Waiting'
 import Account from './pages/Account'
 import Profile from './pages/Profile'
@@ -92,7 +92,15 @@ function App() {
                 : <Waiting />
               : <Navigate to='/login' />
           } />
-          <Route path='/login' element={token ? <Navigate to='/' /> : <Login />} />
+          <Route path='/login' element={
+            token
+              ? jwtDecode(token).status === true
+                ? jwtDecode(token).role === 2
+                  ? <Navigate to='/student' />
+                  : <Navigate to='/list-topics' />
+                : <Waiting />
+              : <Login />
+          } />
           <Route path='/register' element={token ? <Navigate to='/' /> : <Register />} />
           <Route path='/list-topics' element={navigateWithLecturer(<ListTopics />)} />
           <Route path='/create-topic' element={navigateWithLecturer(<CreateTopic />)} />
@@ -100,7 +108,6 @@ function App() {
           <Route path='/list-registers' element={navigateWithLecturer(<ListRegisters />)} />
           <Route path='/create-task' element={navigateWithLecturer(<CreateTask />)} />
           <Route path='/list-tasks' element={navigateWithLecturer(<ListTasks />)} />
-          <Route path='/statistics' element={navigateWithLecturer(<Statistics />)} />
           <Route path='/student' element={navigateWithStudent(<Student />)} />
           <Route path='/detail-topic/:slug' element={<DetailTopic />} />
           <Route path='/detail-task' element={token ? <DetailTask /> : <Navigate to='/' />} />

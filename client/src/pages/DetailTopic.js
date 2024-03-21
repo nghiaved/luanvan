@@ -1,6 +1,6 @@
 import Layout from '../components/Layout'
 import axios from 'axios'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
 import { jwtDecode } from 'jwt-decode'
 import { toast } from 'react-toastify'
@@ -15,6 +15,7 @@ export default function DetailTopic() {
     const navigate = useNavigate()
     const { slug } = useParams()
     const [register, setRegister] = useState(null)
+    const [students, setStudents] = useState([])
     const [state] = useGlobal()
     const [fetchAgain, setFetchAgain] = useState(false)
 
@@ -37,6 +38,16 @@ export default function DetailTopic() {
                 setRegister(res.data.register?.status || null)
             }
             fetchRegister()
+        }
+
+        if (token && topic && jwtDecode(token).role === 1) {
+            const fetchStudents = async () => {
+                const res = await axios.get(`http://localhost:8000/api/registers/get-registers?topic=${topic._id}&lecturer=${jwtDecode(token)._id}`)
+                if (res.data.registers.length > 0) {
+                    setStudents(res.data.registers.map(register => register.student))
+                }
+            }
+            fetchStudents()
         }
     }, [slug, topic, token, fetchAgain, state.fetchAgain])
 
@@ -67,7 +78,7 @@ export default function DetailTopic() {
     return (
         <Layout>
             <div className='display-6 mb-4'>Thông tin đề tài</div>
-            {topic ? (
+            {topic ? <>
                 <div className='mb-4'>
                     <div className='mb-2'>
                         <b className='me-2'>Tên đề tài:</b>
@@ -92,7 +103,17 @@ export default function DetailTopic() {
                         <i>{topic.lecturer?.fullname}</i>
                     </div>
                 </div>
-            ) : (
+                {students.length > 0 && <>
+                    <div className='display-6 mb-4'>Sinh viên đăng ký</div>
+                    <div className='mb-4'>
+                        {students.map(student => <div key={student._id}>
+                            <span className='me-2'>{student.fullname}</span>
+                            <span className='me-2'>{student.username.toUpperCase()}</span>
+                            <Link state={student} to='/list-tasks'>Chi tiết</Link>
+                        </div>)}
+                    </div>
+                </>}
+            </> : (
                 <div className='mb-4'>Không tìm thấy đề tài.</div>
             )}
             {token && (jwtDecode(token).role === 1 || jwtDecode(token).status === false)
