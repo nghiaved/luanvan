@@ -47,48 +47,44 @@ export default function AdminLecturers() {
     <AdminLayout>
       <div className='display-6'>Trang quản lý giảng viên</div>
       {lecturers.length > 0 ? <>
-        <table className="table table-hover mt-4">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Tên giảng viên</th>
-              <th scope="col">Mã số CB</th>
-              <th scope="col">Thông tin</th>
-              <th scope="col">Quản lý</th>
-            </tr>
-          </thead>
-          <tbody className="table-group-divider">
-            {lecturers.map((lecturer, index) => (
-              <tr key={lecturer._id}>
-                <th scope="row">{++index}</th>
-                <td>{lecturer.fullname}</td>
-                <td>{lecturer.username}</td>
-                <td>
-                  <button className="btn text-info"
-                    data-bs-toggle="modal" data-bs-target="#infoModal"
-                    onClick={() => setLecturer(lecturer)}>
-                    Chi tiết
-                  </button>
-                </td>
-                <td>
-                  {lecturer.status === true
-                    ? <span className="text-success">Đã xác nhận</span>
-                    : <>
-                      <button className='btn btn-primary me-2'
-                        onClick={() => handleAcceptLecturer(lecturer)}>
-                        Xác nhận
-                      </button>
-                      <button className='btn btn-danger'
-                        data-bs-toggle="modal" data-bs-target="#refuseModal"
-                        onClick={() => setLecturer(lecturer)}>
-                        Từ chối
-                      </button>
-                    </>}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="row mt-4">
+          {lecturers.map(lecturer => (
+            <div key={lecturer._id} className='col-lg-4 mb-4'>
+              <div className="card">
+                <div className="card-header">
+                  <div className='d-flex justify-content-between'>
+                    <b>{lecturer.fullname}</b>
+                    <span>{lecturer.username.toUpperCase()}</span>
+                  </div>
+                </div>
+                <div className="card-body">
+                  <div className='d-flex justify-content-between'>
+                    <button className="btn text-info"
+                      data-bs-toggle="modal" data-bs-target="#infoModal"
+                      onClick={() => setLecturer(lecturer)}>
+                      Chi tiết
+                    </button>
+                    <div>
+                      {lecturer.status === true
+                        ? <span className="text-success">Đã xác nhận</span>
+                        : <>
+                          <button className='btn btn-primary me-2'
+                            onClick={() => handleAcceptLecturer(lecturer)}>
+                            Xác nhận
+                          </button>
+                          <button className='btn btn-danger'
+                            data-bs-toggle="modal" data-bs-target="#refuseModal"
+                            onClick={() => setLecturer(lecturer)}>
+                            Từ chối
+                          </button>
+                        </>}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
         <div className="modal fade" id="infoModal" tabIndex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
           <div className="modal-dialog">
             <div className="modal-content">

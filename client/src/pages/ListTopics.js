@@ -49,6 +49,18 @@ export default function ListTopics() {
         return desc
     }
 
+    const checkStatus = (limit, registered) => {
+        if (registered === 0) {
+            return 'text-black'
+        }
+
+        if (limit === registered) {
+            return 'text-danger'
+        } else {
+            return 'text-success'
+        }
+    }
+
     return (
         <Layout>
             <Link to="/create-topic" className="me-4">Thêm đề tài</Link>
@@ -58,7 +70,7 @@ export default function ListTopics() {
                 <div className="row mt-4">
                     {topics.map(topic => (
                         <div key={topic._id} className='col-lg-6 mb-4'>
-                            <div className="card">
+                            <div className={`card ${checkStatus(topic.limit, topic.registered)}`}>
                                 <div className="card-header">
                                     <div className="d-flex justify-content-between">
                                         <Link className="me-4" state={topic} to={`/detail-topic/${topic.slug}`}>

@@ -30,8 +30,8 @@ exports.getAllTopics = async (req, res, next) => {
 exports.getAllRegisters = async (req, res, next) => {
     const registers = await registerModel.find({ status: true })
         .populate('topic', 'title')
-        .populate('student', 'fullname')
-        .populate('lecturer', 'fullname')
+        .populate('student', 'fullname username')
+        .populate('lecturer', 'fullname username')
     res.json({ status: true, registers })
 }
 

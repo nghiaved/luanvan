@@ -105,12 +105,22 @@ export default function DetailTopic() {
                 </div>
                 {students.length > 0 && <>
                     <div className='display-6 mb-4'>Sinh viên đăng ký</div>
-                    <div className='mb-4'>
-                        {students.map(student => <div key={student._id}>
-                            <span className='me-2'>{student.fullname}</span>
-                            <span className='me-2'>{student.username.toUpperCase()}</span>
-                            <Link state={student} to='/list-tasks'>Chi tiết</Link>
-                        </div>)}
+                    <div className="row">
+                        {students.map(student => (
+                            <div key={student._id} className='col-lg-6 mb-4'>
+                                <div className="card">
+                                    <div className="card-header d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <span className='me-2'>{student.fullname}</span>
+                                            <span className='me-2'>{student.username.toUpperCase()}</span>
+                                        </div>
+                                        <Link state={student} to='/list-tasks'>
+                                            <button className="btn btn-outline-primary">Chi tiết</button>
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </>}
             </> : (

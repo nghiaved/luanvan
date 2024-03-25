@@ -64,11 +64,13 @@ export default function ListRegisters() {
                 <div className="row mt-4">
                     {registers.map(register => (
                         <div key={register._id} className='col-lg-6 mb-4'>
-                            <div className="card">
+                            <div className="card h-100">
                                 <div className="card-header">
                                     <div className="d-flex justify-content-between">
-                                        <b>{register.topic.title}</b>
-                                        <div className="card-text">
+                                        <Link className='text-nowrap overflow-hidden' state={register.topic} to={`/detail-topic/${register.topic.slug}`}>
+                                            <b>{register.topic.title}</b>
+                                        </Link>
+                                        <div className="card-text text-nowrap ms-2">
                                             {register.status === true
                                                 ? <span className="text-success">Đã xác nhận</span>
                                                 : <span className="text-danger">Chờ xác nhận</span>}
@@ -80,7 +82,7 @@ export default function ListRegisters() {
                                         Họ tên: {register.student.fullname}
                                     </p>
                                     <p className="card-text">
-                                        MSSV: {register.student.username}
+                                        MSSV: {register.student.username.toUpperCase()}
                                     </p>
                                     <p className='text-end'>
                                         {register.status === true ? (

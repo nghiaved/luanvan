@@ -35,6 +35,18 @@ export default function Home() {
         return desc
     }
 
+    const checkStatus = (limit, registered) => {
+        if (registered === 0) {
+            return 'text-black'
+        }
+
+        if (limit === registered) {
+            return 'text-danger disabled'
+        } else {
+            return 'text-success'
+        }
+    }
+
     return (
         <Layout>
             {data.topics?.length > 0 ? (<>
@@ -56,7 +68,7 @@ export default function Home() {
                         || item.lecturer.fullname.toLowerCase().includes(filter.toLowerCase())
                     ).map(topic => (
                         <div key={topic._id} className='col-lg-6 mb-4'>
-                            <div className="card">
+                            <div className={`card ${checkStatus(topic.limit, topic.registered)}`}>
                                 <div className="card-header">
                                     <Link to={`/profile/${topic.lecturer.username}`}>
                                         {topic.lecturer.fullname}
@@ -84,7 +96,7 @@ export default function Home() {
                                         </div>
                                     </div>
                                     <Link state={topic} to={`/detail-topic/${topic.slug}`}>
-                                        <button className="btn btn-outline-primary">Xem thêm</button>
+                                        <button disabled={topic.limit === topic.registered} className="btn btn-outline-primary">Xem thêm</button>
                                     </Link>
                                 </div>
                             </div>

@@ -51,44 +51,41 @@ export default function AdminTopics() {
     <AdminLayout>
       <div className='display-6'>Trang quản lý đề tài</div>
       {topics.length > 0 ? <>
-        <table className="table table-hover mt-4">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Tên đề tài</th>
-              <th scope="col">Tên giảng viên</th>
-              <th scope="col">Thông tin</th>
-              <th scope="col">Quản lý</th>
-            </tr>
-          </thead>
-          <tbody className="table-group-divider">
-            {topics.map((topic, index) => (
-              <tr key={topic._id}>
-                <th scope="row">{++index}</th>
-                <td>{topic.title}</td>
-                <td>{topic.lecturer.fullname}</td>
-                <td>
-                  <Link to={`/detail-topic/${topic.slug}`} className='text-info'>Chi tiết</Link>
-                </td>
-                <td>
-                  {topic.status === true
-                    ? <span className="text-success">Đã xác nhận</span>
-                    : <>
-                      <button className='btn btn-primary me-2'
-                        onClick={() => handleAcceptTopic(topic)}>
-                        Xác nhận
-                      </button>
-                      <button className='btn btn-danger'
-                        data-bs-toggle="modal" data-bs-target="#exampleModal"
-                        onClick={() => setTopic(topic)}>
-                        Từ chối
-                      </button>
-                    </>}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="row mt-4">
+          {topics.map(topic => (
+            <div key={topic._id} className='col-lg-4 mb-4'>
+              <div className="card h-100">
+                <div className="card-header">
+                  <h6 className="text-nowrap overflow-hidden mb-0">{topic.title}</h6>
+                </div>
+                <div className="card-body">
+                  <div className="d-flex justify-content-between mb-4">
+                    <span>{topic.lecturer.fullname}</span>
+                    <span>{topic.lecturer.username}</span>
+                  </div>
+                  <div className='d-flex justify-content-between'>
+                    <Link to={`/detail-topic/${topic.slug}`} className='text-info'>Chi tiết</Link>
+                    <div>
+                      {topic.status === true
+                        ? <span className="text-success">Đã xác nhận</span>
+                        : <>
+                          <button className='btn btn-primary me-2'
+                            onClick={() => handleAcceptTopic(topic)}>
+                            Xác nhận
+                          </button>
+                          <button className='btn btn-danger'
+                            data-bs-toggle="modal" data-bs-target="#exampleModal"
+                            onClick={() => setTopic(topic)}>
+                            Từ chối
+                          </button>
+                        </>}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
         <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div className="modal-dialog">
             <div className="modal-content">
