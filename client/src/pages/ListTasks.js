@@ -33,7 +33,8 @@ export default function ListTasks() {
                             end: new Date(task.end),
                             name: task.title,
                             progress: task.points || 0,
-                            id: task._id
+                            id: task._id,
+                            task
                         }
                     })
                     setGrantt({
@@ -75,11 +76,12 @@ export default function ListTasks() {
         <Layout>
             <Link state={student} to="/create-task" className="me-4">Thêm công việc</Link>
             <Link to="/list-topics">Danh sách đề tài</Link>
-            <div className='display-6 mt-4'>Công việc của "{student.fullname}"</div>
+            <h4 className='mt-4'>Sinh viên: "{student.fullname}"</h4>
             {tasks.length > 0 ? <>
                 <div className="row my-4">
                     <Gantt
                         tasks={grantt.data}
+                        onClick={(data) => navigate('/detail-task', { state: data.task })}
                         viewMode={ViewMode.Week}
                         listCellWidth=""
                         columnWidth={100}

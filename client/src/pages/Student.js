@@ -3,7 +3,7 @@ import Layout from '../components/Layout'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import ReactQuill from 'react-quill'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { ViewMode, Gantt } from "gantt-task-react";
 import { useGlobal } from '../utils/useGlobal'
 
@@ -13,6 +13,7 @@ export default function Student() {
     const [grantt, setGrantt] = useState([])
     const [fetchAgain, setFetchAgain] = useState(false)
     const [state] = useGlobal()
+    const navigate = useNavigate()
 
     const fetchApi = useCallback(async () => {
         const token = sessionStorage.getItem('token')
@@ -36,7 +37,8 @@ export default function Student() {
                                         end: new Date(task.end),
                                         name: task.title,
                                         progress: task.points || 0,
-                                        id: task._id
+                                        id: task._id,
+                                        task
                                     }))
                                     setGrantt(initGrantt)
                                 }
@@ -129,6 +131,7 @@ export default function Student() {
                     <div className='display-6 mb-4'>Biểu đồ đánh giá</div>
                     <Gantt
                         tasks={grantt}
+                        onClick={(data) => navigate('/detail-task', { state: data.task })}
                         viewMode={ViewMode.Week}
                         listCellWidth=""
                         columnWidth={100}
