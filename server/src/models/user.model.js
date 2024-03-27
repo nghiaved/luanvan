@@ -14,6 +14,10 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    isRegistered: {
+        type: Boolean,
+        default: false
+    },
     birth: String,
     sex: String,
     grade: String,

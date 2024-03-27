@@ -118,7 +118,7 @@ export default function Student() {
                                     <td>{task.end.substring(0, 10)}</td>
                                     <td>
                                         {task.status
-                                            ? <span className='text-success'>Đã nộp {task.points && `(${task.points}đ)`}</span>
+                                            ? <span className='text-success'>Đã nộp {task.points && `(${task.points}%)`}</span>
                                             : <span className='text-danger'>{timeRemaining(task.end)}</span>}
                                     </td>
                                     <td>

@@ -41,7 +41,7 @@ export default function Home() {
         }
 
         if (limit === registered) {
-            return 'text-danger disabled'
+            return 'full-registered'
         } else {
             return 'text-success'
         }

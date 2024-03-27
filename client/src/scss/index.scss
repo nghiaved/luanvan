@@ -90,13 +90,15 @@ a {
     font-size: 16px;
 }
 
-.text-danger.disabled {
-    a {
+.full-registered {
+
+    a,
+    p {
         color: #91a3ad;
     }
 
     button {
-        color: #91a3ad;
+        color: #91a3ad !important;
         border: none;
     }
 }

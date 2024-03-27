@@ -38,6 +38,8 @@ exports.login = async (req, res, next) => {
 
             if (user.isAdmin === true) {
                 tokenData.isAdmin = true
+            } else {
+                tokenData.isRegistered = user.isRegistered
             }
 
             const token = jwt.sign(tokenData, 'secretKey', { expiresIn: '2h' })

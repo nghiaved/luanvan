@@ -76,7 +76,7 @@ export default function ListTopics() {
                                         <Link className="me-4" state={topic} to={`/detail-topic/${topic.slug}`}>
                                             <b className="me-2">{topic.title}</b> ({topic.registered} / {topic.limit})
                                         </Link>
-                                        <div className="card-text">
+                                        <div className="card-text text-nowrap">
                                             {topic.status === true
                                                 ? <span className="text-success">Đã xác nhận</span>
                                                 : <span className="text-danger">Chờ xác nhận</span>}

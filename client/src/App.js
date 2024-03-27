@@ -88,7 +88,11 @@ function App() {
           <Route index element={
             token
               ? jwtDecode(token).status === true
-                ? <Home />
+                ? jwtDecode(token).isRegistered === true
+                  ? <Student />
+                  : jwtDecode(token).role === 1
+                    ? <ListTopics />
+                    : <Home />
                 : <Waiting />
               : <Navigate to='/login' />
           } />

@@ -42,7 +42,7 @@ export default function Login() {
                             <h6>Nguyễn Thành Nghĩa B2004736</h6>
                             <hr />
                             <b>Giảng viên hướng dẫn</b>
-                            <h6>Lâm Chí Nguyễn 001708</h6>
+                            <h6>Lâm Chí Nguyện 001708</h6>
                             <hr />
                             <p>Ngày báo cáo: 01-01-2024</p>
                         </div>
