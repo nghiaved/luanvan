@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { jwtDecode } from 'jwt-decode'
 import { toast } from 'react-toastify'
 import ReactQuill from 'react-quill'
+import { ViewMode, Gantt } from "gantt-task-react"
 import { socket } from '../utils/socket'
 import { useGlobal } from '../utils/useGlobal'
 
@@ -44,7 +45,35 @@ export default function DetailTopic() {
             const fetchStudents = async () => {
                 const res = await axios.get(`http://localhost:8000/api/registers/get-registers?topic=${topic._id}&lecturer=${jwtDecode(token)._id}`)
                 if (res.data.registers.length > 0) {
-                    setStudents(res.data.registers.map(register => register.student))
+                    const listStudents = res.data.registers.map(async item => {
+                        const resTasks = await axios.get('http://localhost:8000/api/tasks/get-tasks-by-student-lecturer', {
+                            params: {
+                                student: item.student._id,
+                                lecturer: jwtDecode(token)._id
+                            }
+                        })
+                        const tasks = resTasks.data.tasks
+                        if (resTasks.data.status === true && tasks.length > 0) {
+                            let totalCompleted = 0
+                            item.student.grantt = tasks.map(task => {
+                                if (task.status === true) ++totalCompleted
+                                return {
+                                    start: new Date(task.start),
+                                    end: new Date(task.end),
+                                    name: task.title,
+                                    progress: task.points || 0,
+                                    id: task._id,
+                                    task
+                                }
+                            })
+                            item.student.totalCount = tasks.length
+                            item.student.totalCompleted = totalCompleted
+                        }
+                        return item.student
+                    })
+                    Promise.all(listStudents)
+                        .then(res => setStudents(res))
+                        .catch(err => console.log(err))
                 }
             }
             fetchStudents()
@@ -107,7 +136,7 @@ export default function DetailTopic() {
                     <div className='display-6 mb-4'>Sinh viên đăng ký</div>
                     <div className="row">
                         {students.map(student => (
-                            <div key={student._id} className='col-lg-6 mb-4'>
+                            <div key={student._id} className='mb-4'>
                                 <div className="card">
                                     <div className="card-header d-flex justify-content-between align-items-center">
                                         <div>
@@ -117,6 +146,27 @@ export default function DetailTopic() {
                                         <Link state={student} to='/list-tasks'>
                                             <button className="btn btn-outline-primary">Chi tiết</button>
                                         </Link>
+                                    </div>
+                                    <div className='card-body'>
+                                        {student.grantt ? (
+                                            <Gantt
+                                                tasks={student.grantt}
+                                                onClick={(data) => navigate('/detail-task', { state: data.task })}
+                                                viewMode={ViewMode.Week}
+                                                listCellWidth=""
+                                                columnWidth={100}
+                                                rowHeight={50}
+                                                barBackgroundColor="#1c57a5"
+                                                barProgressColor="#198754"
+                                                fontSize={16}
+                                            />
+                                        ) : (
+                                            <div className='text-center'>Sinh viên hiện chưa có công việc nào.</div>
+                                        )}
+                                    </div>
+                                    <div className='card-footer text-end'>
+                                        <b className='me-2'>Tổng số công việc hoàn thành:</b>
+                                        <i>{student.totalCompleted || 0}/{student.totalCount || 0}</i>
                                     </div>
                                 </div>
                             </div>
