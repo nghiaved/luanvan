@@ -47,6 +47,18 @@ export default function AdminTopics() {
       .catch(err => console.log(err))
   }
 
+  const checkStatus = (limit, registered) => {
+    if (registered === 0) {
+      return 'text-black'
+    }
+
+    if (limit === registered) {
+      return 'text-primary'
+    } else {
+      return 'text-success'
+    }
+  }
+
   return (
     <AdminLayout>
       <div className='display-6'>Trang quản lý đề tài</div>
@@ -54,7 +66,7 @@ export default function AdminTopics() {
         <div className="row mt-4">
           {topics.map(topic => (
             <div key={topic._id} className='col-lg-4 mb-4'>
-              <div className="card h-100">
+              <div className={`card h-100 ${checkStatus(topic.limit, topic.registered)}`}>
                 <div className="card-header">
                   <h6 className="text-nowrap overflow-hidden mb-0">{topic.title}</h6>
                 </div>
@@ -81,6 +93,9 @@ export default function AdminTopics() {
                         </>}
                     </div>
                   </div>
+                </div>
+                <div className="card-footer">
+                  Số lượng đăng ký: {topic.registered}/{topic.limit}
                 </div>
               </div>
             </div>

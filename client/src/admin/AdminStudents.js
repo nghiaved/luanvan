@@ -58,6 +58,12 @@ export default function AdminStudents() {
                   </div>
                 </div>
                 <div className="card-body">
+                  <div className="my-3">
+                    {student.isRegistered === true
+                      ? <span className="text-success">Sinh viên đã đăng ký đề tài</span>
+                      : <span className="text-warning">Sinh viên chưa đăng ký đề tài</span>
+                    }
+                  </div>
                   <div className='d-flex justify-content-between'>
                     <button className="btn text-info"
                       data-bs-toggle="modal" data-bs-target="#infoModal"
