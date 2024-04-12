@@ -25,7 +25,8 @@ const userSchema = new mongoose.Schema({
     course: String,
     faculty: String,
     email: String,
-    phone: String
+    phone: String,
+    avatar: String,
 })
 
 const hashPassword = async function () {

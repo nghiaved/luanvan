@@ -3,11 +3,13 @@ import Layout from '../components/Layout'
 import { Link } from 'react-router-dom'
 import { jwtDecode } from 'jwt-decode'
 import { toast } from 'react-toastify'
+import FileBase64 from 'react-file-base64'
 import axios from 'axios'
 
 export default function Account() {
     const token = sessionStorage.getItem('token')
     const [user, setUser] = useState({})
+    const [image, setImage] = useState()
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -21,8 +23,7 @@ export default function Account() {
         e.preventDefault()
 
         const { birth, sex, grade, major, course, faculty, email, phone } = e.target
-
-        await axios.put(`http://localhost:8000/api/users/update-info/${jwtDecode(token)._id}`, {
+        const data = {
             birth: birth?.value,
             sex: sex?.value,
             grade: grade?.value,
@@ -31,7 +32,13 @@ export default function Account() {
             faculty: faculty?.value,
             email: email?.value,
             phone: phone?.value
-        })
+        }
+
+        if (image) {
+            data.avatar = image
+        }
+
+        await axios.put(`http://localhost:8000/api/users/update-info/${jwtDecode(token)._id}`, data)
             .then(res => {
                 if (res.data.status === true) {
                     toast.success(res.data.message)
@@ -69,6 +76,7 @@ export default function Account() {
                 <div className="col-xl-4 col-lg-4 mb-4">
                     <div className="card">
                         <div className="card-body pt-4 d-flex flex-column align-items-center">
+                            <img className='img-avatar mb-3' alt={user.fullname} src={user.avatar ? user.avatar : '/no-avatar.png'} />
                             <h4>{user.fullname}</h4>
                             <h6>{user.username?.toUpperCase()}</h6>
                             <p>
@@ -159,6 +167,26 @@ export default function Account() {
                                 </div>
                                 <div className="tab-pane fade" id="account-edit">
                                     <form onSubmit={handleUpdateInfo}>
+                                        <div className="row mb-3">
+                                            <label htmlFor="profileImage" className="col-md-4 col-lg-3 col-form-label">Ảnh đại diện</label>
+                                            <div className="col-8 d-flex align-items-center">
+                                                {image
+                                                    ? <img className='img-avatar' src={image} alt={user.fullname} />
+                                                    : <img className='img-avatar' src={user.avatar ? user.avatar : "/no-avatar.png"} alt={user.fullname} />}
+                                                <div className="ms-4 d-flex flex-column">
+                                                    <label className='set-upload-img mb-2'>
+                                                        <FileBase64
+                                                            multiple={false}
+                                                            onDone={({ base64 }) => {
+                                                                setImage(base64)
+                                                            }}
+                                                        />
+                                                        <i className="btn btn-warning btn-sm bi bi-upload"></i>
+                                                    </label>
+                                                    <i onClick={() => setImage()} className="btn btn-danger btn-sm bi bi-trash"></i>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div className="row mb-3">
                                             <label htmlFor="birth" className="col-3 col-form-label">Ngày sinh</label>
                                             <div className="col-8">

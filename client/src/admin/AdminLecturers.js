@@ -58,6 +58,7 @@ export default function AdminLecturers() {
                   </div>
                 </div>
                 <div className="card-body">
+                  <img className='img-avatar mb-3' src={lecturer.avatar ? lecturer.avatar : "/no-avatar.png"} alt={lecturer.fullname} />
                   <div className='d-flex justify-content-between'>
                     <button className="btn text-info"
                       data-bs-toggle="modal" data-bs-target="#infoModal"

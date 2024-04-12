@@ -118,3 +118,14 @@ a {
         width: 300px;
     }
 }
+
+.img-avatar {
+    display: block;
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+}
+
+.set-upload-img input[type="file"] {
+    display: none;
+}

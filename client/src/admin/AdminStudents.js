@@ -58,6 +58,7 @@ export default function AdminStudents() {
                   </div>
                 </div>
                 <div className="card-body">
+                  <img className='img-avatar mb-2' src={student.avatar ? student.avatar : "/no-avatar.png"} alt={student.fullname} />
                   <div className="my-3">
                     {student.isRegistered === true
                       ? <span className="text-success">Sinh viên đã đăng ký đề tài</span>
