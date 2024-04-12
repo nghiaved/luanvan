@@ -109,7 +109,7 @@ export default function AdminStudents() {
                     <tbody className="table-group-divider">
                       <tr>
                         <th scope="row">Mã số SV</th>
-                        <td>{student.username}</td>
+                        <td>{student.username?.toUpperCase()}</td>
                       </tr>
                       <tr>
                         <th scope="row">Họ tên</th>

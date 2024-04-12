@@ -34,7 +34,7 @@ a {
         justify-content: space-between;
         font-size: 20px;
         background: #3A454b;
-        margin-top: 20px;
+        margin-top: 4px;
         color: white;
 
         &>a {
@@ -54,7 +54,8 @@ a {
     padding: 40px;
     border-radius: 5px;
     background: #eee;
-    width: 50%;
+    width: 100%;
+    max-width: 400px;
     margin: 0 auto;
 
     @media (max-width: 991px) {

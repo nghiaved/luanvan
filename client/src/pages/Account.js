@@ -70,7 +70,7 @@ export default function Account() {
                     <div className="card">
                         <div className="card-body pt-4 d-flex flex-column align-items-center">
                             <h4>{user.fullname}</h4>
-                            <h6>{user.username}</h6>
+                            <h6>{user.username?.toUpperCase()}</h6>
                             <p>
                                 Trạng thái: {user.status
                                     ? <span className='text-success'>Đã xác nhận</span>
@@ -112,7 +112,7 @@ export default function Account() {
                                         <tbody className="table-group-divider">
                                             <tr>
                                                 <th scope="row">Mã số {user.role === 1 ? 'CB' : 'SV'}</th>
-                                                <td>{user.username}</td>
+                                                <td>{user.username?.toUpperCase()}</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Họ tên</th>

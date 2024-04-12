@@ -4,6 +4,8 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useGlobal } from '../utils/useGlobal'
 import { toast } from 'react-toastify'
+import TopBar from './TopBar'
+import Footer from './Footer'
 
 export default function Layout({ children }) {
     const token = sessionStorage.getItem('token')
@@ -67,6 +69,7 @@ export default function Layout({ children }) {
 
     return (
         <div className="layout-wrapper">
+            <TopBar />
             <header>
                 <Link to='/'>Trang chủ</Link>
                 {token ? (
@@ -143,6 +146,8 @@ export default function Layout({ children }) {
                 )}
             </header>
             <main>{children}</main>
+            <hr className='my-2' />
+            <Footer />
         </div>
     )
 }
