@@ -4,6 +4,7 @@ import axios from "axios"
 
 export default function AdminProjects() {
   const [registers, setRegisters] = useState([])
+  const [filter, setFilter] = useState('')
 
   const fetchRegisters = useCallback(async () => {
     await axios.get('http://localhost:8000/api/admin/get-all-registers')
@@ -19,12 +20,35 @@ export default function AdminProjects() {
     fetchRegisters()
   }, [fetchRegisters])
 
+  const handleFilter = item => {
+    if (filter === '1') return item.final === true
+    if (filter === '2') return item.final === false
+    if (filter === '3') return item.final === undefined
+    return filter.toLowerCase() === '' ? item
+      : item.topic.title.toLowerCase().includes(filter.toLowerCase())
+      || item.lecturer.username.toLowerCase().includes(filter.toLowerCase())
+      || item.lecturer.fullname.toLowerCase().includes(filter.toLowerCase())
+      || item.student.username.toLowerCase().includes(filter.toLowerCase())
+      || item.student.fullname.toLowerCase().includes(filter.toLowerCase())
+  }
+
   return (
     <AdminLayout>
-      <h3>Trang quản lý đồ án</h3>
+      <div className="d-flex justify-content-between align-items-center">
+        <h3>Trang quản lý đồ án</h3>
+        <div className="flex-fill d-flex justify-content-end gap-4">
+          <select onChange={(e) => setFilter(e.target.value)} className="form-select home-filter">
+            <option defaultChecked value=''>Tất cả</option>
+            <option value='1'>Đã hoàn thành</option>
+            <option value='2'>Không hoàn thành</option>
+            <option value='3'>Đang thực hiện</option>
+          </select>
+          <input onChange={e => setFilter(e.target.value)} className="form-control home-filter" placeholder="Tìm kiếm..." />
+        </div>
+      </div>
       {registers.length > 0 ? <>
         <div className="row mt-4">
-          {registers.map(register => (
+          {registers.filter(item => handleFilter(item)).map(register => (
             <div key={register._id} className='col-lg-6 mb-4'>
               <div className="card h-100">
                 <div className="card-header">

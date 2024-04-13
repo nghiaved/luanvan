@@ -2,12 +2,12 @@ import Layout from '../components/Layout'
 import { useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import React, { useCallback, useEffect, useState } from 'react'
-import ReactQuill from 'react-quill'
 import { socket } from '../utils/socket'
 import { jwtDecode } from 'jwt-decode'
 import { toast } from 'react-toastify'
 import { saveAs } from 'file-saver'
 import { useGlobal } from '../utils/useGlobal'
+import Description from '../components/Description'
 
 export default function DetailTask() {
     const token = sessionStorage.getItem('token')
@@ -122,20 +122,7 @@ export default function DetailTask() {
                         <b className='me-2'>Tên công việc:</b>
                         <i>{task.title}</i>
                     </h5>
-                    <div className="accordion mb-2">
-                        <div className="accordion-item">
-                            <h2 className="accordion-header" id="descriptionHeading">
-                                <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#descriptionTask" aria-expanded="true" aria-controls="descriptionTask">
-                                    Mô tả công việc
-                                </button>
-                            </h2>
-                            <div id="descriptionTask" className="accordion-collapse collapse show" aria-labelledby="descriptionHeading" data-bs-parent="#accordionExample">
-                                <div className="accordion-body">
-                                    <ReactQuill value={task.description} readOnly theme="bubble" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <Description desc={task.description} />
                     <div className='d-flex mb-2'>
                         <div className='me-5'>
                             <b className='me-2'>Ngày bắt đầu:</b>

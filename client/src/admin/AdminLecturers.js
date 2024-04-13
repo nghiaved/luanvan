@@ -6,6 +6,7 @@ import axios from "axios"
 export default function AdminLecturers() {
   const [lecturers, setLecturers] = useState([])
   const [lecturer, setLecturer] = useState(null)
+  const [filter, setFilter] = useState('')
 
   const fetchLecturers = useCallback(async () => {
     await axios.get('http://localhost:8000/api/admin/get-all-lecturers')
@@ -43,12 +44,30 @@ export default function AdminLecturers() {
       .catch(err => console.log(err))
   }
 
+  const handleFilter = item => {
+    if (filter === '1') return item.status === true
+    if (filter === '2') return item.status === false
+    return filter.toLowerCase() === '' ? item
+      : item.username.toLowerCase().includes(filter.toLowerCase())
+      || item.fullname.toLowerCase().includes(filter.toLowerCase())
+  }
+
   return (
     <AdminLayout>
-      <h3>Trang quản lý giảng viên</h3>
+      <div className="d-flex justify-content-between align-items-center">
+        <h3>Trang quản lý giảng viên</h3>
+        <div className="flex-fill d-flex justify-content-end gap-4">
+          <select onChange={(e) => setFilter(e.target.value)} className="form-select home-filter">
+            <option defaultChecked value=''>Tất cả</option>
+            <option value='1'>Đã xác nhận</option>
+            <option value='2'>Chờ phản hồi</option>
+          </select>
+          <input onChange={e => setFilter(e.target.value)} className="form-control home-filter" placeholder="Tìm kiếm..." />
+        </div>
+      </div>
       {lecturers.length > 0 ? <>
         <div className="row mt-4">
-          {lecturers.map(lecturer => (
+          {lecturers.filter(item => handleFilter(item)).map(lecturer => (
             <div key={lecturer._id} className='col-lg-4 mb-4'>
               <div className="card">
                 <div className="card-header">

@@ -8,6 +8,7 @@ import { Link } from "react-router-dom"
 export default function AdminTopics() {
   const [topics, setTopics] = useState([])
   const [topic, setTopic] = useState(null)
+  const [filter, setFilter] = useState('')
 
   const fetchTopics = useCallback(async () => {
     await axios.get('http://localhost:8000/api/admin/get-all-topics')
@@ -59,13 +60,32 @@ export default function AdminTopics() {
     }
   }
 
+  const handleFilter = item => {
+    if (filter === '1') return item.status === true
+    if (filter === '2') return item.status === false
+    return filter.toLowerCase() === '' ? item
+      : item.title.toLowerCase().includes(filter.toLowerCase())
+      || item.lecturer.username.toLowerCase().includes(filter.toLowerCase())
+      || item.lecturer.fullname.toLowerCase().includes(filter.toLowerCase())
+  }
+
   return (
     <AdminLayout>
-      <h3>Trang quản lý đề tài</h3>
+      <div className="d-flex justify-content-between align-items-center">
+        <h3>Trang quản lý đề tài</h3>
+        <div className="flex-fill d-flex justify-content-end gap-4">
+          <select onChange={(e) => setFilter(e.target.value)} className="form-select home-filter">
+            <option defaultChecked value=''>Tất cả</option>
+            <option value='1'>Đã xác nhận</option>
+            <option value='2'>Chờ phản hồi</option>
+          </select>
+          <input onChange={e => setFilter(e.target.value)} className="form-control home-filter" placeholder="Tìm kiếm..." />
+        </div>
+      </div>
       {topics.length > 0 ? <>
         <div className="row mt-4">
-          {topics.map(topic => (
-            <div key={topic._id} className='col-lg-4 mb-4'>
+          {topics.filter(item => handleFilter(item)).map(topic => (
+            <div key={topic._id} className='col-lg-6 mb-4'>
               <div className={`card h-100 ${checkStatus(topic.limit, topic.registered)}`}>
                 <div className="card-header">
                   <h6 className="text-nowrap overflow-hidden mb-0">{topic.title}</h6>

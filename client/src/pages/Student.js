@@ -2,11 +2,11 @@ import React, { useCallback, useEffect, useState } from 'react'
 import Layout from '../components/Layout'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
-import ReactQuill from 'react-quill'
 import { useNavigate } from 'react-router-dom'
 import { useGlobal } from '../utils/useGlobal'
 import Progress from '../components/Progress'
 import ListTasks from '../components/ListTasks'
+import Description from '../components/Description'
 
 export default function Student() {
     const [register, setRegister] = useState(null)
@@ -72,20 +72,7 @@ export default function Student() {
                     <b className='me-2'>Tên đề tài:</b>
                     <i>{register.topic?.title}</i>
                 </div>
-                <div className="accordion mb-2">
-                    <div className="accordion-item">
-                        <h2 className="accordion-header" id="descriptionHeading">
-                            <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#descriptionTopic" aria-expanded="true" aria-controls="descriptionTopic">
-                                Mô tả đề tài
-                            </button>
-                        </h2>
-                        <div id="descriptionTopic" className="accordion-collapse collapse show" aria-labelledby="descriptionHeading" data-bs-parent="#accordionExample">
-                            <div className="accordion-body">
-                                <ReactQuill value={register.topic?.description} readOnly theme="bubble" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <Description desc={register.topic?.description} />
                 <div className='mb-2'>
                     <b className='me-2'>Giảng viên hướng dẫn:</b>
                     <i>{register.lecturer?.username}</i>
