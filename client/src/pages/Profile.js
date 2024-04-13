@@ -18,12 +18,13 @@ export default function Profile() {
     return (
         <Layout>
             <div className='d-flex flex-column align-items-center'>
+                <img className='img-avatar mb-2' src={user.avatar ? user.avatar : "/no-avatar.png"} alt={user.fullname} />
                 <table className="table" style={{ maxWidth: 500 }}>
                     <thead>
                         <tr>
                             <th colSpan={2} scope="col">
                                 <h3 className='text-center'>
-                                    Thông tin cá nhân
+                                    {user.fullname}
                                 </h3>
                             </th>
                         </tr>
@@ -31,11 +32,7 @@ export default function Profile() {
                     <tbody className="table-group-divider">
                         <tr>
                             <th scope="row">Mã số {user.role === 1 ? 'CB' : 'SV'}</th>
-                            <td>{user.username}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Họ tên</th>
-                            <td>{user.fullname}</td>
+                            <td>{user.username?.toUpperCase()}</td>
                         </tr>
                         <tr>
                             <th scope="row">Ngày sinh</th>

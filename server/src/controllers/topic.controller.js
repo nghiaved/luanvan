@@ -26,7 +26,7 @@ exports.getTopicsByLecturer = async (req, res, next) => {
 
 exports.getAllTopics = async (req, res, next) => {
     const topics = await topicModel.find()
-        .populate('lecturer', 'fullname username')
+        .populate('lecturer', 'fullname username avatar')
     res.json({ status: true, topics })
 }
 

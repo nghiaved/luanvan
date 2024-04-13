@@ -43,7 +43,7 @@ export default function CreateTask() {
 
     return (
         <Layout>
-            <div className='display-6'>Phân công đến "{student.fullname}"</div>
+            <h3>Phân công đến "{student.fullname}"</h3>
             <form className='mt-4' onSubmit={handleAssignTask}>
                 <div className="mb-3">
                     <label htmlFor="title" className="form-label">Tên công việc</label>

@@ -23,15 +23,15 @@ exports.getAllLecturers = async (req, res, next) => {
 
 exports.getAllTopics = async (req, res, next) => {
     const topics = await topicModel.find()
-        .populate('lecturer', 'fullname username')
+        .populate('lecturer', 'fullname username avatar')
     res.json({ status: true, topics })
 }
 
 exports.getAllRegisters = async (req, res, next) => {
     const registers = await registerModel.find({ status: true })
         .populate('topic', 'title')
-        .populate('student', 'fullname username')
-        .populate('lecturer', 'fullname username')
+        .populate('student', 'fullname username avatar')
+        .populate('lecturer', 'fullname username avatar')
     res.json({ status: true, registers })
 }
 

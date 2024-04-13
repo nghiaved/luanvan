@@ -14,7 +14,8 @@ const taskSchema = new mongoose.Schema({
         ref: 'User'
     },
     status: Boolean,
-    points: Number
+    points: Number,
+    note: String
 })
 
 const Task = mongoose.models.Task || mongoose.model('Task', taskSchema)

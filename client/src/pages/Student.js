@@ -3,9 +3,10 @@ import Layout from '../components/Layout'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import ReactQuill from 'react-quill'
-import { Link, useNavigate } from 'react-router-dom'
-import { ViewMode, Gantt } from "gantt-task-react";
+import { useNavigate } from 'react-router-dom'
 import { useGlobal } from '../utils/useGlobal'
+import Progress from '../components/Progress'
+import ListTasks from '../components/ListTasks'
 
 export default function Student() {
     const [register, setRegister] = useState(null)
@@ -20,13 +21,18 @@ export default function Student() {
         await axios.get('http://localhost:8000/api/registers/get-register-by-student/' + jwtDecode(token)._id)
             .then(async resRegister => {
                 if (resRegister.data.status === true) {
-                    setRegister(resRegister.data.register)
+                    const isRegistered = resRegister.data.register
+                    if (!isRegistered) {
+                        navigate('/')
+                    } else {
+                        setRegister(isRegistered)
+                    }
 
-                    if (resRegister.data.register) {
+                    if (isRegistered) {
                         await axios.get('http://localhost:8000/api/tasks/get-tasks-by-student-lecturer', {
                             params: {
                                 student: jwtDecode(token)._id,
-                                lecturer: resRegister.data.register.lecturer._id
+                                lecturer: isRegistered.lecturer._id
                             }
                         })
                             .then(resTasks => {
@@ -48,7 +54,7 @@ export default function Student() {
                 }
             })
             .catch(err => console.log(err))
-    }, [])
+    }, [navigate])
 
     useEffect(() => {
         if (state.fetchAgain !== fetchAgain) {
@@ -58,16 +64,10 @@ export default function Student() {
         fetchApi()
     }, [fetchApi, fetchAgain, state.fetchAgain])
 
-    const timeRemaining = (date) => {
-        const timeRemaining = new Date(date).getTime() - Date.now()
-        let days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24))
-        return ++days > 0 ? `Còn ${days} ngày` : 'Đã hết hạn'
-    }
-
     return (
         <Layout>
-            {register ? <>
-                <div className='display-6 mb-4'>Đề tài đăng ký</div>
+            {register && <>
+                <h3 className='mb-4'>Đề tài đăng ký</h3>
                 <div className='mb-2'>
                     <b className='me-2'>Tên đề tài:</b>
                     <i>{register.topic?.title}</i>
@@ -97,60 +97,32 @@ export default function Student() {
                     </span>
                 </div>
                 {register.status === false ? <></> : tasks.length > 0 ? <>
-                    <div className='display-6 mb-4'>Danh sách công việc</div>
-                    <table className="table table-hover mt-4">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Tên công việc</th>
-                                <th scope="col">Ngày bắt đầu</th>
-                                <th scope="col">Ngày kết thúc</th>
-                                <th scope="col">Trạng thái</th>
-                                <th scope="col"></th>
-                            </tr>
-                        </thead>
-                        <tbody className="table-group-divider">
-                            {tasks.map((task, index) => (
-                                <tr key={task._id}>
-                                    <th scope="row">{++index}</th>
-                                    <td>{task.title}</td>
-                                    <td>{task.start.substring(0, 10)}</td>
-                                    <td>{task.end.substring(0, 10)}</td>
-                                    <td>
-                                        {task.status
-                                            ? <span className='text-success'>Đã nộp {task.points && `(${task.points}%)`}</span>
-                                            : <span className='text-danger'>{timeRemaining(task.end)}</span>}
-                                    </td>
-                                    <td>
-                                        <Link state={task} to={`/detail-task`}>Chi tiết</Link>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                    <div className='display-6 mb-4'>Biểu đồ đánh giá</div>
-                    <Gantt
-                        tasks={grantt}
-                        onClick={(data) => navigate('/detail-task', { state: data.task })}
-                        viewMode={ViewMode.Week}
-                        listCellWidth=""
-                        columnWidth={100}
-                        rowHeight={50}
-                        barBackgroundColor="#1c57a5"
-                        barProgressColor="#198754"
-                        fontSize={16}
-                    />
+                    <ul className="nav nav-tabs nav-tabs-bordered">
+                        <li className="nav-item mt-2">
+                            <button className="nav-link active" data-bs-toggle="tab" data-bs-target="#overview">Tổng quan</button>
+                        </li>
+                        <li className="nav-item mt-2">
+                            <button className="nav-link" data-bs-toggle="tab" data-bs-target="#list-tasks">Danh sách công việc</button>
+                        </li>
+                    </ul>
+                    <div className="tab-content pt-4">
+                        <div className="tab-pane fade show active" id="overview">
+                            <h3 className='mb-4'>Tiến độ thực hiện</h3>
+                            <Progress data={grantt} />
+                        </div>
+                        <div className="tab-pane fade show" id="list-tasks">
+                            <ListTasks data={tasks} />
+                        </div>
+                    </div>
                     {register.final === undefined || register.final === null ? <></> : register.final === true ? (
-                        <div className='display-6 text-success'>Đề tài của bạn đã hoàn thành!</div>
+                        <h3 className='text-success mt-4'>Đề tài của bạn đã hoàn thành!</h3>
                     ) : (
-                        <div className='display-6 text-danger'>Đề tài của bạn đã bị chấm dứt!</div>
+                        <h3 className='text-danger mt-4'>Đề tài của bạn đã bị chấm dứt!</h3>
                     )}
                 </> : (
                     <div className="mt-4">Bạn chưa có công việc nào.</div>
                 )}
-            </> : (
-                <div className='mt-4'>Bạn chưa đăng ký đề tài nào.</div>
-            )}
+            </>}
         </Layout>
     )
 }

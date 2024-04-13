@@ -89,10 +89,9 @@ export default function DetailTask() {
 
     const handleEvaluateTask = async (e) => {
         e.preventDefault()
-        if (!e.target.points) return
-
         const points = e.target.points.value
-        await axios.patch('http://localhost:8000/api/tasks/evaluate-task/' + task._id, { points })
+        const note = e.target.note.value
+        await axios.patch('http://localhost:8000/api/tasks/evaluate-task/' + task._id, { points, note })
             .then(res => {
                 if (res.data.status === true) {
                     setTask(task => ({ ...task, points }))
@@ -108,11 +107,21 @@ export default function DetailTask() {
         <Layout>
             {task ? (
                 <div className='mb-4'>
-                    <div className='display-6 mb-4'>Thông tin công việc</div>
-                    <div className='mb-2'>
+                    <div className='d-flex justify-content-between align-items-center'>
+                        <h3 className='mb-4'>Thông tin công việc</h3>
+                        <div className='text-end'>
+                            {task.points
+                                ? <>
+                                    <h4 className='text-success'>Đã hoàn thành ({task.points}%)!</h4>
+                                    <p>{task.note && `Ghi chú: ${task.note}`}</p>
+                                </>
+                                : <h4 className='text-danger'>Chưa có đánh giá!</h4>}
+                        </div>
+                    </div>
+                    <h5>
                         <b className='me-2'>Tên công việc:</b>
                         <i>{task.title}</i>
-                    </div>
+                    </h5>
                     <div className="accordion mb-2">
                         <div className="accordion-item">
                             <h2 className="accordion-header" id="descriptionHeading">
@@ -173,10 +182,16 @@ export default function DetailTask() {
                                         <button name='close' type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div className="modal-body">
-                                        <div className="row">
+                                        <div className="row mb-3">
                                             <label htmlFor="colFormLabel" className="col col-form-label">Nhập số điểm (1 - 100): </label>
                                             <div className="col">
                                                 <input required name='points' type="number" min={0} max={100} className="form-control" id="colFormLabel" />
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <label htmlFor="colFormLabel" className="col col-form-label">Ghi chú: </label>
+                                            <div className="col">
+                                                <textarea required name='note' type="text" className="form-control" id="colFormLabel" />
                                             </div>
                                         </div>
                                     </div>

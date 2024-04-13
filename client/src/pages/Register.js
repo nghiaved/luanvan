@@ -22,7 +22,7 @@ export default function Register() {
 
     return (
         <AuthLayout action={{ name: 'Đăng nhập', path: '/login' }}>
-            <div className='text-center display-6 mb-4'>Đăng ký</div>
+            <h3 className='text-center mb-4'>Đăng ký</h3>
             <form className='form-login' onSubmit={handleRegister}>
                 <div className="form-group mb-4">
                     <input name='fullname' required autoComplete="off" type="text" className="form-control" placeholder="Họ và tên" />

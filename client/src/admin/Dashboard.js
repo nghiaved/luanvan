@@ -39,7 +39,7 @@ export default function Dashboard() {
 
     return (
         <AdminLayout>
-            <div className='display-6 text-center'>Hệ thống quản lý luận văn!</div>
+            <h3 className='text-center'>Hệ thống quản lý luận văn!</h3>
             <div className='row mt-4'>
                 <div className='col-6'>
                     <div className="card">

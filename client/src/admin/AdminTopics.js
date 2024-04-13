@@ -61,7 +61,7 @@ export default function AdminTopics() {
 
   return (
     <AdminLayout>
-      <div className='display-6'>Trang quản lý đề tài</div>
+      <h3>Trang quản lý đề tài</h3>
       {topics.length > 0 ? <>
         <div className="row mt-4">
           {topics.map(topic => (
@@ -72,8 +72,11 @@ export default function AdminTopics() {
                 </div>
                 <div className="card-body">
                   <div className="d-flex justify-content-between mb-4">
-                    <span>{topic.lecturer.fullname}</span>
-                    <span>{topic.lecturer.username}</span>
+                    <div>
+                      <h6>{topic.lecturer.fullname}</h6>
+                      <span>{topic.lecturer.username}</span>
+                    </div>
+                    <img className='img-avatar mb-2' src={topic.lecturer.avatar ? topic.lecturer.avatar : "/no-avatar.png"} alt={topic.lecturer.fullname} />
                   </div>
                   <div className='d-flex justify-content-between'>
                     <Link to={`/detail-topic/${topic.slug}`} className='text-info'>Chi tiết</Link>

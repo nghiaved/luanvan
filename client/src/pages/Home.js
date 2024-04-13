@@ -2,7 +2,6 @@ import Layout from "../components/Layout"
 import { Link } from 'react-router-dom'
 import React, { useCallback, useEffect, useState } from "react"
 import axios from "axios"
-import { Doughnut } from 'react-chartjs-2'
 
 export default function Home() {
     const [data, setData] = useState({})
@@ -49,19 +48,18 @@ export default function Home() {
 
     return (
         <Layout>
+            <h4 className="text-danger">Hiện tại, bạn chưa đăng ký đề tài nào!</h4>
             {data.topics?.length > 0 ? (<>
-                <div className="d-flex justify-content-between mb-4">
+                <div className="d-flex justify-content-between my-4">
                     <select onChange={(e) => setFilter(e.target.value)} className="form-select home-filter">
                         <option defaultChecked value=''>Tất cả</option>
                         {data.lecturers?.map((item, index) => (
-                            <option value={item} key={index}>
-                                {item}
-                            </option>
+                            <option value={item} key={index}>{item}</option>
                         ))}
                     </select>
                     <input onChange={e => setFilter(e.target.value)} className="form-control home-filter" placeholder="Tìm kiếm..." />
                 </div>
-                <div className='display-6 mb-4'>Danh sách đề tài</div>
+                <h3 className='mb-4'>Danh sách đề tài</h3>
                 <div className="row">
                     {data.topics?.filter(item => filter.toLowerCase() === '' ? item
                         : item.title.toLowerCase().includes(filter.toLowerCase())
@@ -69,7 +67,7 @@ export default function Home() {
                     ).map(topic => (
                         <div key={topic._id} className='col-lg-6 mb-4'>
                             <div className={`card ${checkStatus(topic.limit, topic.registered)}`}>
-                                <div className="card-header">
+                                <div className="card-header text-end">
                                     <Link to={`/profile/${topic.lecturer.username}`}>
                                         {topic.lecturer.fullname}
                                     </Link>
@@ -84,15 +82,9 @@ export default function Home() {
                                             </h5>
                                             <p className="card-text">{convertDesc(topic.description)}</p>
                                         </div>
-                                        <div style={{ width: 120, height: 120 }}>
-                                            <Doughnut data={{
-                                                labels: ["Đã đăng ký", "Còn trống",],
-                                                datasets: [{
-                                                    backgroundColor: ["#3e95cd", "#1c57a5"],
-                                                    data: [topic.registered, topic.limit - topic.registered]
-                                                }]
-                                            }} />
-                                            <p style={{ fontSize: 14 }} className="mt-3 text-end">Số lượng: {topic.registered}/{topic.limit}</p>
+                                        <div className="ms-3">
+                                            <img className='img-avatar' src={topic.lecturer.avatar ? topic.lecturer.avatar : "/no-avatar.png"} alt={topic.lecturer.fullname} />
+                                            <p style={{ fontSize: 14 }} className="mt-3 text-nowrap text-end">Số lượng: {topic.registered}/{topic.limit}</p>
                                         </div>
                                     </div>
                                     <Link state={topic} to={`/detail-topic/${topic.slug}`}>

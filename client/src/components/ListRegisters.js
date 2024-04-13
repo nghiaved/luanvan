@@ -1,18 +1,17 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import Layout from '../components/Layout'
-import axios from 'axios'
-import { jwtDecode } from 'jwt-decode'
 import { Link } from 'react-router-dom'
+import React, { useCallback, useEffect, useState } from "react"
+import { jwtDecode } from "jwt-decode"
 import { toast } from 'react-toastify'
 import { useGlobal } from '../utils/useGlobal'
 import { socket } from '../utils/socket'
+import axios from "axios"
 
 export default function ListRegisters() {
     const token = sessionStorage.getItem('token')
+    const [fetchAgain, setFetchAgain] = useState(false)
     const [registers, setRegisters] = useState([])
     const [action, setAction] = useState({})
     const [state] = useGlobal()
-    const [fetchAgain, setFetchAgain] = useState(false)
 
     const fetchRegisters = useCallback(async (userId) => {
         await axios.get('http://localhost:8000/api/registers/get-registers-by-lecturer/' + userId)
@@ -57,9 +56,8 @@ export default function ListRegisters() {
     }
 
     return (
-        <Layout>
-            <Link to="/list-topics">Danh sách đề tài</Link>
-            <div className='display-6 mt-4'>Danh sách đăng ký</div>
+        <>
+            <h3>Danh sách đăng ký</h3>
             {registers.length > 0 ? (<>
                 <div className="row mt-4">
                     {registers.map(register => (
@@ -78,12 +76,17 @@ export default function ListRegisters() {
                                     </div>
                                 </div>
                                 <div className="card-body">
-                                    <p className="card-text mb-0">
-                                        Họ tên: {register.student.fullname}
-                                    </p>
-                                    <p className="card-text">
-                                        MSSV: {register.student.username.toUpperCase()}
-                                    </p>
+                                    <div className='d-flex justify-content-between mb-3'>
+                                        <div>
+                                            <p className="card-text mb-0">
+                                                Họ tên: {register.student.fullname}
+                                            </p>
+                                            <p className="card-text">
+                                                MSSV: {register.student.username.toUpperCase()}
+                                            </p>
+                                        </div>
+                                        <img className='img-avatar mb-2' src={register.student.avatar ? register.student.avatar : "/no-avatar.png"} alt={register.student.fullname} />
+                                    </div>
                                     <p className='text-end'>
                                         {register.status === true ? (
                                             <Link className='ms-2' state={register.student} to='/list-tasks'>Công việc</Link>
@@ -136,6 +139,6 @@ export default function ListRegisters() {
             </>) : (
                 <div className='mt-4'>Chưa có sinh viên nào đăng ký đề tài.</div>
             )}
-        </Layout>
+        </>
     )
 }

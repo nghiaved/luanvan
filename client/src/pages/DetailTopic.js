@@ -106,7 +106,7 @@ export default function DetailTopic() {
 
     return (
         <Layout>
-            <div className='display-6 mb-4'>Thông tin đề tài</div>
+            <h3 className='mb-4'>Thông tin đề tài</h3>
             {topic ? <>
                 <div className='mb-4'>
                     <div className='mb-2'>
@@ -133,7 +133,7 @@ export default function DetailTopic() {
                     </div>
                 </div>
                 {students.length > 0 && <>
-                    <div className='display-6 mb-4'>Sinh viên đăng ký</div>
+                    <h3 className='mb-4'>Sinh viên đăng ký</h3>
                     <div className="row">
                         {students.map(student => (
                             <div key={student._id} className='mb-4'>

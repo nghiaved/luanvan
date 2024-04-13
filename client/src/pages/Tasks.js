@@ -1,13 +1,14 @@
 import Layout from "../components/Layout"
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import React, { useCallback, useEffect, useState } from "react"
-import { ViewMode, Gantt } from "gantt-task-react";
 import { jwtDecode } from "jwt-decode"
 import axios from "axios"
 import { toast } from 'react-toastify'
 import { socket } from '../utils/socket'
+import Progress from '../components/Progress'
+import ListTasks from "../components/ListTasks"
 
-export default function ListTasks() {
+export default function Tasks() {
     const token = sessionStorage.getItem('token')
     const location = useLocation()
     const student = location.state
@@ -51,19 +52,6 @@ export default function ListTasks() {
         fetchTasks(jwtDecode(token)._id)
     }, [fetchTasks, token])
 
-    const timeRemaining = (date) => {
-        const timeRemaining = new Date(date).getTime() - Date.now()
-        let days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24))
-        return ++days > 0 ? `Còn ${days} ngày` : 'Đã hết hạn'
-    }
-
-    const convertDesc = desc => {
-        desc = desc.replace(/<[^>]*>/g, " ")
-        if (desc.length < 50) return desc
-        desc = desc.substring(0, 50).concat(" ...")
-        return desc
-    }
-
     const handleFinal = async (final) => {
         const res = await axios.patch(`http://localhost:8000/api/registers/final-topic/${student._id}`, { final })
         if (res.data.status === true) {
@@ -74,52 +62,36 @@ export default function ListTasks() {
 
     return (
         <Layout>
-            <Link state={student} to="/create-task" className="me-4">Thêm công việc</Link>
-            <Link to="/list-topics">Danh sách đề tài</Link>
-            <h4 className='mt-4'>Sinh viên: "{student.fullname}"</h4>
-            {tasks.length > 0 ? <>
-                <div className="row my-4">
-                    <Gantt
-                        tasks={grantt.data}
-                        onClick={(data) => navigate('/detail-task', { state: data.task })}
-                        viewMode={ViewMode.Week}
-                        listCellWidth=""
-                        columnWidth={100}
-                        rowHeight={50}
-                        barBackgroundColor="#1c57a5"
-                        barProgressColor="#198754"
-                        fontSize={16}
-                    />
-                    <div className="mt-2 text-end">
-                        <b className='me-2'>Tổng số công việc hoàn thành:</b>
-                        <i>{grantt.totalCompleted}/{grantt.totalCount}</i>
-                    </div>
+            <div className="d-flex justify-content-between align-items-center mb-4">
+                <h3>Sinh viên: "{student.fullname}"</h3>
+                <div className="text-end">
+                    <Link state={student} to="/create-task" className="me-4">Thêm công việc</Link>
+                    <Link to="/lecturer">Danh sách đề tài</Link>
                 </div>
-                <div className="row mt-4">
-                    {tasks.map(task => (
-                        <div key={task._id} className='col-lg-6 mb-4'>
-                            <div className="card">
-                                <div className="card-header">
-                                    <div className="d-flex justify-content-between">
-                                        <b>{task.title}</b>
-                                        <div className="card-text">
-                                            {task.status
-                                                ? <span className='text-success'>Đã nộp {task.points && `(${task.points}đ)`} </span>
-                                                : <span className='text-danger'>{timeRemaining(task.end)}</span>}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="card-body">
-                                    <p className="card-text">
-                                        {convertDesc(task.description)}
-                                    </p>
-                                    <p className='text-end'>
-                                        <Link state={task} to={`/detail-task`}>Chi tiết</Link>
-                                    </p>
-                                </div>
+            </div>
+            {tasks.length > 0 ? <>
+                <ul className="nav nav-tabs nav-tabs-bordered">
+                    <li className="nav-item mt-2">
+                        <button className="nav-link active" data-bs-toggle="tab" data-bs-target="#overview">Tổng quan</button>
+                    </li>
+                    <li className="nav-item mt-2">
+                        <button className="nav-link" data-bs-toggle="tab" data-bs-target="#list-tasks">Danh sách công việc</button>
+                    </li>
+                </ul>
+                <div className="tab-content pt-4">
+                    <div className="tab-pane fade show active" id="overview">
+                        <h3>Tiến độ thực hiện</h3>
+                        <div className="row my-4">
+                            <Progress data={grantt.data} />
+                            <div className="mt-2 text-end">
+                                <b className='me-2'>Tổng số công việc hoàn thành:</b>
+                                <i>{grantt.totalCompleted}/{grantt.totalCount}</i>
                             </div>
                         </div>
-                    ))}
+                    </div>
+                    <div className="tab-pane fade show" id="list-tasks">
+                        <ListTasks data={tasks} />
+                    </div>
                 </div>
                 <button className='btn btn-primary me-2' data-bs-toggle="modal" data-bs-target="#finishModal">Hoàn thành</button>
                 <div className="modal fade" id="finishModal" tabIndex="-1" aria-labelledby="finishModalLabel" aria-hidden="true">

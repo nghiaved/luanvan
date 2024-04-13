@@ -94,7 +94,7 @@ export default function Layout({ children }) {
                                         <Link
                                             onClick={() => handleReadMessage(item._id)}
                                             className={item.status === true ? 'text-secondary' : 'text-primary'}
-                                            to={jwtDecode(token).role === 1 ? '/list-registers' : '/student'}>
+                                            to={jwtDecode(token).role === 1 ? '/lecturer' : '/student'}>
                                             {item.sender.fullname + ' ' + item.content}
                                         </Link>
                                         <i onClick={e => {
@@ -121,7 +121,7 @@ export default function Layout({ children }) {
                                 <li><hr className="dropdown-divider" /></li>
                                 <li>
                                     {jwtDecode(token).role === 1
-                                        ? <Link to='/list-topics'>
+                                        ? <Link to='/lecturer'>
                                             <button className="dropdown-item" type="button">
                                                 Quản lý
                                             </button>

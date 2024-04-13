@@ -45,7 +45,7 @@ export default function AdminStudents() {
 
   return (
     <AdminLayout>
-      <div className='display-6'>Trang quản lý sinh viên</div>
+      <h3>Trang quản lý sinh viên</h3>
       {students.length > 0 ? <>
         <div className="row mt-4">
           {students.map(student => (

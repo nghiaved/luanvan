@@ -30,7 +30,7 @@ export default function CreateTopic() {
             .then(res => {
                 if (res.data.status === true) {
                     toast.success(res.data.message)
-                    navigate('/list-topics')
+                    navigate('/lecturer')
                 }
             })
             .catch(err => console.log(err))
@@ -52,7 +52,7 @@ export default function CreateTopic() {
             .then(res => {
                 if (res.data.status === true) {
                     toast.success(res.data.message)
-                    navigate('/list-topics')
+                    navigate('/lecturer')
                 }
             })
             .catch(err => console.log(err))
@@ -60,7 +60,7 @@ export default function CreateTopic() {
 
     return (
         <Layout>
-            <div className='display-6'>{topic ? 'Cập nhật' : 'Tạo'} đề tài</div>
+            <h3>{topic ? 'Cập nhật' : 'Thêm'} đề tài</h3>
             <form className='mt-4' onSubmit={topic ? handleUpdateTopic : handleCreateTopic}>
                 <div className="mb-3">
                     <label htmlFor="title" className="form-label">Tên đề tài</label>
@@ -71,7 +71,7 @@ export default function CreateTopic() {
                     <label className="form-label">Mô tả đề tài</label>
                     <ReactQuill defaultValue={topic?.description} ref={quillRef} theme="snow" />
                 </div>
-                <button className='btn btn-primary' type='submit'>{topic ? 'Cập nhật' : 'Tạo'} đề tài</button>
+                <button className='btn btn-primary' type='submit'>{topic ? 'Cập nhật' : 'Thêm'} đề tài</button>
                 <button type='reset' className='btn btn-secondary ms-2' onClick={() => navigate(-1)}>Trở lại</button>
             </form>
         </Layout>

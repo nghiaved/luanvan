@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import Layout from '../components/Layout'
-import { Link } from 'react-router-dom'
 import { jwtDecode } from 'jwt-decode'
-import { toast } from 'react-toastify'
-import FileBase64 from 'react-file-base64'
 import axios from 'axios'
+import ProfileInfo from '../components/ProfileInfo'
+import UpdateInfo from '../components/UpdateInfo'
+import ChangePassword from '../components/ChangePassword'
 
 export default function Account() {
     const token = sessionStorage.getItem('token')
     const [user, setUser] = useState({})
-    const [image, setImage] = useState()
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -18,57 +17,6 @@ export default function Account() {
         }
         fetchUser()
     }, [token])
-
-    const handleUpdateInfo = async (e) => {
-        e.preventDefault()
-
-        const { birth, sex, grade, major, course, faculty, email, phone } = e.target
-        const data = {
-            birth: birth?.value,
-            sex: sex?.value,
-            grade: grade?.value,
-            major: major?.value,
-            course: course?.value,
-            faculty: faculty?.value,
-            email: email?.value,
-            phone: phone?.value
-        }
-
-        if (image) {
-            data.avatar = image
-        }
-
-        await axios.put(`http://localhost:8000/api/users/update-info/${jwtDecode(token)._id}`, data)
-            .then(res => {
-                if (res.data.status === true) {
-                    toast.success(res.data.message)
-                }
-            })
-            .catch(err => console.log(err))
-    }
-
-    const handleChangePassword = async (e) => {
-        e.preventDefault()
-
-        const { currentPassword, newPassword, renewPassword } = e.target
-
-        if (newPassword.value !== renewPassword.value) {
-            return toast.error('Re-enter incorrect password')
-        }
-
-        await axios.patch(`http://localhost:8000/api/users/change-password/${jwtDecode(token)._id}`, {
-            password: currentPassword.value,
-            newPassword: newPassword.value
-        })
-            .then(res => {
-                if (res.data.status === true) {
-                    toast.success(res.data.message)
-                } else {
-                    toast.error(res.data.message)
-                }
-            })
-            .catch(err => console.log(err))
-    }
 
     return (
         <Layout>
@@ -91,9 +39,6 @@ export default function Account() {
                 <div className="col-xl-8 col-lg-8">
                     <div className="card">
                         <div className="card-body pt-3">
-                            <div className="d-flex justify-content-end">
-                                <Link to={`/profile/${user.username}`} className="btn btn-outline-info">Xem thông tin</Link>
-                            </div>
                             <ul className="nav nav-tabs nav-tabs-bordered">
                                 <li className="nav-item mt-2">
                                     <button className="nav-link active" data-bs-toggle="tab" data-bs-target="#account-overview">Tổng quan</button>
@@ -107,178 +52,13 @@ export default function Account() {
                             </ul>
                             <div className="tab-content pt-4">
                                 <div className="tab-pane fade show active" id="account-overview">
-                                    <table className="table">
-                                        <thead>
-                                            <tr>
-                                                <th colSpan={2} scope="col">
-                                                    <h3 className='text-center'>
-                                                        Thông tin cá nhân
-                                                    </h3>
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="table-group-divider">
-                                            <tr>
-                                                <th scope="row">Mã số {user.role === 1 ? 'CB' : 'SV'}</th>
-                                                <td>{user.username?.toUpperCase()}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Họ tên</th>
-                                                <td>{user.fullname}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Ngày sinh</th>
-                                                <td>{user.birth}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Giới tính</th>
-                                                <td>{user.sex}</td>
-                                            </tr>
-                                            {user.role !== 1 && <>
-                                                <tr>
-                                                    <th scope="row">Lớp</th>
-                                                    <td>{user.grade}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">Ngành học</th>
-                                                    <td>{user.major}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">Khoá học</th>
-                                                    <td>{user.course}</td>
-                                                </tr>
-                                            </>}
-                                            <tr>
-                                                <th scope="row">Khoa</th>
-                                                <td>{user.faculty}</td>
-                                            </tr>
-                                            {user.role === 1 && <>
-                                                <tr>
-                                                    <th scope="row">Email</th>
-                                                    <td>{user.email}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">Số điện thoại</th>
-                                                    <td>{user.phone}</td>
-                                                </tr>
-                                            </>}
-                                        </tbody>
-                                    </table>
+                                    <ProfileInfo />
                                 </div>
                                 <div className="tab-pane fade" id="account-edit">
-                                    <form onSubmit={handleUpdateInfo}>
-                                        <div className="row mb-3">
-                                            <label htmlFor="profileImage" className="col-md-4 col-lg-3 col-form-label">Ảnh đại diện</label>
-                                            <div className="col-8 d-flex align-items-center">
-                                                {image
-                                                    ? <img className='img-avatar' src={image} alt={user.fullname} />
-                                                    : <img className='img-avatar' src={user.avatar ? user.avatar : "/no-avatar.png"} alt={user.fullname} />}
-                                                <div className="ms-4 d-flex flex-column">
-                                                    <label className='set-upload-img mb-2'>
-                                                        <FileBase64
-                                                            multiple={false}
-                                                            onDone={({ base64 }) => {
-                                                                setImage(base64)
-                                                            }}
-                                                        />
-                                                        <i className="btn btn-warning btn-sm bi bi-upload"></i>
-                                                    </label>
-                                                    <i onClick={() => setImage()} className="btn btn-danger btn-sm bi bi-trash"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="row mb-3">
-                                            <label htmlFor="birth" className="col-3 col-form-label">Ngày sinh</label>
-                                            <div className="col-8">
-                                                <input name='birth' maxLength={15} autoComplete='off'
-                                                    type="text" className="form-control" id="birth" defaultValue={user.birth} />
-                                            </div>
-                                        </div>
-                                        <div className="row mb-3">
-                                            <label htmlFor="sex" className="col-3 col-form-label">Giới tính</label>
-                                            <div className="col-8">
-                                                <input name='sex' maxLength={10} autoComplete='off'
-                                                    type="text" className="form-control" id="sex" defaultValue={user.sex} />
-                                            </div>
-                                        </div>
-                                        {user.role !== 1 && <>
-                                            <div className="row mb-3">
-                                                <label htmlFor="grade" className="col-3 col-form-label">Lớp</label>
-                                                <div className="col-8">
-                                                    <input name='grade' maxLength={20} autoComplete='off'
-                                                        type="text" className="form-control" id="grade" defaultValue={user.grade} />
-                                                </div>
-                                            </div>
-                                            <div className="row mb-3">
-                                                <label htmlFor="major" className="col-3 col-form-label">Ngành học</label>
-                                                <div className="col-8">
-                                                    <input name='major' maxLength={50} autoComplete='off'
-                                                        type="text" className="form-control" id="major" defaultValue={user.major} />
-                                                </div>
-                                            </div>
-                                            <div className="row mb-3">
-                                                <label htmlFor="course" className="col-3 col-form-label">Khoá học</label>
-                                                <div className="col-8">
-                                                    <input name='course' maxLength={5} autoComplete='off'
-                                                        type="text" className="form-control" id="course" defaultValue={user.course} />
-                                                </div>
-                                            </div>
-                                        </>}
-                                        <div className="row mb-3">
-                                            <label htmlFor="faculty" className="col-3 col-form-label">Khoa</label>
-                                            <div className="col-8">
-                                                <input name='faculty' maxLength={50} autoComplete='off'
-                                                    type="text" className="form-control" id="faculty" defaultValue={user.faculty} />
-                                            </div>
-                                        </div>
-                                        {user.role === 1 && <>
-                                            <div className="row mb-3">
-                                                <label htmlFor="email" className="col-3 col-form-label">Email</label>
-                                                <div className="col-8">
-                                                    <input name='email' maxLength={30} autoComplete='off'
-                                                        type="text" className="form-control" id="email" defaultValue={user.email} />
-                                                </div>
-                                            </div>
-                                            <div className="row mb-3">
-                                                <label htmlFor="phone" className="col-3 col-form-label">Số điện thoại</label>
-                                                <div className="col-8">
-                                                    <input name='phone' maxLength={15} autoComplete='off'
-                                                        type="text" className="form-control" id="phone" defaultValue={user.phone} />
-                                                </div>
-                                            </div>
-                                        </>}
-                                        <div className="text-center">
-                                            <button type="submit" className="btn btn-primary">Lưu thông tin</button>
-                                        </div>
-                                    </form>
+                                    <UpdateInfo />
                                 </div>
                                 <div className="tab-pane fade" id="account-change-password">
-                                    <form onSubmit={handleChangePassword}>
-                                        <div className="row mb-3">
-                                            <label htmlFor="currentPassword" className="col-4 col-form-label">Mật khẩu hiện tại</label>
-                                            <div className="col-6">
-                                                <input name='oldPassword' required maxLength={30} minLength={6} autoComplete='off'
-                                                    type="password" className="form-control" id="currentPassword" />
-                                            </div>
-                                        </div>
-                                        <div className="row mb-3">
-                                            <label htmlFor="newPassword" className="col-4 col-form-label">Mật khẩu mới</label>
-                                            <div className="col-6">
-                                                <input name='newPassword' required maxLength={30} minLength={6} autoComplete='off'
-                                                    type="password" className="form-control" id="newPassword" />
-                                            </div>
-                                        </div>
-                                        <div className="row mb-3">
-                                            <label htmlFor="renewPassword" className="col-4 col-form-label">Nhập lại mật khẩu mới</label>
-                                            <div className="col-6">
-                                                <input name='renewPassword' required maxLength={30} minLength={6} autoComplete='off'
-                                                    type="password" className="form-control" id="renewPassword" />
-                                            </div>
-                                        </div>
-                                        <div className="text-center">
-                                            <button type="submit" className="btn btn-primary">Đổi mật khẩu</button>
-                                        </div>
-                                    </form>
+                                    <ChangePassword />
                                 </div>
                             </div>
                         </div>

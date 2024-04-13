@@ -60,9 +60,9 @@ exports.extendTask = async (req, res, next) => {
 
 exports.evaluateTask = async (req, res, next) => {
     const _id = req.params.id
-    const { points } = req.body
+    const { points, note } = req.body
 
-    if (!_id || !points) {
+    if (!_id || !points || !note) {
         return res.json({ status: false, message: 'Not enough information' })
     }
 
@@ -75,7 +75,7 @@ exports.evaluateTask = async (req, res, next) => {
         status: false
     })
 
-    await taskModel.updateOne({ _id }, { points: parseInt(points) })
+    await taskModel.updateOne({ _id }, { points: parseInt(points), note })
 
     await taskModel.findById(_id)
         .then(task => res.json({ status: true, task, message: 'Evaluated' }))

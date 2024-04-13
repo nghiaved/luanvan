@@ -17,15 +17,14 @@ import 'gantt-task-react/dist/index.css'
 import './scss/index.scss'
 
 import Login from './pages/Login'
-import ListTopics from './pages/ListTopics'
+import Lecturer from './pages/Lecturer'
 import Home from './pages/Home'
 import DetailTopic from './pages/DetailTopic'
 import CreateTopic from './pages/CreateTopic'
 import Register from './pages/Register'
-import ListRegisters from './pages/ListRegisters'
 import Student from './pages/Student'
 import CreateTask from './pages/CreateTask'
-import ListTasks from './pages/ListTasks'
+import Tasks from './pages/Tasks'
 import DetailTask from './pages/DetailTask'
 import Waiting from './pages/Waiting'
 import Account from './pages/Account'
@@ -91,7 +90,7 @@ function App() {
                 ? jwtDecode(token).isRegistered === true
                   ? <Student />
                   : jwtDecode(token).role === 1
-                    ? <ListTopics />
+                    ? <Lecturer />
                     : <Home />
                 : <Waiting />
               : <Navigate to='/login' />
@@ -101,17 +100,16 @@ function App() {
               ? jwtDecode(token).status === true
                 ? jwtDecode(token).role === 2
                   ? <Navigate to='/student' />
-                  : <Navigate to='/list-topics' />
+                  : <Navigate to='/lecturer' />
                 : <Waiting />
               : <Login />
           } />
           <Route path='/register' element={token ? <Navigate to='/' /> : <Register />} />
-          <Route path='/list-topics' element={navigateWithLecturer(<ListTopics />)} />
+          <Route path='/lecturer' element={navigateWithLecturer(<Lecturer />)} />
           <Route path='/create-topic' element={navigateWithLecturer(<CreateTopic />)} />
           <Route path='/update-topic' element={navigateWithLecturer(<CreateTopic />)} />
-          <Route path='/list-registers' element={navigateWithLecturer(<ListRegisters />)} />
           <Route path='/create-task' element={navigateWithLecturer(<CreateTask />)} />
-          <Route path='/list-tasks' element={navigateWithLecturer(<ListTasks />)} />
+          <Route path='/list-tasks' element={navigateWithLecturer(<Tasks />)} />
           <Route path='/student' element={navigateWithStudent(<Student />)} />
           <Route path='/detail-topic/:slug' element={<DetailTopic />} />
           <Route path='/detail-task' element={token ? <DetailTask /> : <Navigate to='/' />} />

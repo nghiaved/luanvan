@@ -1,4 +1,3 @@
-import Layout from "../components/Layout"
 import { Link } from 'react-router-dom'
 import React, { useCallback, useEffect, useState } from "react"
 import { jwtDecode } from "jwt-decode"
@@ -62,10 +61,13 @@ export default function ListTopics() {
     }
 
     return (
-        <Layout>
-            <Link to="/create-topic" className="me-4">Thêm đề tài</Link>
-            <Link to="/list-registers">Danh sách đăng ký</Link>
-            <div className='display-6 mt-4'>Danh sách đề tài</div>
+        <>
+            <div className="d-flex justify-content-between align-items-center">
+                <h3>Danh sách đề tài</h3>
+                <div className="text-end">
+                    <Link to="/create-topic" className="btn btn-primary">Thêm đề tài</Link>
+                </div>
+            </div>
             {topics.length > 0 ? <>
                 <div className="row mt-4">
                     {topics.map(topic => (
@@ -123,6 +125,6 @@ export default function ListTopics() {
             </> : (
                 <div className="mt-4">Bạn chưa thêm đề tài.</div>
             )}
-        </Layout>
+        </>
     )
 }

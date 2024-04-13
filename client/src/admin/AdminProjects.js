@@ -21,7 +21,7 @@ export default function AdminProjects() {
 
   return (
     <AdminLayout>
-      <div className='display-6'>Trang quản lý đồ án</div>
+      <h3>Trang quản lý đồ án</h3>
       {registers.length > 0 ? <>
         <div className="row mt-4">
           {registers.map(register => (
@@ -31,11 +31,21 @@ export default function AdminProjects() {
                   <h6 className="text-nowrap overflow-hidden mb-0">{register.topic.title}</h6>
                 </div>
                 <div className="card-body">
-                  <b>Sinh viên thực hiện</b>
-                  <h6>{register.student.fullname} {register.student.username.toUpperCase()}</h6>
+                  <div className="d-flex justify-content-between">
+                    <div>
+                      <b>Giảng viên hướng dẫn</b>
+                      <h6>{register.lecturer.fullname} {register.lecturer.username}</h6>
+                    </div>
+                    <img className='img-avatar mb-2' src={register.lecturer.avatar ? register.lecturer.avatar : "/no-avatar.png"} alt={register.lecturer.fullname} />
+                  </div>
                   <hr />
-                  <b>Giảng viên hướng dẫn</b>
-                  <h6>{register.lecturer.fullname} {register.lecturer.username}</h6>
+                  <div className="d-flex justify-content-between">
+                    <img className='img-avatar mb-2' src={register.student.avatar ? register.student.avatar : "/no-avatar.png"} alt={register.student.fullname} />
+                    <div>
+                      <b>Sinh viên thực hiện</b>
+                      <h6>{register.student.fullname} {register.student.username.toUpperCase()}</h6>
+                    </div>
+                  </div>
                   <hr />
                   <div className="text-end">
                     {register.final === true
@@ -51,8 +61,7 @@ export default function AdminProjects() {
         </div>
       </> : (
         <div className="mt-4">Chưa có đồ án.</div>
-      )
-      }
+      )}
     </AdminLayout >
   )
 }
