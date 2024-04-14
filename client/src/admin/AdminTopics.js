@@ -1,9 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react"
 import AdminLayout from '../components/AdminLayout'
+import ModalConfirm from '../components/ModalConfirm'
 import { toast } from 'react-toastify'
 import { socket } from '../utils/socket'
 import axios from "axios"
 import { Link } from "react-router-dom"
+import Avatar from "../components/Avatar"
 
 export default function AdminTopics() {
   const [topics, setTopics] = useState([])
@@ -96,7 +98,7 @@ export default function AdminTopics() {
                       <h6>{topic.lecturer.fullname}</h6>
                       <span>{topic.lecturer.username}</span>
                     </div>
-                    <img className='img-avatar mb-2' src={topic.lecturer.avatar ? topic.lecturer.avatar : "/no-avatar.png"} alt={topic.lecturer.fullname} />
+                    <Avatar src={topic.lecturer.avatar} alt={topic.lecturer.fullname} />
                   </div>
                   <div className='d-flex justify-content-between'>
                     <Link to={`/detail-topic/${topic.slug}`} className='text-info'>Chi tiết</Link>
@@ -109,7 +111,7 @@ export default function AdminTopics() {
                             Xác nhận
                           </button>
                           <button className='btn btn-danger'
-                            data-bs-toggle="modal" data-bs-target="#exampleModal"
+                            data-bs-toggle="modal" data-bs-target="#refuseModal"
                             onClick={() => setTopic(topic)}>
                             Từ chối
                           </button>
@@ -124,23 +126,14 @@ export default function AdminTopics() {
             </div>
           ))}
         </div>
-        <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title" id="exampleModalLabel">Xoá đề tài</h5>
-                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div className="modal-body">
-                Bạn có chắc chắn muốn xoá đề tài này?
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Trở lại</button>
-                <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={handleRefuseTopic}>Xoá</button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ModalConfirm
+          id='refuseModal'
+          action='Xoá'
+          type='danger'
+          title='Xoá đề tài'
+          content='Bạn có chắc chắn muốn xoá đề tài này?'
+          func={handleRefuseTopic}
+        />
       </> : (
         <div className="mt-4">Chưa có đề tài.</div>
       )}

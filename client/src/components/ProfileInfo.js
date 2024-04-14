@@ -1,19 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { jwtDecode } from 'jwt-decode'
-import axios from 'axios'
+import React from 'react'
 
-export default function ProfileInfo() {
-    const token = sessionStorage.getItem('token')
-    const [user, setUser] = useState({})
-
-    useEffect(() => {
-        const fetchUser = async () => {
-            const res = await axios.get(`http://localhost:8000/api/users/get-user/${jwtDecode(token).username}`)
-            setUser(res.data.user)
-        }
-        fetchUser()
-    }, [token])
-
+export default function ProfileInfo({ user }) {
     return (
         <table className="table">
             <thead>

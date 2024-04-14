@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { useGlobal } from '../utils/useGlobal'
 import Progress from '../components/Progress'
 import ListTasks from '../components/ListTasks'
-import Description from '../components/Description'
+import TopicInfo from '../components/TopicInfo'
 
 export default function Student() {
     const [register, setRegister] = useState(null)
@@ -68,15 +68,7 @@ export default function Student() {
         <Layout>
             {register && <>
                 <h3 className='mb-4'>Đề tài đăng ký</h3>
-                <div className='mb-2'>
-                    <b className='me-2'>Tên đề tài:</b>
-                    <i>{register.topic?.title}</i>
-                </div>
-                <Description desc={register.topic?.description} />
-                <div className='mb-2'>
-                    <b className='me-2'>Giảng viên hướng dẫn:</b>
-                    <i>{register.lecturer?.username}</i>
-                </div>
+                <TopicInfo title={register.topic?.title} desc={register.topic?.description} lecturer={register.lecturer} />
                 <div className='mb-2'>
                     <b className='me-2'>Trạng thái:</b>
                     <span className={`${register.status ? 'text-success' : 'text-warning'}`}>

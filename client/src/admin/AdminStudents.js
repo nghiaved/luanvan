@@ -1,7 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react"
 import AdminLayout from '../components/AdminLayout'
+import ModalConfirm from '../components/ModalConfirm'
+import ProfileInfo from "../components/ProfileInfo"
 import { toast } from 'react-toastify'
 import axios from "axios"
+import Avatar from "../components/Avatar"
 
 export default function AdminStudents() {
   const [students, setStudents] = useState([])
@@ -81,7 +84,7 @@ export default function AdminStudents() {
                   </div>
                 </div>
                 <div className="card-body">
-                  <img className='img-avatar mb-2' src={student.avatar ? student.avatar : "/no-avatar.png"} alt={student.fullname} />
+                  <Avatar src={student.avatar} alt={student.fullname} />
                   <div className="my-3">
                     {student.isRegistered === true
                       ? <span className="text-success">Sinh viên đã đăng ký đề tài</span>
@@ -115,77 +118,23 @@ export default function AdminStudents() {
             </div>
           ))}
         </div>
-        <div className="modal fade" id="infoModal" tabIndex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div className="modal fade" id="infoModal" tabIndex="-1" aria-hidden="true">
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-body">
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th colSpan={2} scope="col">
-                        <h3 className='text-center'>
-                          Thông tin cá nhân
-                        </h3>
-                      </th>
-                    </tr>
-                  </thead>
-                  {student &&
-                    <tbody className="table-group-divider">
-                      <tr>
-                        <th scope="row">Mã số SV</th>
-                        <td>{student.username?.toUpperCase()}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Họ tên</th>
-                        <td>{student.fullname}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Ngày sinh</th>
-                        <td>{student.birth}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Giới tính</th>
-                        <td>{student.sex}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Lớp</th>
-                        <td>{student.grade}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Ngành học</th>
-                        <td>{student.major}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Khoá học</th>
-                        <td>{student.course}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Khoa</th>
-                        <td>{student.faculty}</td>
-                      </tr>
-                    </tbody>}
-                </table>
+                {student && <ProfileInfo user={student} />}
               </div>
             </div>
           </div>
         </div>
-        <div className="modal fade" id="refuseModal" tabIndex="-1" aria-labelledby="refuseModalLabel" aria-hidden="true">
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title" id="refuseModalLabel">Xoá sinh viên</h5>
-                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div className="modal-body">
-                Bạn có chắc chắn muốn xoá sinh viên này?
-              </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Trở lại</button>
-                <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={handleRefuseStudent}>Xoá</button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ModalConfirm
+          id='refuseModal'
+          action='Xoá'
+          type='danger'
+          title='Xoá sinh viên'
+          content='Bạn có chắc chắn muốn xoá sinh viên này?'
+          func={handleRefuseStudent}
+        />
       </> : (
         <div className="mt-4">Chưa có sinh viên.</div>
       )}

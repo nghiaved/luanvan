@@ -5,6 +5,7 @@ import axios from 'axios'
 import ProfileInfo from '../components/ProfileInfo'
 import UpdateInfo from '../components/UpdateInfo'
 import ChangePassword from '../components/ChangePassword'
+import Avatar from '../components/Avatar'
 
 export default function Account() {
     const token = sessionStorage.getItem('token')
@@ -24,7 +25,7 @@ export default function Account() {
                 <div className="col-xl-4 col-lg-4 mb-4">
                     <div className="card">
                         <div className="card-body pt-4 d-flex flex-column align-items-center">
-                            <img className='img-avatar mb-3' alt={user.fullname} src={user.avatar ? user.avatar : '/no-avatar.png'} />
+                            <Avatar src={user.avatar} alt={user.fullname} />
                             <h4>{user.fullname}</h4>
                             <h6>{user.username?.toUpperCase()}</h6>
                             <p>
@@ -52,7 +53,7 @@ export default function Account() {
                             </ul>
                             <div className="tab-content pt-4">
                                 <div className="tab-pane fade show active" id="account-overview">
-                                    <ProfileInfo />
+                                    <ProfileInfo user={user} />
                                 </div>
                                 <div className="tab-pane fade" id="account-edit">
                                     <UpdateInfo />

@@ -30,7 +30,7 @@ export default function Home() {
 
     return (
         <Layout>
-            <h4 className="text-danger">Hiện tại, bạn chưa đăng ký đề tài nào!</h4>
+            <h4 className="text-danger">Hiện tại, bạn chưa thực hiện đề tài nào!</h4>
             {data.topics?.length > 0 ? (<>
                 <div className="d-flex justify-content-between my-4">
                     <select onChange={(e) => setFilter(e.target.value)} className="form-select home-filter">

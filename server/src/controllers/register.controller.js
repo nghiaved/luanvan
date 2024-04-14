@@ -30,7 +30,7 @@ exports.getRegistersByLecturer = async (req, res, next) => {
 
     await registerModel.find({ lecturer })
         .populate('topic')
-        .populate('student', 'fullname username')
+        .populate('student', 'fullname username avatar')
         .then(registers => res.json({ status: true, registers }))
         .catch(next)
 }

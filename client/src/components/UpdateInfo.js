@@ -3,6 +3,7 @@ import { jwtDecode } from 'jwt-decode'
 import { toast } from 'react-toastify'
 import FileBase64 from 'react-file-base64'
 import axios from 'axios'
+import Avatar from './Avatar'
 
 export default function UpdateInfo() {
     const token = sessionStorage.getItem('token')
@@ -50,9 +51,7 @@ export default function UpdateInfo() {
             <div className="row mb-3">
                 <label htmlFor="profileImage" className="col-md-4 col-lg-3 col-form-label">Ảnh đại diện</label>
                 <div className="col-8 d-flex align-items-center">
-                    {image
-                        ? <img className='img-avatar' src={image} alt={user.fullname} />
-                        : <img className='img-avatar' src={user.avatar ? user.avatar : "/no-avatar.png"} alt={user.fullname} />}
+                    <Avatar src={image ? image : user.avatar} alt={user.fullname} />
                     <div className="ms-4 d-flex flex-column">
                         <label className='set-upload-img mb-2'>
                             <FileBase64

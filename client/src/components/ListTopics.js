@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from "react"
 import { jwtDecode } from "jwt-decode"
 import { toast } from 'react-toastify'
 import { useGlobal } from '../utils/useGlobal'
+import ModalConfirm from '../components/ModalConfirm'
 import axios from "axios"
 
 export default function ListTopics() {
@@ -96,7 +97,7 @@ export default function ListTopics() {
                                         <Link className="me-4" state={topic} to='/update-topic'>
                                             <i className="bi bi-pencil-square text-warning"></i>
                                         </Link>
-                                        <Link data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={() => setTopicId(topic._id)}>
+                                        <Link data-bs-toggle="modal" data-bs-target='#refuseModal' onClick={() => setTopicId(topic._id)}>
                                             <i className="bi bi-trash-fill text-danger"></i>
                                         </Link>
                                     </p>
@@ -105,23 +106,14 @@ export default function ListTopics() {
                         </div>
                     ))}
                 </div>
-                <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLabel">Xoá đề tài</h5>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div className="modal-body">
-                                Bạn có chắc chắn muốn xoá đề tài này?
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Trở lại</button>
-                                <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={handleDeleteTopic}>Xoá</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <ModalConfirm
+                    id='refuseModal'
+                    action='Xoá'
+                    type='danger'
+                    title='Xoá đề tài'
+                    content='Bạn có chắc chắn muốn xoá đề tài này?'
+                    func={handleDeleteTopic}
+                />
             </> : (
                 <div className="mt-4">Bạn chưa thêm đề tài.</div>
             )}

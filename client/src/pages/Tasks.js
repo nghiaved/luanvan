@@ -7,6 +7,7 @@ import { toast } from 'react-toastify'
 import { socket } from '../utils/socket'
 import Progress from '../components/Progress'
 import ListTasks from "../components/ListTasks"
+import ButtonModalConfirm from "../components/ButtonModalConfirm"
 
 export default function Tasks() {
     const token = sessionStorage.getItem('token')
@@ -93,42 +94,22 @@ export default function Tasks() {
                         <ListTasks data={tasks} />
                     </div>
                 </div>
-                <button className='btn btn-primary me-2' data-bs-toggle="modal" data-bs-target="#finishModal">Hoàn thành</button>
-                <div className="modal fade" id="finishModal" tabIndex="-1" aria-labelledby="finishModalLabel" aria-hidden="true">
-                    <div className="modal-dialog">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title" id="terminateModalLabel">Hoàn thành đề tài</h5>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div className="modal-body">
-                                Bạn có chắc chắn muốn hoàn thành đề tài này?
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Trở lại</button>
-                                <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={() => handleFinal(true)}>Hoàn thành</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <button className='btn btn-danger me-2' data-bs-toggle="modal" data-bs-target="#terminateModal">Kết thúc</button>
-                <div className="modal fade" id="terminateModal" tabIndex="-1" aria-labelledby="terminateModalLabel" aria-hidden="true">
-                    <div className="modal-dialog">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title" id="terminateModalLabel">Kết thúc đề tài</h5>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div className="modal-body">
-                                Bạn có chắc chắn muốn kết thúc đề tài này?
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Trở lại</button>
-                                <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={() => handleFinal(false)}>Kết thúc</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <ButtonModalConfirm
+                    id='finishModal'
+                    action='Hoàn thành'
+                    type='primary'
+                    title='Hoàn thành đề tài'
+                    content='Bạn có chắc chắn muốn hoàn thành đề tài này?'
+                    func={() => handleFinal(true)}
+                />
+                <ButtonModalConfirm
+                    id='terminateModal'
+                    action='Kết thúc'
+                    type='danger'
+                    title='Kết thúc đề tài'
+                    content='Bạn có chắc chắn muốn kết thúc đề tài này?'
+                    func={() => handleFinal(false)}
+                />
                 <button className='btn btn-secondary ms-2' onClick={() => navigate(-1)}>Trở lại</button>
             </> : (
                 <div className="mt-4">Bạn chưa thêm công việc nào.</div>

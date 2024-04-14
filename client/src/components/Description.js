@@ -7,7 +7,7 @@ export default function Description({ desc }) {
             <div className="accordion-item">
                 <h2 className="accordion-header" id="descriptionHeading">
                     <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#descriptionTask" aria-expanded="true" aria-controls="descriptionTask">
-                        Mô tả công việc
+                        Mô tả
                     </button>
                 </h2>
                 <div id="descriptionTask" className="accordion-collapse collapse show" aria-labelledby="descriptionHeading" data-bs-parent="#accordionExample">

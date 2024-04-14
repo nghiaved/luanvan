@@ -7,7 +7,8 @@ import { toast } from 'react-toastify'
 import { socket } from '../utils/socket'
 import { useGlobal } from '../utils/useGlobal'
 import Progress from '../components/Progress'
-import Description from '../components/Description'
+import TopicInfo from '../components/TopicInfo'
+import ButtonModalConfirm from '../components/ButtonModalConfirm'
 
 export default function DetailTopic() {
     const token = sessionStorage.getItem('token')
@@ -36,7 +37,11 @@ export default function DetailTopic() {
         if (token && topic && jwtDecode(token).role !== 1) {
             const fetchRegister = async () => {
                 const res = await axios.get(`http://localhost:8000/api/registers/get-register?topic=${topic._id}&student=${jwtDecode(token)._id}`)
-                setRegister(res.data.register?.status || null)
+                if (res.data.register?.status === undefined) {
+                    setRegister(null)
+                } else {
+                    setRegister(res.data.register?.status)
+                }
             }
             fetchRegister()
         }
@@ -109,15 +114,7 @@ export default function DetailTopic() {
             <h3 className='mb-4'>Thông tin đề tài</h3>
             {topic ? <>
                 <div className='mb-4'>
-                    <div className='mb-2'>
-                        <b className='me-2'>Tên đề tài:</b>
-                        <i>{topic.title}</i>
-                    </div>
-                    <Description desc={topic.description} />
-                    <div className='mb-2'>
-                        <b className='me-2'>Giảng viên hướng dẫn:</b>
-                        <i>{topic.lecturer?.fullname}</i>
-                    </div>
+                    <TopicInfo title={topic.title} desc={topic.description} lecturer={topic.lecturer} />
                 </div>
                 {students.length > 0 && <>
                     <h3 className='mb-4'>Sinh viên đăng ký</h3>
@@ -156,26 +153,14 @@ export default function DetailTopic() {
             {token && (jwtDecode(token).role === 1 || jwtDecode(token).status === false)
                 ? <></>
                 : register === null
-                    ? <>
-                        <button className='btn btn-primary me-2' data-bs-toggle="modal" data-bs-target="#exampleModal">Đăng ký</button>
-                        <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div className="modal-dialog">
-                                <div className="modal-content">
-                                    <div className="modal-header">
-                                        <h5 className="modal-title" id="exampleModalLabel">Đăng ký đề tài</h5>
-                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div className="modal-body">
-                                        Bạn có chắc chắn muốn đăng ký đề tài này?
-                                    </div>
-                                    <div className="modal-footer">
-                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Trở lại</button>
-                                        <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={handlSubscribeTopic}>Đăng ký</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </>
+                    ? <ButtonModalConfirm
+                        id='registerModal'
+                        action='Đăng ký'
+                        type='primary'
+                        title='Đăng ký đề tài'
+                        content='Bạn có chắc chắn muốn đăng ký đề tài này?'
+                        func={handlSubscribeTopic}
+                    />
                     : register === false
                         ? <button className='btn btn-warning me-2 pe-none'>Chờ xác nhận</button>
                         : <button className='btn btn-success me-2 pe-none'>Đã xác nhận</button>

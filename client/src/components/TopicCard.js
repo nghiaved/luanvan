@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import Avatar from './Avatar'
 
 export default function TopicCard({ topic }) {
     const convertDesc = desc => {
@@ -39,8 +40,8 @@ export default function TopicCard({ topic }) {
                         <p className="card-text">{convertDesc(topic.description)}</p>
                     </div>
                     <div className="ms-3">
-                        <img className='img-avatar' src={topic.lecturer.avatar ? topic.lecturer.avatar : "/no-avatar.png"} alt={topic.lecturer.fullname} />
-                        <p style={{ fontSize: 14 }} className="mt-3 text-nowrap text-end">Số lượng: {topic.registered}/{topic.limit}</p>
+                        <Avatar src={topic.lecturer.avatar} alt={topic.lecturer.fullname} />
+                        <p style={{ fontSize: 14 }} className="text-nowrap text-end">Số lượng: {topic.registered}/{topic.limit}</p>
                     </div>
                 </div>
                 <Link state={topic} to={`/detail-topic/${topic.slug}`}>

@@ -118,10 +118,10 @@ export default function DetailTask() {
                                 : <h4 className='text-danger'>Chưa có đánh giá!</h4>}
                         </div>
                     </div>
-                    <h5>
+                    <div className='mb-2'>
                         <b className='me-2'>Tên công việc:</b>
                         <i>{task.title}</i>
-                    </h5>
+                    </div>
                     <Description desc={task.description} />
                     <div className='d-flex mb-2'>
                         <div className='me-5'>

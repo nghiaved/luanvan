@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react"
 import AdminLayout from '../components/AdminLayout'
 import axios from "axios"
+import Avatar from "../components/Avatar"
 
 export default function AdminProjects() {
   const [registers, setRegisters] = useState([])
@@ -60,11 +61,11 @@ export default function AdminProjects() {
                       <b>Giảng viên hướng dẫn</b>
                       <h6>{register.lecturer.fullname} {register.lecturer.username}</h6>
                     </div>
-                    <img className='img-avatar mb-2' src={register.lecturer.avatar ? register.lecturer.avatar : "/no-avatar.png"} alt={register.lecturer.fullname} />
+                    <Avatar src={register.lecturer.avatar} alt={register.lecturer.fullname} />
                   </div>
                   <hr />
                   <div className="d-flex justify-content-between">
-                    <img className='img-avatar mb-2' src={register.student.avatar ? register.student.avatar : "/no-avatar.png"} alt={register.student.fullname} />
+                    <Avatar src={register.student.avatar} alt={register.student.fullname} />
                     <div>
                       <b>Sinh viên thực hiện</b>
                       <h6>{register.student.fullname} {register.student.username.toUpperCase()}</h6>

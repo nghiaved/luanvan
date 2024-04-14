@@ -4,6 +4,8 @@ import { jwtDecode } from "jwt-decode"
 import { toast } from 'react-toastify'
 import { useGlobal } from '../utils/useGlobal'
 import { socket } from '../utils/socket'
+import Avatar from '../components/Avatar'
+import ModalConfirm from '../components/ModalConfirm'
 import axios from "axios"
 
 export default function ListRegisters() {
@@ -85,13 +87,15 @@ export default function ListRegisters() {
                                                 MSSV: {register.student.username.toUpperCase()}
                                             </p>
                                         </div>
-                                        <img className='img-avatar mb-2' src={register.student.avatar ? register.student.avatar : "/no-avatar.png"} alt={register.student.fullname} />
+                                        <Link to={`/profile/${register.student.username}`}>
+                                            <Avatar src={register.student.avatar} alt={register.student.fullname} />
+                                        </Link>
                                     </div>
                                     <p className='text-end'>
                                         {register.status === true ? (
                                             <Link className='ms-2' state={register.student} to='/list-tasks'>Công việc</Link>
                                         ) : (<>
-                                            <Link className='me-2' data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                            <Link className='me-2' data-bs-toggle="modal" data-bs-target="#confirmModal"
                                                 onClick={() => setAction({
                                                     id: register._id,
                                                     username: register.student.username,
@@ -100,7 +104,7 @@ export default function ListRegisters() {
                                                     desc: 'chấp nhận',
                                                     func: handleAcceptRegister
                                                 })}>Chấp nhận</Link>
-                                            <Link data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                            <Link data-bs-toggle="modal" data-bs-target="#confirmModal"
                                                 onClick={() => setAction({
                                                     id: register._id,
                                                     username: register.student.username,
@@ -116,26 +120,14 @@ export default function ListRegisters() {
                         </div>
                     ))}
                 </div>
-                <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLabel">{action.text} đăng ký</h5>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div className="modal-body">
-                                Bạn có chắc chắn muốn {action.desc} đăng ký này?
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Trở lại</button>
-                                <button type="button" className={`btn btn-${action.type}`} data-bs-dismiss="modal"
-                                    onClick={() => action.func(action.id, action.username)}>
-                                    {action.text}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <ModalConfirm
+                    id='confirmModal'
+                    action={action.text}
+                    type={action.type}
+                    title={`${action.text} đăng ký`}
+                    content={`Bạn có chắc chắn muốn ${action.desc} đăng ký này?`}
+                    func={() => action.func(action.id, action.username)}
+                />
             </>) : (
                 <div className='mt-4'>Chưa có sinh viên nào đăng ký đề tài.</div>
             )}
