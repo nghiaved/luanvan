@@ -61,9 +61,9 @@ export default function AdminTopics() {
   }
 
   return (
-    <AdminLayout>
+    <AdminLayout breadcrumb='Đề tài'>
       <div className="d-flex justify-content-between align-items-center">
-        <h3>Trang quản lý đề tài</h3>
+        <h3>Quản lý đề tài</h3>
         <div className="flex-fill d-flex justify-content-end gap-4">
           <select onChange={(e) => setFilter(e.target.value)} className="form-select home-filter">
             <option defaultChecked value=''>Tất cả</option>

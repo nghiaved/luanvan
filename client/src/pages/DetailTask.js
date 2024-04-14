@@ -104,7 +104,7 @@ export default function DetailTask() {
     }
 
     return (
-        <Layout>
+        <Layout breadcrumb={task.title}>
             {task ? (
                 <div className='mb-4'>
                     <div className='d-flex justify-content-between align-items-center'>

@@ -35,6 +35,7 @@ import AdminStudents from './admin/AdminStudents'
 import AdminLecturers from './admin/AdminLecturers'
 import AdminTopics from './admin/AdminTopics'
 import AdminProjects from './admin/AdminProjects'
+import AdminAccount from './admin/AdminAccount'
 
 Chart.register(CategoryScale)
 
@@ -80,6 +81,7 @@ function App() {
           <Route path='/lecturers' element={<AdminLecturers />} />
           <Route path='/topics' element={<AdminTopics />} />
           <Route path='/projects' element={<AdminProjects />} />
+          <Route path='/account' element={<AdminAccount />} />
           <Route path='/detail-topic/:slug' element={<DetailTopic />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>

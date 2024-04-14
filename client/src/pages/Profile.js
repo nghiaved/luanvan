@@ -18,7 +18,7 @@ export default function Profile() {
     }, [username])
 
     return (
-        <Layout>
+        <Layout breadcrumb={`Thông tin ${user.role === 1 ? 'giảng viên' : 'sinh viên'}`}>
             <div className='d-flex flex-column align-items-center'>
                 <Avatar src={user.avatar} alt={user.fullname} />
                 <div style={{ width: '100%', maxWidth: 500 }}>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Layout from '../components/Layout'
+import AdminLayout from '../components/AdminLayout'
 import { jwtDecode } from 'jwt-decode'
 import axios from 'axios'
 import ProfileInfo from '../components/ProfileInfo'
@@ -7,7 +7,7 @@ import UpdateInfo from '../components/UpdateInfo'
 import ChangePassword from '../components/ChangePassword'
 import Avatar from '../components/Avatar'
 
-export default function Account() {
+export default function AdminAccount() {
     const token = sessionStorage.getItem('token')
     const [user, setUser] = useState({})
 
@@ -20,20 +20,14 @@ export default function Account() {
     }, [token])
 
     return (
-        <Layout breadcrumb='Hồ sơ'>
+        <AdminLayout breadcrumb='Hồ sơ'>
             <div className="row">
                 <div className="col-xl-4 col-lg-4 mb-4">
                     <div className="card">
                         <div className="card-body pt-4 d-flex flex-column align-items-center">
                             <Avatar src={user.avatar} alt={user.fullname} />
-                            <h4>{user.fullname}</h4>
-                            <h6>{user.username?.toUpperCase()}</h6>
-                            <p>
-                                Trạng thái: {user.status
-                                    ? <span className='text-success'>Đã xác nhận</span>
-                                    : <span className='text-warning'>Chờ xác nhận</span>
-                                }
-                            </p>
+                            <h4>{user.fullname} <i className="bi bi-shield-check text-success"></i></h4>
+                            <p>Trạng thái: <span className='text-success'>Hoạt động</span></p>
                         </div>
                     </div>
                 </div>
@@ -42,23 +36,23 @@ export default function Account() {
                         <div className="card-body pt-3">
                             <ul className="nav nav-tabs nav-tabs-bordered">
                                 <li className="nav-item mt-2">
-                                    <button className="nav-link active" data-bs-toggle="tab" data-bs-target="#account-overview">Tổng quan</button>
+                                    <button className="nav-link" data-bs-toggle="tab" data-bs-target="#account-overview">Tổng quan</button>
                                 </li>
                                 <li className="nav-item mt-2">
                                     <button className="nav-link" data-bs-toggle="tab" data-bs-target="#account-edit">Cập nhật thông tin</button>
                                 </li>
                                 <li className="nav-item mt-2">
-                                    <button className="nav-link" data-bs-toggle="tab" data-bs-target="#account-change-password">Đổi mật khẩu</button>
+                                    <button className="nav-link active" data-bs-toggle="tab" data-bs-target="#account-change-password">Đổi mật khẩu</button>
                                 </li>
                             </ul>
                             <div className="tab-content pt-4">
-                                <div className="tab-pane fade show active" id="account-overview">
+                                <div className="tab-pane fade" id="account-overview">
                                     <ProfileInfo user={user} />
                                 </div>
                                 <div className="tab-pane fade" id="account-edit">
                                     <UpdateInfo />
                                 </div>
-                                <div className="tab-pane fade" id="account-change-password">
+                                <div className="tab-pane fade show active" id="account-change-password">
                                     <ChangePassword />
                                 </div>
                             </div>
@@ -66,6 +60,6 @@ export default function Account() {
                     </div>
                 </div>
             </div>
-        </Layout>
+        </AdminLayout>
     )
 }

@@ -62,7 +62,7 @@ export default function Tasks() {
     }
 
     return (
-        <Layout>
+        <Layout breadcrumb='Danh sách công việc'>
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h3>Sinh viên: "{student.fullname}"</h3>
                 <div className="text-end">

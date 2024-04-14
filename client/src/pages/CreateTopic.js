@@ -59,7 +59,7 @@ export default function CreateTopic() {
     }
 
     return (
-        <Layout>
+        <Layout breadcrumb={topic ? 'Cập nhật đề tài' : 'Thêm đề tài'}>
             <h3>{topic ? 'Cập nhật' : 'Thêm'} đề tài</h3>
             <form className='mt-4' onSubmit={topic ? handleUpdateTopic : handleCreateTopic}>
                 <div className="mb-3">

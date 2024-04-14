@@ -66,7 +66,7 @@ export default function CreateTask() {
     }
 
     return (
-        <Layout>
+        <Layout breadcrumb={task ? 'Cập nhật công việc' : 'Phân công công việc'}>
             <h3>{task ? 'Cập nhật' : 'Phân công'} đến "{student.fullname}"</h3>
             <form className='mt-4' onSubmit={task ? handleUpdateTask : handleAssignTask}>
                 <div className="mb-3">

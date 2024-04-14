@@ -110,7 +110,7 @@ export default function DetailTopic() {
     }
 
     return (
-        <Layout>
+        <Layout breadcrumb={topic.title}>
             <h3 className='mb-4'>Thông tin đề tài</h3>
             {topic ? <>
                 <div className='mb-4'>

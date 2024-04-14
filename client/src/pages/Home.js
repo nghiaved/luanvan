@@ -51,7 +51,7 @@ export default function Home() {
                             <TopicCard topic={topic} />
                         </div>
                     ))}
-                    {data.topicsFull?.map(topic => (
+                    {filter === '' && data.topicsFull?.map(topic => (
                         <div key={topic._id} className='col-lg-6 mb-4'>
                             <TopicCard topic={topic} />
                         </div>

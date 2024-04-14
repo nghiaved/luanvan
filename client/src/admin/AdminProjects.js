@@ -34,9 +34,9 @@ export default function AdminProjects() {
   }
 
   return (
-    <AdminLayout>
+    <AdminLayout breadcrumb='Đồ án'>
       <div className="d-flex justify-content-between align-items-center">
-        <h3>Trang quản lý đồ án</h3>
+        <h3>Quản lý đồ án</h3>
         <div className="flex-fill d-flex justify-content-end gap-4">
           <select onChange={(e) => setFilter(e.target.value)} className="form-select home-filter">
             <option defaultChecked value=''>Tất cả</option>

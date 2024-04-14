@@ -5,9 +5,11 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useGlobal } from '../utils/useGlobal'
 import { toast } from 'react-toastify'
 import TopBar from './TopBar'
+import Breadcrumb from './Breadcrumb'
 import Footer from './Footer'
+import BackToTop from './BackToTop'
 
-export default function Layout({ children }) {
+export default function Layout({ children, breadcrumb }) {
     const token = sessionStorage.getItem('token')
     const navigate = useNavigate()
     const [messages, setMessages] = useState([])
@@ -71,7 +73,9 @@ export default function Layout({ children }) {
         <div className="layout-wrapper">
             <TopBar />
             <header>
-                <Link to='/'>Trang chủ</Link>
+                <Link to='/'>
+                    <i className="bi bi-house-door-fill"></i>
+                </Link>
                 {token ? (
                     <div className='d-flex align-items-center'>
                         <div className="btn-group me-2">
@@ -145,9 +149,11 @@ export default function Layout({ children }) {
                     <Link to='/login'>Đăng nhập</Link>
                 )}
             </header>
+            <Breadcrumb name={breadcrumb} />
             <main>{children}</main>
             <hr className='my-2' />
             <Footer />
+            <BackToTop />
         </div>
     )
 }
