@@ -109,6 +109,7 @@ function App() {
           <Route path='/create-topic' element={navigateWithLecturer(<CreateTopic />)} />
           <Route path='/update-topic' element={navigateWithLecturer(<CreateTopic />)} />
           <Route path='/create-task' element={navigateWithLecturer(<CreateTask />)} />
+          <Route path='/update-task' element={navigateWithLecturer(<CreateTask />)} />
           <Route path='/list-tasks' element={navigateWithLecturer(<Tasks />)} />
           <Route path='/student' element={navigateWithStudent(<Student />)} />
           <Route path='/detail-topic/:slug' element={<DetailTopic />} />

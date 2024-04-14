@@ -3,8 +3,10 @@ import React, { useCallback, useEffect, useState } from "react"
 import { jwtDecode } from "jwt-decode"
 import { toast } from 'react-toastify'
 import { useGlobal } from '../utils/useGlobal'
+import convertDesc from '../utils/convertDesc'
 import ModalConfirm from '../components/ModalConfirm'
 import axios from "axios"
+import checkStatus from '../utils/checkStatus'
 
 export default function ListTopics() {
     const token = sessionStorage.getItem('token')
@@ -42,25 +44,6 @@ export default function ListTopics() {
             .catch(err => console.log(err))
     }
 
-    const convertDesc = desc => {
-        desc = desc.replace(/<[^>]*>/g, " ")
-        if (desc.length < 50) return desc
-        desc = desc.substring(0, 50).concat(" ...")
-        return desc
-    }
-
-    const checkStatus = (limit, registered) => {
-        if (registered === 0) {
-            return 'text-black'
-        }
-
-        if (limit === registered) {
-            return 'text-danger'
-        } else {
-            return 'text-success'
-        }
-    }
-
     return (
         <>
             <div className="d-flex justify-content-between align-items-center">
@@ -73,7 +56,7 @@ export default function ListTopics() {
                 <div className="row mt-4">
                     {topics.map(topic => (
                         <div key={topic._id} className='col-lg-6 mb-4'>
-                            <div className={`card ${checkStatus(topic.limit, topic.registered)}`}>
+                            <div className={`card ${checkStatus(topic.limit, topic.registered, 'text-danger')}`}>
                                 <div className="card-header">
                                     <div className="d-flex justify-content-between">
                                         <Link className="me-4" state={topic} to={`/detail-topic/${topic.slug}`}>

@@ -6,6 +6,7 @@ import { socket } from '../utils/socket'
 import axios from "axios"
 import { Link } from "react-router-dom"
 import Avatar from "../components/Avatar"
+import checkStatus from '../utils/checkStatus'
 
 export default function AdminTopics() {
   const [topics, setTopics] = useState([])
@@ -50,18 +51,6 @@ export default function AdminTopics() {
       .catch(err => console.log(err))
   }
 
-  const checkStatus = (limit, registered) => {
-    if (registered === 0) {
-      return 'text-black'
-    }
-
-    if (limit === registered) {
-      return 'text-primary'
-    } else {
-      return 'text-success'
-    }
-  }
-
   const handleFilter = item => {
     if (filter === '1') return item.status === true
     if (filter === '2') return item.status === false
@@ -88,7 +77,7 @@ export default function AdminTopics() {
         <div className="row mt-4">
           {topics.filter(item => handleFilter(item)).map(topic => (
             <div key={topic._id} className='col-lg-6 mb-4'>
-              <div className={`card h-100 ${checkStatus(topic.limit, topic.registered)}`}>
+              <div className={`card h-100 ${checkStatus(topic.limit, topic.registered, 'text-primary')}`}>
                 <div className="card-header">
                   <h6 className="text-nowrap overflow-hidden mb-0">{topic.title}</h6>
                 </div>

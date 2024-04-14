@@ -1,29 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import Avatar from './Avatar'
+import convertDesc from '../utils/convertDesc'
+import checkStatus from '../utils/checkStatus'
 
 export default function TopicCard({ topic }) {
-    const convertDesc = desc => {
-        desc = desc.replace(/<[^>]*>/g, " ")
-        if (desc.length < 50) return desc
-        desc = desc.substring(0, 50).concat(" ...")
-        return desc
-    }
-
-    const checkStatus = (limit, registered) => {
-        if (registered === 0) {
-            return 'text-black'
-        }
-
-        if (limit === registered) {
-            return 'full-registered'
-        } else {
-            return 'text-success'
-        }
-    }
-
     return (
-        <div className={`card ${checkStatus(topic.limit, topic.registered)}`}>
+        <div className={`card ${checkStatus(topic.limit, topic.registered, 'full-registered')}`}>
             <div className="card-header text-end">
                 <Link to={`/profile/${topic.lecturer.username}`}>
                     {topic.lecturer.fullname}

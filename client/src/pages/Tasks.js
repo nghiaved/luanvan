@@ -66,7 +66,7 @@ export default function Tasks() {
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h3>Sinh viên: "{student.fullname}"</h3>
                 <div className="text-end">
-                    <Link state={student} to="/create-task" className="me-4">Thêm công việc</Link>
+                    <Link state={{ student }} to="/create-task" className="me-4">Thêm công việc</Link>
                     <Link to="/lecturer">Danh sách đề tài</Link>
                 </div>
             </div>
@@ -91,7 +91,7 @@ export default function Tasks() {
                         </div>
                     </div>
                     <div className="tab-pane fade show" id="list-tasks">
-                        <ListTasks data={tasks} />
+                        <ListTasks data={tasks} student={student} />
                     </div>
                 </div>
                 <ButtonModalConfirm

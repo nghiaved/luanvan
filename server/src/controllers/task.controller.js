@@ -81,3 +81,28 @@ exports.evaluateTask = async (req, res, next) => {
         .then(task => res.json({ status: true, task, message: 'Evaluated' }))
         .catch(next)
 }
+
+exports.updateTask = async (req, res, next) => {
+    const _id = req.params.id
+    const { title, description, start, end } = req.body
+
+    if (!_id) {
+        return res.json({ status: false, message: 'Not enough information' })
+    }
+
+    await taskModel.updateOne({ _id }, { title, description, start, end })
+        .then(() => res.json({ status: true, message: 'Updated' }))
+        .catch(next)
+}
+
+exports.deleteTask = async (req, res, next) => {
+    const _id = req.params.id
+
+    if (!_id) {
+        return res.json({ status: false, message: 'Not enough information' })
+    }
+
+    await taskModel.findOneAndDelete({ _id })
+        .then(() => res.json({ status: true, message: 'Deleted' }))
+        .catch(next)
+}
