@@ -50,27 +50,6 @@ a {
     }
 }
 
-.form-login {
-    padding: 40px;
-    border-radius: 5px;
-    background: #eee;
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-
-    @media (max-width: 991px) {
-        width: 60%;
-    }
-
-    @media (max-width: 767px) {
-        width: 80%;
-    }
-
-    @media (max-width: 575px) {
-        width: 100%;
-    }
-}
-
 .home-filter {
     width: 25%;
 
@@ -104,18 +83,34 @@ a {
     }
 }
 
-.login-wrapper {
+.layout-auth-wrapper {
     display: flex;
-    justify-content: center;
-    gap: 30px;
+    gap: 20px;
 
-    @media (max-width: 767px) {
-        flex-direction: column;
-        align-items: center;
+    @media (max-width: 991px) {
+        flex-direction: column-reverse;
     }
 
-    img {
-        width: 300px;
+    .auth-wrapper {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+
+        @media (max-width: 767px) {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        img {
+            width: 300px;
+        }
+
+        .form-auth {
+            padding: 40px;
+            border-radius: 5px;
+            background: #eee;
+            width: 400px;
+        }
     }
 }
 
