@@ -7,13 +7,14 @@ import { useGlobal } from '../utils/useGlobal'
 import Progress from '../components/Progress'
 import ListTasks from '../components/ListTasks'
 import TopicInfo from '../components/TopicInfo'
+import Status from '../components/Status'
 
 export default function Student() {
     const [register, setRegister] = useState(null)
     const [tasks, setTasks] = useState([])
     const [grantt, setGrantt] = useState([])
     const [fetchAgain, setFetchAgain] = useState(false)
-    const [state] = useGlobal()
+    const [state, dispatch] = useGlobal()
     const navigate = useNavigate()
 
     const fetchApi = useCallback(async () => {
@@ -67,13 +68,18 @@ export default function Student() {
     return (
         <Layout>
             {register && <>
-                <h3 className='mb-4'>Đề tài đăng ký</h3>
+                <div className='d-flex justify-content-between align-items-center'>
+                    <h3 className='mb-4'>Đề tài đăng ký</h3>
+                    <button onClick={() => dispatch({ userConversation: state.userConversation ? null : register.lecturer })} className='btn btn-sm btn-outline-success'>
+                        {register.lecturer.isOnline && <i className="bi bi-circle-fill"></i>}
+                        <span className='mx-2'>Liên hệ với giảng viên</span>
+                        <i className="bi bi-chat-dots"></i>
+                    </button>
+                </div>
                 <TopicInfo title={register.topic?.title} desc={register.topic?.description} lecturer={register.lecturer} />
                 <div className='mb-2'>
                     <b className='me-2'>Trạng thái:</b>
-                    <span className={`${register.status ? 'text-success' : 'text-warning'}`}>
-                        {register.status ? 'Đã xác nhận' : 'Chờ xác nhận'}
-                    </span>
+                    <Status check={register.status === true} />
                 </div>
                 {register.status === false ? <></> : tasks.length > 0 ? <>
                     <ul className="nav nav-tabs nav-tabs-bordered">

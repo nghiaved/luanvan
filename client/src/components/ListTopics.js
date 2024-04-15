@@ -7,6 +7,7 @@ import convertDesc from '../utils/convertDesc'
 import ModalConfirm from '../components/ModalConfirm'
 import axios from "axios"
 import checkStatus from '../utils/checkStatus'
+import Status from './Status'
 
 export default function ListTopics() {
     const token = sessionStorage.getItem('token')
@@ -56,16 +57,14 @@ export default function ListTopics() {
                 <div className="row mt-4">
                     {topics.map(topic => (
                         <div key={topic._id} className='col-lg-6 mb-4'>
-                            <div className={`card ${checkStatus(topic.limit, topic.registered, 'text-danger')}`}>
+                            <div className={`card h-100 ${checkStatus(topic.limit, topic.registered, 'text-danger')}`}>
                                 <div className="card-header">
                                     <div className="d-flex justify-content-between">
                                         <Link className="me-4" state={topic} to={`/detail-topic/${topic.slug}`}>
                                             <b className="me-2">{topic.title}</b> ({topic.registered} / {topic.limit})
                                         </Link>
                                         <div className="card-text text-nowrap">
-                                            {topic.status === true
-                                                ? <span className="text-success">Đã xác nhận</span>
-                                                : <span className="text-danger">Chờ xác nhận</span>}
+                                            <Status check={topic.status} />
                                         </div>
                                     </div>
                                 </div>

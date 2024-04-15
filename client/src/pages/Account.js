@@ -6,6 +6,7 @@ import ProfileInfo from '../components/ProfileInfo'
 import UpdateInfo from '../components/UpdateInfo'
 import ChangePassword from '../components/ChangePassword'
 import Avatar from '../components/Avatar'
+import Status from '../components/Status'
 
 export default function Account() {
     const token = sessionStorage.getItem('token')
@@ -28,12 +29,7 @@ export default function Account() {
                             <Avatar src={user.avatar} alt={user.fullname} />
                             <h4>{user.fullname}</h4>
                             <h6>{user.username?.toUpperCase()}</h6>
-                            <p>
-                                Trạng thái: {user.status
-                                    ? <span className='text-success'>Đã xác nhận</span>
-                                    : <span className='text-warning'>Chờ xác nhận</span>
-                                }
-                            </p>
+                            <p>Trạng thái: <Status check={user.status} /></p>
                         </div>
                     </div>
                 </div>

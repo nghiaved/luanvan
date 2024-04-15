@@ -27,14 +27,20 @@ const userSchema = new mongoose.Schema({
     email: String,
     phone: String,
     avatar: String,
+    isOnline: {
+        type: Boolean,
+        default: false
+    },
 })
 
 const hashPassword = async function () {
     let user = {}
     this._id != null ? user = this : user = this._update
-    const salt = await bcrypt.genSalt(10)
-    const hash = await bcrypt.hash(user.password, salt)
-    user.password = hash
+    if (user.password) {
+        const salt = await bcrypt.genSalt(10)
+        const hash = await bcrypt.hash(user.password, salt)
+        user.password = hash
+    }
 }
 
 userSchema.pre('save', hashPassword)

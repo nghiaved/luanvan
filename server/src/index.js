@@ -41,8 +41,19 @@ const server = http.createServer(app)
 
 const io = new Server(server, { cors: { origin: 'http://localhost:3000', methods: ['GET', 'POST'] } })
 
+const userModel = require('./models/user.model')
+
 io.on('connection', socket => {
-    socket.on('user-join', username => socket.join(username))
+    socket.on('user-join', async username => {
+        socket.join(username)
+        await userModel.updateOne({ username }, { isOnline: true })
+        io.emit('user-online', username)
+
+        socket.on('disconnect', async () => {
+            await userModel.updateOne({ username }, { isOnline: false })
+            io.emit('user-offline', username)
+        })
+    })
     socket.on('send-notify', username => io.to(username).emit('receive-notify', username))
 })
 

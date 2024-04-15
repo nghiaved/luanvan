@@ -5,6 +5,7 @@ import { toast } from 'react-toastify'
 import { useGlobal } from '../utils/useGlobal'
 import { socket } from '../utils/socket'
 import Avatar from '../components/Avatar'
+import Status from '../components/Status'
 import ModalConfirm from '../components/ModalConfirm'
 import axios from "axios"
 
@@ -13,7 +14,7 @@ export default function ListRegisters() {
     const [fetchAgain, setFetchAgain] = useState(false)
     const [registers, setRegisters] = useState([])
     const [action, setAction] = useState({})
-    const [state] = useGlobal()
+    const [state, dispatch] = useGlobal()
 
     const fetchRegisters = useCallback(async (userId) => {
         await axios.get('http://localhost:8000/api/registers/get-registers-by-lecturer/' + userId)
@@ -71,9 +72,7 @@ export default function ListRegisters() {
                                             <b>{register.topic.title}</b>
                                         </Link>
                                         <div className="card-text text-nowrap ms-2">
-                                            {register.status === true
-                                                ? <span className="text-success">Đã xác nhận</span>
-                                                : <span className="text-danger">Chờ xác nhận</span>}
+                                            <Status check={register.status} />
                                         </div>
                                     </div>
                                 </div>
@@ -91,30 +90,37 @@ export default function ListRegisters() {
                                             <Avatar src={register.student.avatar} alt={register.student.fullname} />
                                         </Link>
                                     </div>
-                                    <p className='text-end'>
-                                        {register.status === true ? (
-                                            <Link className='ms-2' state={register.student} to='/list-tasks'>Công việc</Link>
-                                        ) : (<>
-                                            <Link className='me-2' data-bs-toggle="modal" data-bs-target="#confirmModal"
-                                                onClick={() => setAction({
-                                                    id: register._id,
-                                                    username: register.student.username,
-                                                    type: 'primary',
-                                                    text: 'Chấp nhận',
-                                                    desc: 'chấp nhận',
-                                                    func: handleAcceptRegister
-                                                })}>Chấp nhận</Link>
-                                            <Link data-bs-toggle="modal" data-bs-target="#confirmModal"
-                                                onClick={() => setAction({
-                                                    id: register._id,
-                                                    username: register.student.username,
-                                                    type: 'danger',
-                                                    text: 'Từ chối',
-                                                    desc: 'từ chối',
-                                                    func: handleRefuseRegister
-                                                })}>Từ chối</Link>
-                                        </>)}
-                                    </p>
+                                    <div className='d-flex justify-content-between'>
+                                        <button onClick={() => dispatch({ userConversation: state.userConversation ? null : register.student })} className='btn btn-sm btn-outline-success'>
+                                            {register.student.isOnline && <i className="bi bi-circle-fill"></i>}
+                                            <span className='mx-2'>Liên hệ</span>
+                                            <i className="bi bi-chat-dots"></i>
+                                        </button>
+                                        <div>
+                                            {register.status === true ? (
+                                                <Link className='ms-2' state={register.student} to='/list-tasks'>Công việc</Link>
+                                            ) : (<>
+                                                <Link className='me-2' data-bs-toggle="modal" data-bs-target="#confirmModal"
+                                                    onClick={() => setAction({
+                                                        id: register._id,
+                                                        username: register.student.username,
+                                                        type: 'primary',
+                                                        text: 'Chấp nhận',
+                                                        desc: 'chấp nhận',
+                                                        func: handleAcceptRegister
+                                                    })}>Chấp nhận</Link>
+                                                <Link data-bs-toggle="modal" data-bs-target="#confirmModal"
+                                                    onClick={() => setAction({
+                                                        id: register._id,
+                                                        username: register.student.username,
+                                                        type: 'danger',
+                                                        text: 'Từ chối',
+                                                        desc: 'từ chối',
+                                                        func: handleRefuseRegister
+                                                    })}>Từ chối</Link>
+                                            </>)}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

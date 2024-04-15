@@ -30,7 +30,7 @@ exports.getRegistersByLecturer = async (req, res, next) => {
 
     await registerModel.find({ lecturer })
         .populate('topic')
-        .populate('student', 'fullname username avatar')
+        .populate('student', 'fullname username avatar isOnline')
         .then(registers => res.json({ status: true, registers }))
         .catch(next)
 }
@@ -114,7 +114,7 @@ exports.getRegisterByStudent = async (req, res, next) => {
 
     await registerModel.findOne({ student })
         .populate('topic', 'title description')
-        .populate('lecturer', 'fullname username')
+        .populate('lecturer', 'fullname username avatar isOnline')
         .then(register => res.json({ status: true, register }))
         .catch(next)
 }

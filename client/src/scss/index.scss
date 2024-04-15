@@ -158,3 +158,59 @@ a {
         opacity: 1;
     }
 }
+
+.conversation-wrapper {
+    $conversation-width: 320px;
+    position: fixed;
+    right: -$conversation-width;
+    bottom: 0;
+    width: $conversation-width;
+    height: 460px;
+    z-index: 996;
+    transition: all .2s;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #aab7cf transparent;
+    box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.1);
+    background-color: #fff;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    display: flex;
+    flex-direction: column;
+
+    .conversation-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4px 20px;
+
+        img {
+            width: 32px;
+            height: 32px;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+
+        span {
+            span {
+                font-weight: 600;
+                font-size: 15px;
+            }
+
+            i {
+                cursor: pointer;
+            }
+        }
+    }
+
+    .conversation-body {
+        flex: 1;
+        overflow-y: auto;
+        margin: 20px 0 0 20px;
+        padding-right: 20px;
+    }
+
+    .conversation-footer {
+        padding: 20px;
+    }
+}

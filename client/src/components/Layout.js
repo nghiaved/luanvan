@@ -7,6 +7,7 @@ import { toast } from 'react-toastify'
 import TopBar from './TopBar'
 import Breadcrumb from './Breadcrumb'
 import Footer from './Footer'
+import Conversation from './Conversation'
 import BackToTop from './BackToTop'
 
 export default function Layout({ children, breadcrumb }) {
@@ -153,6 +154,7 @@ export default function Layout({ children, breadcrumb }) {
             <main>{children}</main>
             <hr className='my-2' />
             <Footer />
+            <Conversation />
             <BackToTop />
         </div>
     )
