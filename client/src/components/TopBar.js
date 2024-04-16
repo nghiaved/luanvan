@@ -10,12 +10,16 @@ export default function TopBar() {
                 </Link>
                 <div className='ms-2'>
                     <b>TRƯỜNG ĐẠI HỌC CẦN THƠ</b>
-                    <h5 className='mb-0 text-primary'>Ứng dụng quản lý luận văn - CICT</h5>
+                    <h5 className='mb-0 text-primary'>Trường Công nghệ thông tin và Truyền thông</h5>
                 </div>
             </div>
-            <Link to='/'>
-                <img style={{ height: 60 }} src='/logo-ctu.png' alt='Logo CTU' />
-            </Link>
+            <div className='d-flex align-items-center'>
+                <div className='ms-2'>
+                    <b>ỨNG DỤNG</b>
+                    <h5 className='mb-0 text-primary'>Quản lý luận văn</h5>
+                </div>
+                <img style={{ height: 60 }} src='/logo.png' alt='Logo CTU' />
+            </div>
         </div>
     )
 }

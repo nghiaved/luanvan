@@ -12,6 +12,7 @@ const registerRoute = require('./routes/register.route')
 const taskRoute = require('./routes/task.route')
 const fileRoute = require('./routes/file.route')
 const messageRoute = require('./routes/message.route')
+const messRoute = require('./routes/mess.route')
 const adminRoute = require('./routes/admin.route')
 
 const app = express()
@@ -35,6 +36,7 @@ app.use('/api/registers', registerRoute)
 app.use('/api/tasks', taskRoute)
 app.use('/api/files', fileRoute)
 app.use('/api/messages', messageRoute)
+app.use('/api/messes', messRoute)
 app.use('/api/admin', adminRoute)
 
 const server = http.createServer(app)
@@ -47,11 +49,9 @@ io.on('connection', socket => {
     socket.on('user-join', async username => {
         socket.join(username)
         await userModel.updateOne({ username }, { isOnline: true })
-        io.emit('user-online', username)
 
         socket.on('disconnect', async () => {
             await userModel.updateOne({ username }, { isOnline: false })
-            io.emit('user-offline', username)
         })
     })
     socket.on('send-notify', username => io.to(username).emit('receive-notify', username))

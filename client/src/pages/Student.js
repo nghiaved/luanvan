@@ -13,9 +13,39 @@ export default function Student() {
     const [register, setRegister] = useState(null)
     const [tasks, setTasks] = useState([])
     const [grantt, setGrantt] = useState([])
+    const [messes, setMesses] = useState([])
     const [fetchAgain, setFetchAgain] = useState(false)
     const [state, dispatch] = useGlobal()
     const navigate = useNavigate()
+
+    const fetchTasks = async (studentId, lecturerId) => {
+        await axios.get('http://localhost:8000/api/tasks/get-tasks-by-student-lecturer', {
+            params: { student: studentId, lecturer: lecturerId }
+        })
+            .then(resTasks => {
+                if (resTasks.data.status === true) {
+                    setTasks(resTasks.data.tasks)
+                    const initGrantt = resTasks.data.tasks.map(task => ({
+                        start: new Date(task.start),
+                        end: new Date(task.end),
+                        name: task.title,
+                        progress: task.points || 0,
+                        id: task._id,
+                        task
+                    }))
+                    setGrantt(initGrantt)
+                }
+            })
+            .catch(err => console.log(err))
+    }
+
+    const fetchMesses = async (id, userId) => {
+        const res = await axios.get(`http://localhost:8000/api/messes/get-messes/${id}`)
+        if (res.data.status === true) {
+            const newMesses = res.data.messes.filter(item => item.reader === userId && item.status === false)
+            setMesses(newMesses)
+        }
+    }
 
     const fetchApi = useCallback(async () => {
         const token = sessionStorage.getItem('token')
@@ -30,27 +60,8 @@ export default function Student() {
                     }
 
                     if (isRegistered) {
-                        await axios.get('http://localhost:8000/api/tasks/get-tasks-by-student-lecturer', {
-                            params: {
-                                student: jwtDecode(token)._id,
-                                lecturer: isRegistered.lecturer._id
-                            }
-                        })
-                            .then(resTasks => {
-                                if (resTasks.data.status === true) {
-                                    setTasks(resTasks.data.tasks)
-                                    const initGrantt = resTasks.data.tasks.map(task => ({
-                                        start: new Date(task.start),
-                                        end: new Date(task.end),
-                                        name: task.title,
-                                        progress: task.points || 0,
-                                        id: task._id,
-                                        task
-                                    }))
-                                    setGrantt(initGrantt)
-                                }
-                            })
-                            .catch(err => console.log(err))
+                        fetchTasks(jwtDecode(token)._id, isRegistered.lecturer._id)
+                        fetchMesses(isRegistered._id, jwtDecode(token)._id)
                     }
                 }
             })
@@ -65,15 +76,28 @@ export default function Student() {
         fetchApi()
     }, [fetchApi, fetchAgain, state.fetchAgain])
 
+    const handleClickMessage = async () => {
+        await axios.patch(`http://localhost:8000/api/messes/read-messes`, {
+            register: register._id,
+            reader: register.student
+        })
+        fetchMesses(register._id, register.student)
+        dispatch({
+            userConversation: state.userConversation ? null : register.lecturer,
+            registerId: register._id
+        })
+    }
+
     return (
         <Layout>
             {register && <>
                 <div className='d-flex justify-content-between align-items-center'>
                     <h3 className='mb-4'>Đề tài đăng ký</h3>
-                    <button onClick={() => dispatch({ userConversation: state.userConversation ? null : register.lecturer })} className='btn btn-sm btn-outline-success'>
+                    <button onClick={handleClickMessage} className='btn btn-sm btn-outline-success'>
                         {register.lecturer.isOnline && <i className="bi bi-circle-fill"></i>}
                         <span className='mx-2'>Liên hệ với giảng viên</span>
                         <i className="bi bi-chat-dots"></i>
+                        {messes.length > 0 && <span className='ms-2 text-danger'>({messes.length})</span>}
                     </button>
                 </div>
                 <TopicInfo title={register.topic?.title} desc={register.topic?.description} lecturer={register.lecturer} />

@@ -19,8 +19,16 @@ export default function ListRegisters() {
     const fetchRegisters = useCallback(async (userId) => {
         await axios.get('http://localhost:8000/api/registers/get-registers-by-lecturer/' + userId)
             .then(res => {
-                if (res.data.status === true) {
-                    setRegisters(res.data.registers)
+                if (res.data.status === true && res.data.registers.length > 0) {
+                    const listStudents = res.data.registers.map(async register => {
+                        const resp = await axios.get(`http://localhost:8000/api/messes/get-messes/${register._id}`)
+                        const newMesses = resp.data.messes.filter(item => item.reader === userId && item.status === false)
+                        register.newMesses = newMesses.length
+                        return register
+                    })
+                    Promise.all(listStudents)
+                        .then(res => setRegisters(res))
+                        .catch(err => console.log(err))
                 }
             })
             .catch(err => console.log(err))
@@ -58,6 +66,18 @@ export default function ListRegisters() {
             .catch(err => console.log(err))
     }
 
+    const handleClickMessage = async (register) => {
+        await axios.patch(`http://localhost:8000/api/messes/read-messes`, {
+            register: register._id,
+            reader: register.lecturer
+        })
+        fetchRegisters(register.lecturer)
+        dispatch({
+            userConversation: state.userConversation ? null : register.student,
+            registerId: register._id
+        })
+    }
+
     return (
         <>
             <h3>Danh sách đăng ký</h3>
@@ -91,10 +111,11 @@ export default function ListRegisters() {
                                         </Link>
                                     </div>
                                     <div className='d-flex justify-content-between'>
-                                        <button onClick={() => dispatch({ userConversation: state.userConversation ? null : register.student })} className='btn btn-sm btn-outline-success'>
+                                        <button onClick={() => handleClickMessage(register)} className='btn btn-sm btn-outline-success'>
                                             {register.student.isOnline && <i className="bi bi-circle-fill"></i>}
                                             <span className='mx-2'>Liên hệ</span>
                                             <i className="bi bi-chat-dots"></i>
+                                            {register.newMesses > 0 && <span className='ms-2 text-danger'>({register.newMesses})</span>}
                                         </button>
                                         <div>
                                             {register.status === true ? (
