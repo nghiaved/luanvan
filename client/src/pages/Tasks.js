@@ -1,5 +1,5 @@
 import Layout from "../components/Layout"
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import React, { useCallback, useEffect, useState } from "react"
 import { jwtDecode } from "jwt-decode"
 import axios from "axios"
@@ -11,8 +11,8 @@ import ButtonModalConfirm from "../components/ButtonModalConfirm"
 
 export default function Tasks() {
     const token = sessionStorage.getItem('token')
-    const location = useLocation()
-    const student = location.state
+    const { username } = useParams()
+    const [student, setStudent] = useState({})
     const [tasks, setTasks] = useState([])
     const [grantt, setGrantt] = useState({})
     const navigate = useNavigate()
@@ -50,8 +50,16 @@ export default function Tasks() {
     }, [student._id])
 
     useEffect(() => {
-        fetchTasks(jwtDecode(token)._id)
-    }, [fetchTasks, token])
+        const fetchUser = async () => {
+            const res = await axios.get(`http://localhost:8000/api/users/get-user/${username}`)
+            setStudent(res.data.user)
+        }
+        fetchUser()
+
+        if (student) {
+            fetchTasks(jwtDecode(token)._id)
+        }
+    }, [fetchTasks, token, username, student])
 
     const handleFinal = async (final) => {
         const res = await axios.patch(`http://localhost:8000/api/registers/final-topic/${student._id}`, { final })

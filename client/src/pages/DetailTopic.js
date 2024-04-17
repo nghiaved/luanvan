@@ -127,7 +127,7 @@ export default function DetailTopic() {
                                             <span className='me-2'>{student.fullname}</span>
                                             <span className='me-2'>{student.username.toUpperCase()}</span>
                                         </div>
-                                        <Link state={student} to='/list-tasks'>
+                                        <Link to={`/list-tasks/${student.username}`}>
                                             <button className="btn btn-outline-primary">Chi tiết</button>
                                         </Link>
                                     </div>

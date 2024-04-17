@@ -5,10 +5,12 @@ import { jwtDecode } from 'jwt-decode'
 import ModalConfirm from '../components/ModalConfirm'
 import convertDesc from '../utils/convertDesc'
 import { toast } from 'react-toastify'
+import DetailTask from './DetailTask'
 
 export default function ListTasks({ data, student }) {
     const token = sessionStorage.getItem('token')
     const [tasks, setTasks] = useState(data)
+    const [taskDetail, setTaskDetail] = useState(data[0])
     const [taskId, setTaskId] = useState(null)
 
     const timeRemaining = (date) => {
@@ -35,12 +37,12 @@ export default function ListTasks({ data, student }) {
             <div className="row my-4">
                 {tasks.map(task => (
                     <div key={task._id} className='col-lg-6 mb-4'>
-                        <div className="card">
+                        <div onClick={() => setTaskDetail(task)}
+                            className={`card ${task._id === taskDetail._id && 'bg-light'}`}
+                            style={{ cursor: 'pointer' }}>
                             <div className="card-header">
                                 <div className="d-flex justify-content-between">
-                                    <Link state={task} to='/detail-task'>
-                                        <b>{task.title}</b>
-                                    </Link>
+                                    <b className={`${task._id === taskDetail._id && 'text-primary'}`}>{task.title}</b>
                                     <div className="card-text">
                                         {task.status
                                             ? <span className='text-success'>Đã nộp {task.points && `(${task.points}%)`} </span>
@@ -54,9 +56,6 @@ export default function ListTasks({ data, student }) {
                                 <div className='d-flex justify-content-between align-items-center'>
                                     <div>{task.start.substring(0, 10)} | {task.end.substring(0, 10)}</div>
                                     <div>
-                                        <Link state={task} to='/detail-task'>
-                                            <i className="bi bi-file-text"></i>
-                                        </Link>
                                         {jwtDecode(token).role === 1 && <>
                                             <Link className="mx-4" state={{ task, student }} to='/update-task'>
                                                 <i className="bi bi-pencil-square text-warning"></i>
@@ -72,6 +71,7 @@ export default function ListTasks({ data, student }) {
                     </div>
                 ))}
             </div>
+            <DetailTask data={taskDetail} />
             <ModalConfirm
                 id='refuseModal'
                 action='Xoá'

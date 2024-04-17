@@ -35,7 +35,7 @@ export default function CreateTask() {
                 if (res.data.status === true) {
                     socket.emit('send-notify', student.username)
                     toast.success(res.data.message)
-                    navigate('/list-tasks', { state: student })
+                    navigate(`/list-tasks/${student.username}`)
                 }
             })
             .catch(err => console.log(err))
@@ -59,7 +59,7 @@ export default function CreateTask() {
             .then(res => {
                 if (res.data.status === true) {
                     toast.success(res.data.message)
-                    navigate('/list-tasks', { state: student })
+                    navigate(`/list-tasks/${student.username}`)
                 }
             })
             .catch(err => console.log(err))

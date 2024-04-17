@@ -119,7 +119,7 @@ export default function ListRegisters() {
                                         </button>
                                         <div>
                                             {register.status === true ? (
-                                                <Link className='ms-2' state={register.student} to='/list-tasks'>Công việc</Link>
+                                                <Link className='ms-2' to={`/list-tasks/${register.student.username}`}>Công việc</Link>
                                             ) : (<>
                                                 <Link className='me-2' data-bs-toggle="modal" data-bs-target="#confirmModal"
                                                     onClick={() => setAction({

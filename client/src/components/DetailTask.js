@@ -1,5 +1,3 @@
-import Layout from '../components/Layout'
-import { useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import React, { useCallback, useEffect, useState } from 'react'
 import { socket } from '../utils/socket'
@@ -9,20 +7,22 @@ import { saveAs } from 'file-saver'
 import { useGlobal } from '../utils/useGlobal'
 import Description from '../components/Description'
 
-export default function DetailTask() {
+export default function DetailTask({ data }) {
     const token = sessionStorage.getItem('token')
-    const location = useLocation()
-    const [task, setTask] = useState(location.state)
-    const navigate = useNavigate()
+    const [task, setTask] = useState({})
     const [fileUpload, setFileUpload] = useState(null)
     const [file, setFile] = useState(null)
     const [state] = useGlobal()
     const [fetchAgain, setFetchAgain] = useState(false)
 
     const fetchFile = useCallback(async () => {
-        const res = await axios.get(`http://localhost:8000/api/files/get-file/${task._id}`)
-        if (res.data.status === true) {
-            setFile(res.data.file)
+        if (task._id) {
+            const res = await axios.get(`http://localhost:8000/api/files/get-file/${task._id}`)
+            if (res.data.status === true) {
+                setFile(res.data.file)
+            } else {
+                setFile(null)
+            }
         }
     }, [task._id])
 
@@ -31,8 +31,11 @@ export default function DetailTask() {
             setFetchAgain(state.fetchAgain)
         }
 
-        fetchFile()
-    }, [fetchFile, fetchAgain, state.fetchAgain])
+        if (data) {
+            setTask(data)
+            fetchFile()
+        }
+    }, [fetchFile, fetchAgain, state.fetchAgain, data])
 
     const handleSubmitTask = async () => {
         if (!fileUpload) return toast.warning("Vui lòng đăng tải theo yêu cầu")
@@ -104,33 +107,32 @@ export default function DetailTask() {
     }
 
     return (
-        <Layout breadcrumb={task.title}>
+        <div className='my-4'>
             {task ? (
                 <div className='mb-4'>
-                    <div className='d-flex justify-content-between align-items-center'>
-                        <h3 className='mb-4'>Thông tin công việc</h3>
+                    <div className='d-flex justify-content-between align-items-center mb-2'>
+                        <h5>
+                            <b className='me-2'>Tên công việc:</b>
+                            <i>{task.title}</i>
+                        </h5>
                         <div className='text-end'>
                             {task.points
                                 ? <>
-                                    <h4 className='text-success'>Đã hoàn thành ({task.points}%)!</h4>
+                                    <h5 className='text-success'>Đã hoàn thành ({task.points}%)!</h5>
                                     <p>{task.note && `Ghi chú: ${task.note}`}</p>
                                 </>
-                                : <h4 className='text-danger'>Chưa có đánh giá!</h4>}
+                                : <h5 className='text-danger'>Chưa có đánh giá!</h5>}
                         </div>
-                    </div>
-                    <div className='mb-2'>
-                        <b className='me-2'>Tên công việc:</b>
-                        <i>{task.title}</i>
                     </div>
                     <Description desc={task.description} />
                     <div className='d-flex mb-2'>
                         <div className='me-5'>
                             <b className='me-2'>Ngày bắt đầu:</b>
-                            {task.start.substring(0, 10)}
+                            {task.start?.substring(0, 10)}
                         </div>
                         <div>
                             <b className='me-2'>Ngày kết thúc:</b>
-                            {task.end.substring(0, 10)}
+                            {task.end?.substring(0, 10)}
                         </div>
                     </div>
                     {file
@@ -141,7 +143,7 @@ export default function DetailTask() {
                             </div>
                             <div>
                                 <b className='me-1'>vào lúc</b>
-                                {file.time.substring(0, 10)}
+                                {file.time?.substring(0, 10)}
                             </div>
                         </div>
                         : jwtDecode(token).role === 1
@@ -221,7 +223,6 @@ export default function DetailTask() {
                         ? <button className='btn btn-danger me-2 pe-none'>Đã hết hạn</button>
                         : <button onClick={handleSubmitTask} className='btn btn-primary me-2'>Nộp bài</button>
             }
-            <button className='btn btn-secondary' onClick={() => navigate(-1)}>Trở lại</button>
-        </Layout>
+        </div>
     )
 }

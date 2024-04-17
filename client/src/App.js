@@ -25,7 +25,6 @@ import Register from './pages/Register'
 import Student from './pages/Student'
 import CreateTask from './pages/CreateTask'
 import Tasks from './pages/Tasks'
-import DetailTask from './pages/DetailTask'
 import Waiting from './pages/Waiting'
 import Account from './pages/Account'
 import Profile from './pages/Profile'
@@ -112,10 +111,9 @@ function App() {
           <Route path='/update-topic' element={navigateWithLecturer(<CreateTopic />)} />
           <Route path='/create-task' element={navigateWithLecturer(<CreateTask />)} />
           <Route path='/update-task' element={navigateWithLecturer(<CreateTask />)} />
-          <Route path='/list-tasks' element={navigateWithLecturer(<Tasks />)} />
+          <Route path='/list-tasks/:username' element={navigateWithLecturer(<Tasks />)} />
           <Route path='/student' element={navigateWithStudent(<Student />)} />
           <Route path='/detail-topic/:slug' element={<DetailTopic />} />
-          <Route path='/detail-task' element={token ? <DetailTask /> : <Navigate to='/' />} />
           <Route path='/waiting' element={token ? <Waiting /> : <Navigate to='/' />} />
           <Route path='/account' element={token ? <Account /> : <Navigate to='/' />} />
           <Route path='/profile/:username' element={<Profile />} />
