@@ -7,7 +7,7 @@ import { saveAs } from 'file-saver'
 import { useGlobal } from '../utils/useGlobal'
 import Description from '../components/Description'
 
-export default function DetailTask({ data }) {
+export default function DetailTask({ data, isAdmin }) {
     const token = sessionStorage.getItem('token')
     const [task, setTask] = useState({})
     const [fileUpload, setFileUpload] = useState(null)
@@ -107,7 +107,7 @@ export default function DetailTask({ data }) {
     }
 
     return (
-        <div className='my-4'>
+        <div className={isAdmin ? '' : 'my-4'}>
             {task ? (
                 <div className='mb-4'>
                     <div className='d-flex justify-content-between align-items-center mb-2'>
@@ -135,94 +135,103 @@ export default function DetailTask({ data }) {
                             {task.end?.substring(0, 10)}
                         </div>
                     </div>
-                    {file
-                        ? <div className='d-flex text-success mb-2'>
-                            <div className='me-1'>
-                                <b className='me-1'>Đã đăng tải file</b>
-                                {file.name}
+                    {!isAdmin && (
+                        file
+                            ? <div className='d-flex text-success mb-2'>
+                                <div className='me-1'>
+                                    <b className='me-1'>Đã đăng tải file</b>
+                                    {file.name}
+                                </div>
+                                <div>
+                                    <b className='me-1'>vào lúc</b>
+                                    {file.time?.substring(0, 10)}
+                                </div>
                             </div>
-                            <div>
-                                <b className='me-1'>vào lúc</b>
-                                {file.time?.substring(0, 10)}
-                            </div>
-                        </div>
-                        : jwtDecode(token).role === 1
-                            ? <div className='mb-2'>
-                                <span className='text-danger'>Sinh viên chưa đăng tải nội dung</span>
-                            </div>
-                            : <div className="mb-2">
-                                <label htmlFor="formFile" className="form-label">Đăng tải nội dung theo yêu cầu</label>
-                                <input disabled={checkExpired(task.end)} onChange={e => setFileUpload(e.target.files[0])} className="form-control" type="file" id="formFile" />
-                            </div>}
+                            : jwtDecode(token).role === 1
+                                ? <div className='mb-2'>
+                                    <span className='text-danger'>Sinh viên chưa đăng tải nội dung</span>
+                                </div>
+                                : <div className="mb-2">
+                                    <label htmlFor="formFile" className="form-label">Đăng tải nội dung theo yêu cầu</label>
+                                    <input disabled={checkExpired(task.end)} onChange={e => setFileUpload(e.target.files[0])} className="form-control" type="file" id="formFile" />
+                                </div>
+                    )}
                 </div>
             ) : (
                 <div className='mb-4'>Không tìm thấy công việc.</div>
             )}
-            {token && jwtDecode(token).role === 1
-                ? file
-                    ? <>
-                        <button onClick={handleDownloadTask} className='btn btn-warning me-2'>Tải file</button>
-                        <button className='btn btn-info me-2' data-bs-toggle="modal" data-bs-target="#exampleModal">Đánh giá {task.points && 'lại'}</button>
-                        <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div className="modal-dialog">
-                                <form onSubmit={handleEvaluateTask} className="modal-content">
-                                    <div className="modal-header">
-                                        <h5 className="modal-title" id="exampleModalLabel">Đánh giá công việc</h5>
-                                        <button name='close' type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div className="modal-body">
-                                        <div className="row mb-3">
-                                            <label htmlFor="colFormLabel" className="col col-form-label">Nhập số điểm (1 - 100): </label>
-                                            <div className="col">
-                                                <input required name='points' type="number" min={0} max={100} className="form-control" id="colFormLabel" />
+            {!isAdmin ? (
+                token && jwtDecode(token).role === 1
+                    ? file
+                        ? <>
+                            <button onClick={handleDownloadTask} className='btn btn-warning me-2'>Tải file</button>
+                            <button className='btn btn-info me-2' data-bs-toggle="modal" data-bs-target="#exampleModal">Đánh giá {task.points && 'lại'}</button>
+                            <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div className="modal-dialog">
+                                    <form onSubmit={handleEvaluateTask} className="modal-content">
+                                        <div className="modal-header">
+                                            <h5 className="modal-title" id="exampleModalLabel">Đánh giá công việc</h5>
+                                            <button name='close' type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div className="modal-body">
+                                            <div className="row mb-3">
+                                                <label htmlFor="colFormLabel" className="col col-form-label">Nhập số điểm (1 - 100): </label>
+                                                <div className="col">
+                                                    <input required name='points' type="number" min={0} max={100} className="form-control" id="colFormLabel" />
+                                                </div>
+                                            </div>
+                                            <div className="row">
+                                                <label htmlFor="colFormLabel" className="col col-form-label">Ghi chú: </label>
+                                                <div className="col">
+                                                    <textarea required name='note' type="text" className="form-control" id="colFormLabel" />
+                                                </div>
                                             </div>
                                         </div>
-                                        <div className="row">
-                                            <label htmlFor="colFormLabel" className="col col-form-label">Ghi chú: </label>
-                                            <div className="col">
-                                                <textarea required name='note' type="text" className="form-control" id="colFormLabel" />
-                                            </div>
+                                        <div className="modal-footer">
+                                            <button type="reset" className="btn btn-secondary" data-bs-dismiss="modal">Trở lại</button>
+                                            <button type="submit" className="btn btn-primary">Đánh giá</button>
                                         </div>
-                                    </div>
-                                    <div className="modal-footer">
-                                        <button type="reset" className="btn btn-secondary" data-bs-dismiss="modal">Trở lại</button>
-                                        <button type="submit" className="btn btn-primary">Đánh giá</button>
-                                    </div>
-                                </form>
+                                    </form>
+                                </div>
                             </div>
-                        </div>
-                    </>
-                    : <>
-                        <button className='btn btn-info me-2' data-bs-toggle="modal" data-bs-target="#exampleModal">Gia hạn</button>
-                        <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div className="modal-dialog">
-                                <form onSubmit={handleExtendTask} className="modal-content">
-                                    <div className="modal-header">
-                                        <h5 className="modal-title" id="exampleModalLabel">Gia hạn công việc</h5>
-                                        <button name='close' type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div className="modal-body">
-                                        <div className="row">
-                                            <label htmlFor="colFormLabel" className="col col-form-label">Nhập số ngày gia hạn: </label>
-                                            <div className="col">
-                                                <input required name='days' type="number" min={0} className="form-control" id="colFormLabel" />
+                        </>
+                        : <>
+                            <button className='btn btn-info me-2' data-bs-toggle="modal" data-bs-target="#exampleModal">Gia hạn</button>
+                            <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div className="modal-dialog">
+                                    <form onSubmit={handleExtendTask} className="modal-content">
+                                        <div className="modal-header">
+                                            <h5 className="modal-title" id="exampleModalLabel">Gia hạn công việc</h5>
+                                            <button name='close' type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div className="modal-body">
+                                            <div className="row">
+                                                <label htmlFor="colFormLabel" className="col col-form-label">Nhập số ngày gia hạn: </label>
+                                                <div className="col">
+                                                    <input required name='days' type="number" min={0} className="form-control" id="colFormLabel" />
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className="modal-footer">
-                                        <button type="reset" className="btn btn-secondary" data-bs-dismiss="modal">Trở lại</button>
-                                        <button type="submit" className="btn btn-primary">Gia hạn</button>
-                                    </div>
-                                </form>
+                                        <div className="modal-footer">
+                                            <button type="reset" className="btn btn-secondary" data-bs-dismiss="modal">Trở lại</button>
+                                            <button type="submit" className="btn btn-primary">Gia hạn</button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
-                        </div>
-                    </>
-                : file
-                    ? <button className='btn btn-success me-2 pe-none'>Đã nộp</button>
+                        </>
+                    : file
+                        ? <button className='btn btn-success me-2 pe-none'>Đã nộp</button>
+                        : checkExpired(task.end)
+                            ? <button className='btn btn-danger me-2 pe-none'>Đã hết hạn</button>
+                            : <button onClick={handleSubmitTask} className='btn btn-primary me-2'>Nộp bài</button>
+            ) : (
+                file
+                    ? <div className='btn btn-success me-2 pe-none'>Đã nộp</div>
                     : checkExpired(task.end)
-                        ? <button className='btn btn-danger me-2 pe-none'>Đã hết hạn</button>
-                        : <button onClick={handleSubmitTask} className='btn btn-primary me-2'>Nộp bài</button>
-            }
+                        ? <div className='btn btn-danger me-2 pe-none'>Đã hết hạn</div>
+                        : <div className='btn btn-warning me-2 pe-none'>Đang thực hiện</div>
+            )}
         </div>
     )
 }

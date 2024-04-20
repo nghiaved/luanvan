@@ -1,22 +1,17 @@
-import Layout from '../components/Layout'
+import AdminLayout from '../components/AdminLayout'
 import axios from 'axios'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
-import { jwtDecode } from 'jwt-decode'
-import { toast } from 'react-toastify'
-import { socket } from '../utils/socket'
 import { useGlobal } from '../utils/useGlobal'
 import Progress from '../components/Progress'
 import TopicInfo from '../components/TopicInfo'
-import ButtonModalConfirm from '../components/ButtonModalConfirm'
 
-export default function DetailTopic() {
+export default function AdminDetailTopic() {
     const token = sessionStorage.getItem('token')
     const location = useLocation()
     const [topic, setTopic] = useState(location.state)
     const navigate = useNavigate()
     const { slug } = useParams()
-    const [register, setRegister] = useState(null)
     const [students, setStudents] = useState([])
     const [state] = useGlobal()
     const [fetchAgain, setFetchAgain] = useState(false)
@@ -34,27 +29,15 @@ export default function DetailTopic() {
             fetchTopic()
         }
 
-        if (token && topic && jwtDecode(token).role !== 1) {
-            const fetchRegister = async () => {
-                const res = await axios.get(`http://localhost:8000/api/registers/get-register?topic=${topic._id}&student=${jwtDecode(token)._id}`)
-                if (res.data.register?.status === undefined) {
-                    setRegister(null)
-                } else {
-                    setRegister(res.data.register?.status)
-                }
-            }
-            fetchRegister()
-        }
-
-        if (token && topic && jwtDecode(token).role === 1) {
+        if (token && topic) {
             const fetchStudents = async () => {
-                const res = await axios.get(`http://localhost:8000/api/registers/get-registers?topic=${topic._id}&lecturer=${jwtDecode(token)._id}`)
+                const res = await axios.get(`http://localhost:8000/api/registers/get-registers?topic=${topic._id}&lecturer=${topic.lecturer._id}`)
                 if (res.data.registers.length > 0) {
                     const listStudents = res.data.registers.map(async item => {
                         const resTasks = await axios.get('http://localhost:8000/api/tasks/get-tasks-by-student-lecturer', {
                             params: {
                                 student: item.student._id,
-                                lecturer: jwtDecode(token)._id
+                                lecturer: topic.lecturer._id
                             }
                         })
                         const tasks = resTasks.data.tasks
@@ -85,32 +68,8 @@ export default function DetailTopic() {
         }
     }, [slug, topic, token, fetchAgain, state.fetchAgain])
 
-    const handlSubscribeTopic = async () => {
-        if (!token) return navigate('/login')
-
-        const resStudent = await axios.get('http://localhost:8000/api/registers/get-register-by-student/' + jwtDecode(token)._id)
-
-        if (resStudent.data.register) {
-            toast.info('You have registered: ' + resStudent.data.register.topic.title)
-            toast.info("Each student is only allowed to register for one topic")
-            return
-        }
-
-        const res = await axios.post('http://localhost:8000/api/registers/create-register', {
-            topic: topic._id,
-            student: jwtDecode(token)._id,
-            lecturer: topic.lecturer._id,
-        })
-
-        if (res.data.status === true) {
-            setRegister(false)
-            socket.emit('send-notify', topic.lecturer.username)
-            toast.success(res.data.message)
-        }
-    }
-
     return (
-        <Layout breadcrumb={topic.title}>
+        <AdminLayout breadcrumb={topic?.title}>
             <h3 className='mb-4'>Thông tin đề tài</h3>
             {topic ? <>
                 <div className='mb-4'>
@@ -133,7 +92,7 @@ export default function DetailTopic() {
                                     </div>
                                     <div className='card-body'>
                                         {student.grantt ? (
-                                            <Progress data={student.grantt} />
+                                            <Progress data={student.grantt} isAdmin />
                                         ) : (
                                             <div className='text-center'>Sinh viên hiện chưa có công việc nào.</div>
                                         )}
@@ -150,24 +109,9 @@ export default function DetailTopic() {
             </> : (
                 <div className='mb-4'>Không tìm thấy đề tài.</div>
             )}
-            {token && (jwtDecode(token).role === 1 || jwtDecode(token).status === false)
-                ? <></>
-                : register === null
-                    ? <ButtonModalConfirm
-                        id='registerModal'
-                        action='Đăng ký'
-                        type='primary'
-                        title='Đăng ký đề tài'
-                        content='Bạn có chắc chắn muốn đăng ký đề tài này?'
-                        func={handlSubscribeTopic}
-                    />
-                    : register === false
-                        ? <button className='btn btn-warning me-2 pe-none'>Chờ xác nhận</button>
-                        : <button className='btn btn-success me-2 pe-none'>Đã xác nhận</button>
-            }
             <div className='text-center'>
                 <button className='btn btn-secondary' onClick={() => navigate(-1)}>Quay về trang trước</button>
             </div>
-        </Layout>
+        </AdminLayout>
     )
 }

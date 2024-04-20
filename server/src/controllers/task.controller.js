@@ -34,6 +34,20 @@ exports.getTasksByStudentLecturer = async (req, res, next) => {
         .catch(next)
 }
 
+exports.getTasksByStudent = async (req, res, next) => {
+    const { student } = req.params
+
+    if (!student) {
+        return res.json({ status: false, message: 'Not enough information' })
+    }
+
+    await taskModel.find({ student })
+        .populate('student', 'username')
+        .populate('lecturer', 'username')
+        .then(tasks => res.json({ status: true, tasks }))
+        .catch(next)
+}
+
 exports.extendTask = async (req, res, next) => {
     const _id = req.params.id
     const { days } = req.body

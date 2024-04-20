@@ -9,16 +9,19 @@ export default function AuthLayout({ name, component }) {
             <header style={{ borderBottom: '4px solid #1c57a5' }}></header>
             <main>
                 <div className='layout-auth-wrapper'>
-                    <div className='flex-fill mt-5'>
-                        <h4 className='text-center mb-3'>
-                            <b>Đề tài:</b> Phát triển ứng dụng quản lý luận văn
+                    <div className='flex-fill'>
+                        <h4 className='mb-3'>
+                            <b>Đề tài:</b> Phát triển ứng dụng quản lý tiến độ đề tài
                         </h4>
-                        <p className='text-center text-secondary mb-1'>
-                            Xây dựng ứng dụng web hỗ trợ quản lý tiến độ thực hiện luận văn
+                        <p className='text-secondary mb-1'>
+                            Xây dựng một ứng dụng web cho phép người dùng theo dõi, kiểm soát và cập nhật tiến độ của các đề tài bằng công nghệ MERN Stack.
                         </p>
+                        <b>Các chức năng chính:</b>
                         <ul className='text-secondary'>
-                            <li>Áp dụng công nghệ MERN Stack</li>
-                            <li>Quản lý tiến độ thực hiện của luận văn</li>
+                            <li>Quản lý đề tài và công việc</li>
+                            <li>Theo dõi tiến độ và đánh giá</li>
+                            <li>Thông báo và nhắc nhở</li>
+                            <li>Báo cáo và thống kê</li>
                         </ul>
                         <div className='d-flex justify-content-between mt-5'>
                             <div>

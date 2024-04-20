@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react"
-import AdminLayout from '../components/AdminLayout'
 import axios from "axios"
-import Avatar from "../components/Avatar"
+import Avatar from "./Avatar"
+import { Link } from "react-router-dom"
 
-export default function AdminProjects() {
+export default function AdminRegisters() {
   const [registers, setRegisters] = useState([])
   const [filter, setFilter] = useState('')
 
@@ -34,9 +34,9 @@ export default function AdminProjects() {
   }
 
   return (
-    <AdminLayout breadcrumb='Đồ án'>
+    <>
       <div className="d-flex justify-content-between align-items-center">
-        <h3>Quản lý đồ án</h3>
+        <h3>Quản lý đăng ký</h3>
         <div className="flex-fill d-flex justify-content-end gap-4">
           <select onChange={(e) => setFilter(e.target.value)} className="form-select home-filter">
             <option defaultChecked value=''>Tất cả</option>
@@ -53,7 +53,11 @@ export default function AdminProjects() {
             <div key={register._id} className='col-lg-6 mb-4'>
               <div className="card h-100">
                 <div className="card-header">
-                  <h6 className="text-nowrap overflow-hidden mb-0">{register.topic.title}</h6>
+                  <h6 className="text-nowrap overflow-hidden mb-0">
+                    <Link to={`/detail-topic/${register.topic.slug}`}>
+                      {register.topic.title}
+                    </Link>
+                  </h6>
                 </div>
                 <div className="card-body">
                   <div className="d-flex justify-content-between">
@@ -61,18 +65,23 @@ export default function AdminProjects() {
                       <b>Giảng viên hướng dẫn</b>
                       <h6>{register.lecturer.fullname} {register.lecturer.username}</h6>
                     </div>
-                    <Avatar src={register.lecturer.avatar} alt={register.lecturer.fullname} />
+                    <Link to={`/profile/${register.lecturer.username}`}>
+                      <Avatar src={register.lecturer.avatar} alt={register.lecturer.fullname} />
+                    </Link>
                   </div>
                   <hr />
                   <div className="d-flex justify-content-between">
-                    <Avatar src={register.student.avatar} alt={register.student.fullname} />
+                    <Link to={`/profile/${register.student.username}`}>
+                      <Avatar src={register.student.avatar} alt={register.student.fullname} />
+                    </Link>
                     <div>
                       <b>Sinh viên thực hiện</b>
                       <h6>{register.student.fullname} {register.student.username.toUpperCase()}</h6>
                     </div>
                   </div>
                   <hr />
-                  <div className="text-end">
+                  <div className="d-flex justify-content-between">
+                    <Link to={`/list-tasks/${register.student.username}`}>Chi tiết</Link>
                     {register.final === true
                       ? <span className="text-success">Đã hoàn thành</span>
                       : register.final === false
@@ -87,6 +96,6 @@ export default function AdminProjects() {
       </> : (
         <div className="mt-4">Chưa có đồ án.</div>
       )}
-    </AdminLayout >
+    </ >
   )
 }

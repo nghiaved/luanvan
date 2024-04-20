@@ -7,7 +7,7 @@ import convertDesc from '../utils/convertDesc'
 import { toast } from 'react-toastify'
 import DetailTask from './DetailTask'
 
-export default function ListTasks({ data, student }) {
+export default function ListTasks({ data, student, isAdmin = false }) {
     const token = sessionStorage.getItem('token')
     const [tasks, setTasks] = useState(data)
     const [taskDetail, setTaskDetail] = useState(data[0])
@@ -71,7 +71,7 @@ export default function ListTasks({ data, student }) {
                     </div>
                 ))}
             </div>
-            <DetailTask data={taskDetail} />
+            <DetailTask data={taskDetail} isAdmin={isAdmin} />
             <ModalConfirm
                 id='refuseModal'
                 action='Xoá'

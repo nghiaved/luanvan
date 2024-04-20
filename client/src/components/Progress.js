@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { ViewMode, Gantt } from "gantt-task-react"
 import DetailTask from './DetailTask'
 
-export default function Progress({ data }) {
+export default function Progress({ data, isAdmin = false }) {
     const [task, setTask] = useState(data[0].task)
 
     return (
@@ -18,7 +18,7 @@ export default function Progress({ data }) {
                 barProgressColor="#198754"
                 fontSize={16}
             />
-            <DetailTask data={task} />
+            <DetailTask data={task} isAdmin={isAdmin} />
         </>
     )
 }

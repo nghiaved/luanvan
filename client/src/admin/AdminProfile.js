@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import Layout from '../components/Layout'
+import AdminLayout from '../components/AdminLayout'
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import Avatar from '../components/Avatar'
 import ProfileInfo from '../components/ProfileInfo'
 
-export default function Profile() {
+export default function AdminProfile() {
     const { username } = useParams()
     const [user, setUser] = useState({})
     const navigate = useNavigate()
@@ -19,7 +19,7 @@ export default function Profile() {
     }, [username])
 
     return (
-        <Layout breadcrumb={`Thông tin ${user.role === 1 ? 'giảng viên' : 'sinh viên'}`}>
+        <AdminLayout breadcrumb={`Thông tin ${user.role === 1 ? 'giảng viên' : 'sinh viên'}`}>
             <div className='d-flex flex-column align-items-center'>
                 <Avatar src={user.avatar} alt={user.fullname} />
                 <div style={{ width: '100%', maxWidth: 500 }}>
@@ -29,6 +29,6 @@ export default function Profile() {
             <div className='text-center'>
                 <button className='btn btn-secondary' onClick={() => navigate(-1)}>Quay về trang trước</button>
             </div>
-        </Layout>
+        </AdminLayout>
     )
 }

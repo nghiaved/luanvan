@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import AdminLayout from '../components/AdminLayout'
-import { Doughnut } from 'react-chartjs-2'
+import { Doughnut, Bar } from 'react-chartjs-2'
 import axios from "axios"
 
 export default function Dashboard() {
@@ -24,10 +24,6 @@ export default function Dashboard() {
                             topics: [
                                 res.data.topics.length,
                                 res.data.topics.reduce((total, item) => item.status === true ? total + 1 : total, 0)
-                            ],
-                            registers: [
-                                res.data.registers.length,
-                                res.data.registers.reduce((total, item) => item.final === true ? total + 1 : total, 0)
                             ]
                         })
                     }
@@ -39,74 +35,42 @@ export default function Dashboard() {
 
     return (
         <AdminLayout>
-            <h3 className='text-center'>Ứng dụng quản lý luận văn!</h3>
+            <h3 className='text-center'>Ứng dụng tiến độ đề tài!</h3>
             <div className='row mt-4'>
                 <div className='col-6'>
                     <div className="card">
                         <div className="card-header">
-                            Sinh viên
+                            Tổng quan
                         </div>
-                        <div className="card-body">
-                            <div className="d-flex justify-content-between">
-                                <div>
-                                    <Link to="/students">
-                                        <h5 className="card-title">Quản lý sinh viên</h5>
-                                    </Link>
-                                    <p className="card-text">Thông tin liên quan đến sinh viên bao gồm: họ tên, chuyên ngành, khoá,...</p>
-                                </div>
-                                {home.students && (
-                                    <div style={{ width: 130, height: 130 }}>
-                                        <Doughnut data={{
-                                            labels: ["Đã xác nhận", "Chờ phản hồi",],
-                                            datasets: [{
-                                                backgroundColor: ["#3e95cd", "#1c57a5"],
-                                                data: [home.students[1], home.students[0] - home.students[1]]
-                                            }]
-                                        }} />
-                                        <p style={{ fontSize: 14 }} className="mt-3 text-end">Số lượng: {home.students[0]}</p>
-                                    </div>
-                                )}
-                            </div>
-                            <Link to="/students">
-                                <button className="btn btn-outline-primary">Xem thêm</button>
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-                <div className='col-6'>
-                    <div className="card">
-                        <div className="card-header">
-                            Giảng viên
-                        </div>
-                        <div className="card-body">
-                            <div className="d-flex justify-content-between">
-                                <div>
-                                    <Link to="/lecturers">
-                                        <h5 className="card-title">Quản lý giảng viên</h5>
-                                    </Link>
-                                    <p className="card-text">Thông tin liên quan đến giảng viên bao gồm: họ tên, chức vụ,...</p>
-                                </div>
-                                {home.lecturers && (
-                                    <div style={{ width: 130, height: 130 }}>
-                                        <Doughnut data={{
-                                            labels: ["Đã xác nhận", "Chờ phản hồi",],
-                                            datasets: [{
-                                                backgroundColor: ["#3e95cd", "#1c57a5"],
-                                                data: [home.lecturers[1], home.lecturers[0] - home.lecturers[1]]
-                                            }]
-                                        }} />
-                                        <p style={{ fontSize: 14 }} className="mt-3 text-end">Số lượng: {home.lecturers[0]}</p>
-                                    </div>
-                                )}
-                            </div>
-                            <Link to="/lecturers">
-                                <button className="btn btn-outline-primary">Xem thêm</button>
-                            </Link>
+                        <div style={{ height: 198 }} className="card-body d-flex justify-content-center">
+                            {home.topics && home.lecturers && home.students && (
+                                <Bar data={{
+                                    labels: ["Giảng viên", "Sinh viên", "Đề tài"],
+                                    datasets: [
+                                        {
+                                            label: "Tổng số",
+                                            data: [
+                                                home.lecturers[0],
+                                                home.students[0],
+                                                home.topics[0]
+                                            ],
+                                            backgroundColor: "#1c57a5",
+                                        },
+                                        {
+                                            label: "Chờ phản hồi",
+                                            data: [
+                                                home.lecturers[0] - home.lecturers[1],
+                                                home.students[0] - home.students[1],
+                                                home.topics[0] - home.topics[1]
+                                            ],
+                                            backgroundColor: "#3e95cd",
+                                        },
+                                    ],
+                                }} />
+                            )}
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className='row mt-4'>
                 <div className='col-6'>
                     <div className="card">
                         <div className="card-header">
@@ -125,7 +89,7 @@ export default function Dashboard() {
                                         <Doughnut data={{
                                             labels: ["Đã xác nhận", "Chờ phản hồi",],
                                             datasets: [{
-                                                backgroundColor: ["#3e95cd", "#1c57a5"],
+                                                backgroundColor: ["#1c57a5", "#3e95cd"],
                                                 data: [home.topics[1], home.topics[0] - home.topics[1]]
                                             }]
                                         }} />
@@ -139,33 +103,67 @@ export default function Dashboard() {
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className='row mt-4'>
                 <div className='col-6'>
                     <div className="card">
                         <div className="card-header">
-                            Đồ án
+                            Giảng viên
                         </div>
                         <div className="card-body">
                             <div className="d-flex justify-content-between">
                                 <div>
-                                    <Link to="/projects">
-                                        <h5 className="card-title">Quản lý đồ án</h5>
+                                    <Link to="/lecturers">
+                                        <h5 className="card-title">Quản lý giảng viên</h5>
                                     </Link>
-                                    <p className="card-text">Thông tin liên quan đến đồ án bao gồm: tên đề tài, sinh viên thực hiện, giảng viên hướng dẫn,...</p>
+                                    <p className="card-text">Thông tin liên quan đến giảng viên bao gồm: họ tên, chức vụ,...</p>
                                 </div>
-                                {home.registers && (
+                                {home.lecturers && (
                                     <div style={{ width: 130, height: 130 }}>
                                         <Doughnut data={{
-                                            labels: ["Đã hoàn thành", "Đang thực hiện",],
+                                            labels: ["Đã xác nhận", "Chờ phản hồi",],
                                             datasets: [{
-                                                backgroundColor: ["#3e95cd", "#1c57a5"],
-                                                data: [home.registers[1], home.registers[0] - home.registers[1]]
+                                                backgroundColor: ["#1c57a5", "#3e95cd"],
+                                                data: [home.lecturers[1], home.lecturers[0] - home.lecturers[1]]
                                             }]
                                         }} />
-                                        <p style={{ fontSize: 14 }} className="mt-3 text-end">Số lượng: {home.registers[0]}</p>
+                                        <p style={{ fontSize: 14 }} className="mt-3 text-end">Số lượng: {home.lecturers[0]}</p>
                                     </div>
                                 )}
                             </div>
-                            <Link to="/projects">
+                            <Link to="/lecturers">
+                                <button className="btn btn-outline-primary">Xem thêm</button>
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+                <div className='col-6'>
+                    <div className="card">
+                        <div className="card-header">
+                            Sinh viên
+                        </div>
+                        <div className="card-body">
+                            <div className="d-flex justify-content-between">
+                                <div>
+                                    <Link to="/students">
+                                        <h5 className="card-title">Quản lý sinh viên</h5>
+                                    </Link>
+                                    <p className="card-text">Thông tin liên quan đến sinh viên bao gồm: họ tên, chuyên ngành, khoá,...</p>
+                                </div>
+                                {home.students && (
+                                    <div style={{ width: 130, height: 130 }}>
+                                        <Doughnut data={{
+                                            labels: ["Đã xác nhận", "Chờ phản hồi",],
+                                            datasets: [{
+                                                backgroundColor: ["#1c57a5", "#3e95cd"],
+                                                data: [home.students[1], home.students[0] - home.students[1]]
+                                            }]
+                                        }} />
+                                        <p style={{ fontSize: 14 }} className="mt-3 text-end">Số lượng: {home.students[0]}</p>
+                                    </div>
+                                )}
+                            </div>
+                            <Link to="/students">
                                 <button className="btn btn-outline-primary">Xem thêm</button>
                             </Link>
                         </div>

@@ -16,7 +16,7 @@ export default function TopBar() {
             <div className='d-flex align-items-center'>
                 <div className='ms-2'>
                     <b>ỨNG DỤNG</b>
-                    <h5 className='mb-0 text-primary'>Quản lý luận văn</h5>
+                    <h5 className='mb-0 text-primary'>Quản lý tiến độ đề tài</h5>
                 </div>
                 <img style={{ height: 60 }} src='/logo.png' alt='Logo CTU' />
             </div>
