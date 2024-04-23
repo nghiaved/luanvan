@@ -121,13 +121,13 @@ exports.getRegisterByStudent = async (req, res, next) => {
 
 exports.finalTopic = async (req, res, next) => {
     const { student } = req.params
-    const { final } = req.body
+    const { final, desc } = req.body
 
-    if (!student) {
+    if (!student || !desc) {
         return res.json({ status: false, message: 'Not enough information' })
     }
 
-    await registerModel.findOneAndUpdate({ student }, { final })
+    await registerModel.findOneAndUpdate({ student }, { final, desc })
         .then(async register => await messageModel.create({
             content: `đã ${final ? 'hoàn thành' : 'chấm dứt'} đề tài.`,
             sender: register.lecturer,

@@ -1,3 +1,4 @@
+const taskModel = require('../models/task.model')
 const messageModel = require('../models/message.model')
 
 exports.getMessages = async (req, res, next) => {
@@ -59,5 +60,24 @@ exports.deleteAllMessages = async (req, res, next) => {
 
     await messageModel.deleteMany({ reader })
         .then(() => res.json({ status: true, message: 'Deleted' }))
+        .catch(next)
+}
+
+exports.remindMessage = async (req, res, next) => {
+    const { content, taskId } = req.body
+
+    if (!content || !taskId) {
+        return res.json({ status: false, message: 'Not enough information' })
+    }
+
+    const task = await taskModel.findById(taskId)
+
+    await messageModel.create({
+        content: `đã nhắc nhở: "${content}"`,
+        sender: task.lecturer,
+        reader: task.student,
+        status: false
+    })
+        .then(() => res.json({ status: true, message: 'Created' }))
         .catch(next)
 }

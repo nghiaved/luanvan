@@ -123,12 +123,16 @@ export default function Student() {
                             <ListTasks data={tasks} />
                         </div>
                     </div>
-                    {register.final === undefined || register.final === null ? <></> : register.final === true ? (
-                        <h3 className='text-success mt-4'>Đề tài của bạn đã hoàn thành!</h3>
-                    ) : (
-                        <h3 className='text-danger mt-4'>Đề tài của bạn đã bị chấm dứt!</h3>
-                    )}
-                </> : (
+                    {register.final === undefined || register.final === null ? <></> : (
+                        <div>
+                            {register.final === true ? (
+                                <h3 className='text-success mt-4'>Đề tài của bạn đã hoàn thành!</h3>
+                            ) : (
+                                <h3 className='text-danger mt-4'>Đề tài của bạn đã bị chấm dứt!</h3>
+                            )}
+                            <h5><b>Mô tả: </b>{register.desc}</h5>
+                        </div>
+                    )} </> : (
                     <div className="mt-4">Bạn chưa có công việc nào.</div>
                 )}
             </>}

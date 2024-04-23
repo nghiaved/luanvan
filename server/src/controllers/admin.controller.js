@@ -70,7 +70,7 @@ exports.acceptTopic = async (req, res, next) => {
 
     await messageModel.create({
         content: 'đã được xác nhận đề tài.',
-        sender: topic.lecturer,
+        sender: 'Bạn',
         reader: topic.lecturer,
         status: false
     })
@@ -91,7 +91,7 @@ exports.refuseTopic = async (req, res, next) => {
 
     await messageModel.create({
         content: 'đã bị từ chối đề tài.',
-        sender: topic.lecturer,
+        sender: 'Bạn',
         reader: topic.lecturer,
         status: false
     })

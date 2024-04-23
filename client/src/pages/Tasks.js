@@ -3,11 +3,9 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import React, { useCallback, useEffect, useState } from "react"
 import { jwtDecode } from "jwt-decode"
 import axios from "axios"
-import { toast } from 'react-toastify'
-import { socket } from '../utils/socket'
 import Progress from '../components/Progress'
 import ListTasks from "../components/ListTasks"
-import ButtonModalConfirm from "../components/ButtonModalConfirm"
+import FinalTopic from "../components/FinalTopic"
 
 export default function Tasks() {
     const token = sessionStorage.getItem('token')
@@ -56,18 +54,10 @@ export default function Tasks() {
         }
         fetchUser()
 
-        if (student) {
+        if (student._id) {
             fetchTasks(jwtDecode(token)._id)
         }
-    }, [fetchTasks, token, username, student])
-
-    const handleFinal = async (final) => {
-        const res = await axios.patch(`http://localhost:8000/api/registers/final-topic/${student._id}`, { final })
-        if (res.data.status === true) {
-            socket.emit('send-notify', student.username)
-            toast.success(res.data.message)
-        }
-    }
+    }, [student._id, username, token, fetchTasks])
 
     return (
         <Layout breadcrumb='Danh sách công việc'>
@@ -102,23 +92,10 @@ export default function Tasks() {
                         <ListTasks data={tasks} student={student} />
                     </div>
                 </div>
-                <ButtonModalConfirm
-                    id='finishModal'
-                    action='Hoàn thành'
-                    type='primary'
-                    title='Hoàn thành đề tài'
-                    content='Bạn có chắc chắn muốn hoàn thành đề tài này?'
-                    func={() => handleFinal(true)}
-                />
-                <ButtonModalConfirm
-                    id='terminateModal'
-                    action='Kết thúc'
-                    type='danger'
-                    title='Kết thúc đề tài'
-                    content='Bạn có chắc chắn muốn kết thúc đề tài này?'
-                    func={() => handleFinal(false)}
-                />
-                <button className='btn btn-secondary ms-2' onClick={() => navigate(-1)}>Trở lại</button>
+                <div className="d-flex justify-content-end">
+                    <FinalTopic student={student} />
+                    <button className='btn btn-secondary ms-2' onClick={() => navigate(-1)}>Trở lại</button>
+                </div>
             </> : (
                 <div className="mt-4">Bạn chưa thêm công việc nào.</div>
             )}

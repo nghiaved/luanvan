@@ -4,23 +4,25 @@ const messageModel = require('../models/message.model')
 const path = require('path')
 
 exports.uploadFile = async (req, res, next) => {
+    const { task, note } = req.body
+
     const file = {
         name: req.file.originalname,
         url: req.file.path,
         time: new Date(),
-        task: req.body.task
+        task, note: note || ''
     }
 
-    const task = await taskModel.findById(req.body.task)
+    const taskResult = await taskModel.findById(task)
 
     await messageModel.create({
         content: 'đã đăng tải nội dụng.',
-        sender: task.student,
-        reader: task.lecturer,
+        sender: taskResult.student,
+        reader: taskResult.lecturer,
         status: false
     })
 
-    await taskModel.updateOne({ _id: req.body.task }, { status: true })
+    await taskModel.updateOne({ _id: task }, { status: true })
 
     await fileModel.create(file)
         .then(() => res.json({ status: true, message: 'Uploaded' }))

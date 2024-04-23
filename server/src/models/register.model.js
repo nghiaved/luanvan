@@ -14,7 +14,8 @@ const registerSchema = new mongoose.Schema({
         ref: 'User'
     },
     status: Boolean,
-    final: Boolean
+    final: Boolean,
+    desc: String,
 })
 
 const Register = mongoose.models.Register || mongoose.model('Register', registerSchema)

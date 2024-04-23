@@ -1,15 +1,11 @@
 import React from 'react'
+import ButtonModal from './ButtonModal'
 import ModalConfirm from './ModalConfirm'
 
 export default function ButtonModalConfirm({ id, action, type, title, content, func }) {
     return (
         <>
-            <button
-                className={`btn btn-${type} me-2`}
-                data-bs-toggle="modal"
-                data-bs-target={`#${id}`}>
-                {action}
-            </button>
+            <ButtonModal id={id} action={action} type={type} />
             <ModalConfirm
                 id={id}
                 action={action}

@@ -5,13 +5,15 @@ import { jwtDecode } from 'jwt-decode'
 import { toast } from 'react-toastify'
 import { saveAs } from 'file-saver'
 import { useGlobal } from '../utils/useGlobal'
-import Description from '../components/Description'
+import Description from './Description'
+import ButtonModalForm from './ButtonModalForm'
 
 export default function DetailTask({ data, isAdmin }) {
     const token = sessionStorage.getItem('token')
     const [task, setTask] = useState({})
     const [fileUpload, setFileUpload] = useState(null)
     const [file, setFile] = useState(null)
+    const [note, setNote] = useState('')
     const [state] = useGlobal()
     const [fetchAgain, setFetchAgain] = useState(false)
 
@@ -43,6 +45,9 @@ export default function DetailTask({ data, isAdmin }) {
         const formData = new FormData()
         formData.append("file", fileUpload)
         formData.append("task", task._id)
+        if (note) {
+            formData.append("note", note)
+        }
 
         await axios.post('http://localhost:8000/api/files/upload-file', formData)
             .then(res => {
@@ -106,6 +111,20 @@ export default function DetailTask({ data, isAdmin }) {
             .catch(err => console.log(err))
     }
 
+    const handleRemindTask = async (e) => {
+        e.preventDefault()
+        const content = e.target.content.value
+        await axios.post('http://localhost:8000/api/messages/remind-message', { taskId: task._id, content })
+            .then(res => {
+                if (res.data.status === true) {
+                    socket.emit('send-notify', task.student.username)
+                    e.target.close.click()
+                    toast.success(res.data.message)
+                }
+            })
+            .catch(err => console.log(err))
+    }
+
     return (
         <div className={isAdmin ? '' : 'my-4'}>
             {task ? (
@@ -137,15 +156,22 @@ export default function DetailTask({ data, isAdmin }) {
                     </div>
                     {!isAdmin && (
                         file
-                            ? <div className='d-flex text-success mb-2'>
-                                <div className='me-1'>
-                                    <b className='me-1'>Đã đăng tải file</b>
-                                    {file.name}
+                            ? <div className='mb-2'>
+                                <div className='d-flex text-success'>
+                                    <div className='me-1'>
+                                        <b className='me-1'>Đã đăng tải file</b>
+                                        {file.name}
+                                    </div>
+                                    <div>
+                                        <b className='me-1'>vào lúc</b>
+                                        {file.time?.substring(0, 10)}
+                                    </div>
                                 </div>
-                                <div>
-                                    <b className='me-1'>vào lúc</b>
-                                    {file.time?.substring(0, 10)}
-                                </div>
+                                {file.note && (
+                                    <div className='mt-1'>
+                                        <b>Mô tả: </b>{file.note}
+                                    </div>
+                                )}
                             </div>
                             : jwtDecode(token).role === 1
                                 ? <div className='mb-2'>
@@ -154,6 +180,8 @@ export default function DetailTask({ data, isAdmin }) {
                                 : <div className="mb-2">
                                     <label htmlFor="formFile" className="form-label">Đăng tải nội dung theo yêu cầu</label>
                                     <input disabled={checkExpired(task.end)} onChange={e => setFileUpload(e.target.files[0])} className="form-control" type="file" id="formFile" />
+                                    <label htmlFor="colFormLabel" className="col col-form-label">Ghi chú: </label>
+                                    <textarea disabled={checkExpired(task.end)} onChange={e => setNote(e.target.value)} type="text" className="form-control" id="colFormLabel" />
                                 </div>
                     )}
                 </div>
@@ -165,60 +193,48 @@ export default function DetailTask({ data, isAdmin }) {
                     ? file
                         ? <>
                             <button onClick={handleDownloadTask} className='btn btn-warning me-2'>Tải file</button>
-                            <button className='btn btn-info me-2' data-bs-toggle="modal" data-bs-target="#exampleModal">Đánh giá {task.points && 'lại'}</button>
-                            <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div className="modal-dialog">
-                                    <form onSubmit={handleEvaluateTask} className="modal-content">
-                                        <div className="modal-header">
-                                            <h5 className="modal-title" id="exampleModalLabel">Đánh giá công việc</h5>
-                                            <button name='close' type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div className="modal-body">
-                                            <div className="row mb-3">
-                                                <label htmlFor="colFormLabel" className="col col-form-label">Nhập số điểm (1 - 100): </label>
-                                                <div className="col">
-                                                    <input required name='points' type="number" min={0} max={100} className="form-control" id="colFormLabel" />
-                                                </div>
-                                            </div>
-                                            <div className="row">
-                                                <label htmlFor="colFormLabel" className="col col-form-label">Ghi chú: </label>
-                                                <div className="col">
-                                                    <textarea required name='note' type="text" className="form-control" id="colFormLabel" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="modal-footer">
-                                            <button type="reset" className="btn btn-secondary" data-bs-dismiss="modal">Trở lại</button>
-                                            <button type="submit" className="btn btn-primary">Đánh giá</button>
-                                        </div>
-                                    </form>
+                            <ButtonModalForm
+                                id='evaluateModal'
+                                action={`Đánh giá ${task.points ? 'lại' : ''}`}
+                                type='info'
+                                title='Đánh giá công việc'
+                                func={handleEvaluateTask}
+                            >
+                                <div className="row">
+                                    <label htmlFor="colFormLabel" className="col col-form-label">Nhập số điểm (1 - 100): </label>
+                                    <div className="col">
+                                        <input required name='points' type="number" min={0} max={100} className="form-control" id="colFormLabel" />
+                                    </div>
                                 </div>
-                            </div>
+                                <label htmlFor="colFormLabel" className="col col-form-label">Ghi chú: </label>
+                                <textarea name='note' type="text" className="form-control" id="colFormLabel" />
+                            </ButtonModalForm>
                         </>
                         : <>
-                            <button className='btn btn-info me-2' data-bs-toggle="modal" data-bs-target="#exampleModal">Gia hạn</button>
-                            <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div className="modal-dialog">
-                                    <form onSubmit={handleExtendTask} className="modal-content">
-                                        <div className="modal-header">
-                                            <h5 className="modal-title" id="exampleModalLabel">Gia hạn công việc</h5>
-                                            <button name='close' type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div className="modal-body">
-                                            <div className="row">
-                                                <label htmlFor="colFormLabel" className="col col-form-label">Nhập số ngày gia hạn: </label>
-                                                <div className="col">
-                                                    <input required name='days' type="number" min={0} className="form-control" id="colFormLabel" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="modal-footer">
-                                            <button type="reset" className="btn btn-secondary" data-bs-dismiss="modal">Trở lại</button>
-                                            <button type="submit" className="btn btn-primary">Gia hạn</button>
-                                        </div>
-                                    </form>
+                            <ButtonModalForm
+                                id='remindModal'
+                                action='Nhắc nhở'
+                                type='warning'
+                                title='Nhắc nhở công việc'
+                                func={handleRemindTask}
+                            >
+                                <label htmlFor="colFormLabel" className="col col-form-label">Nhập nội dung: </label>
+                                <textarea required name='content' type="text" className="form-control" id="colFormLabel" />
+                            </ButtonModalForm>
+                            <ButtonModalForm
+                                id='extendModal'
+                                action='Gia hạn'
+                                type='info'
+                                title='Nhắc nhở công việc'
+                                func={handleExtendTask}
+                            >
+                                <div className="row">
+                                    <label htmlFor="colFormLabel" className="col col-form-label">Nhập số ngày gia hạn: </label>
+                                    <div className="col">
+                                        <input required name='days' type="number" min={0} className="form-control" id="colFormLabel" />
+                                    </div>
                                 </div>
-                            </div>
+                            </ButtonModalForm>
                         </>
                     : file
                         ? <button className='btn btn-success me-2 pe-none'>Đã nộp</button>
