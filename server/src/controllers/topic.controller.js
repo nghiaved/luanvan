@@ -8,7 +8,7 @@ exports.createTopic = async (req, res, next) => {
     }
 
     await topicModel.create({ title, description, lecturer })
-        .then(() => res.json({ status: true, message: 'Created' }))
+        .then(() => res.json({ status: true, message: 'Bạn đã thêm đề tài mới!' }))
         .catch(next)
 }
 
@@ -51,7 +51,7 @@ exports.updateTopic = async (req, res, next) => {
     }
 
     await topicModel.updateOne({ _id }, { title, description })
-        .then(() => res.json({ status: true, message: 'Updated' }))
+        .then(() => res.json({ status: true, message: 'Bạn đã cập nhật đề tài!' }))
         .catch(next)
 }
 
@@ -63,6 +63,6 @@ exports.deleteTopic = async (req, res, next) => {
     }
 
     await topicModel.findOneAndDelete({ _id })
-        .then(() => res.json({ status: true, message: 'Deleted' }))
+        .then(() => res.json({ status: true, message: 'Bạn đã xoá đề tài!' }))
         .catch(next)
 }

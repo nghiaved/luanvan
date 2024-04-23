@@ -10,11 +10,11 @@ exports.register = async (req, res, next) => {
 
     await userModel.findOne({ username })
         .then(async user => {
-            if (user) return res.json({ status: false, message: 'User already exists' })
+            if (user) return res.json({ status: false, message: 'Tên tài khoản đã tồn tại!' })
 
             const newUser = new userModel({ fullname, username, password, role })
             await newUser.save()
-                .then(() => res.json({ status: true, message: 'Registered' }))
+                .then(() => res.json({ status: true, message: 'Bạn đã đăng ký thành công!' }))
                 .catch(next)
         })
         .catch(next)
@@ -29,10 +29,10 @@ exports.login = async (req, res, next) => {
 
     await userModel.findOne({ username })
         .then(async user => {
-            if (!user) return res.json({ status: false, message: `User don't exist` })
+            if (!user) return res.json({ status: false, message: `Tên tài khoản không tồn tại!` })
 
             const isMatch = await user.comparePassword(password)
-            if (!isMatch) return res.json({ status: false, message: `Password invalid` })
+            if (!isMatch) return res.json({ status: false, message: `Mật khẩu không chính xác!` })
 
             const tokenData = { _id: user._id, fullname: user.fullname, username, role: user.role, status: user.status }
 
@@ -67,7 +67,7 @@ exports.updateInfo = async (req, res, next) => {
     }
 
     await userModel.findByIdAndUpdate(_id, req.body)
-        .then(() => res.json({ status: true, message: 'Updated' }))
+        .then(() => res.json({ status: true, message: 'Bạn đã cập nhật thông tin!' }))
         .catch(next)
 }
 
@@ -81,10 +81,10 @@ exports.changePassword = async (req, res, next) => {
 
     const user = await userModel.findById(_id)
     const isMatch = await user.comparePassword(password)
-    if (!isMatch) return res.json({ status: false, message: `Current password is incorrect` })
+    if (!isMatch) return res.json({ status: false, message: `Mật khẩu hiện tại không chính xác!` })
 
     await userModel.updateOne({ _id }, { password: newPassword })
-        .then(() => res.json({ status: true, message: 'Changed' }))
+        .then(() => res.json({ status: true, message: 'Bạn đã đổi mật khẩu!' }))
         .catch(next)
 }
 

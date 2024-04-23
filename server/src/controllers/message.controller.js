@@ -47,7 +47,7 @@ exports.deleteMessage = async (req, res, next) => {
     }
 
     await messageModel.findByIdAndDelete(reader)
-        .then(() => res.json({ status: true, message: 'Deleted' }))
+        .then(() => res.json({ status: true, message: 'Bạn đã xoá một thông báo!' }))
         .catch(next)
 }
 
@@ -59,7 +59,7 @@ exports.deleteAllMessages = async (req, res, next) => {
     }
 
     await messageModel.deleteMany({ reader })
-        .then(() => res.json({ status: true, message: 'Deleted' }))
+        .then(() => res.json({ status: true, message: 'Bạn đã xoá tất cả thông báo!' }))
         .catch(next)
 }
 
@@ -78,6 +78,6 @@ exports.remindMessage = async (req, res, next) => {
         reader: task.student,
         status: false
     })
-        .then(() => res.json({ status: true, message: 'Created' }))
+        .then(() => res.json({ status: true, message: 'Bạn đã nhắc nhở thành công!' }))
         .catch(next)
 }

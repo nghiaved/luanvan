@@ -43,7 +43,7 @@ exports.acceptUser = async (req, res, next) => {
     }
 
     await userModel.findByIdAndUpdate(_id, { status: true })
-        .then(() => res.json({ status: true, message: 'Accepted' }))
+        .then(() => res.json({ status: true, message: 'Bạn đã xác nhận người dùng!' }))
         .catch(next)
 }
 
@@ -55,7 +55,7 @@ exports.refuseUser = async (req, res, next) => {
     }
 
     await userModel.findByIdAndDelete(_id)
-        .then(() => res.json({ status: true, message: 'Refused' }))
+        .then(() => res.json({ status: true, message: 'Bạn đã từ chối người dùng!' }))
         .catch(next)
 }
 
@@ -76,7 +76,7 @@ exports.acceptTopic = async (req, res, next) => {
     })
 
     await topicModel.findByIdAndUpdate(_id, { status: true })
-        .then(() => res.json({ status: true, message: 'Accepted' }))
+        .then(() => res.json({ status: true, message: 'Bạn đã xác nhận đề tài!' }))
         .catch(next)
 }
 
@@ -97,6 +97,6 @@ exports.refuseTopic = async (req, res, next) => {
     })
 
     await topicModel.findByIdAndDelete(_id)
-        .then(() => res.json({ status: true, message: 'Refused' }))
+        .then(() => res.json({ status: true, message: 'Bạn đã từ chối đề tài!' }))
         .catch(next)
 }

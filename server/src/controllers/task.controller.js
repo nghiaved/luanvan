@@ -16,7 +16,7 @@ exports.createTask = async (req, res, next) => {
     })
 
     await taskModel.create({ title, description, start, end, student, lecturer, status: false })
-        .then(() => res.json({ status: true, message: 'Created' }))
+        .then(() => res.json({ status: true, message: 'Bạn đã thêm công việc mới!' }))
         .catch(next)
 }
 
@@ -68,7 +68,7 @@ exports.extendTask = async (req, res, next) => {
     await taskModel.updateOne({ _id }, { end: days })
 
     await taskModel.findById(_id)
-        .then(task => res.json({ status: true, task, message: 'Extended' }))
+        .then(task => res.json({ status: true, task, message: 'Bạn đã gia hạn công việc!' }))
         .catch(next)
 }
 
@@ -92,7 +92,7 @@ exports.evaluateTask = async (req, res, next) => {
     await taskModel.updateOne({ _id }, { points: parseInt(points), note: note || '' })
 
     await taskModel.findById(_id)
-        .then(task => res.json({ status: true, task, message: 'Evaluated' }))
+        .then(task => res.json({ status: true, task, message: 'Bạn đã đánh giá công việc!' }))
         .catch(next)
 }
 
@@ -105,7 +105,7 @@ exports.updateTask = async (req, res, next) => {
     }
 
     await taskModel.updateOne({ _id }, { title, description, start, end })
-        .then(() => res.json({ status: true, message: 'Updated' }))
+        .then(() => res.json({ status: true, message: 'Bạn đã cập nhật công việc!' }))
         .catch(next)
 }
 
@@ -117,6 +117,6 @@ exports.deleteTask = async (req, res, next) => {
     }
 
     await taskModel.findOneAndDelete({ _id })
-        .then(() => res.json({ status: true, message: 'Deleted' }))
+        .then(() => res.json({ status: true, message: 'Bạn đã xoá công việc!' }))
         .catch(next)
 }

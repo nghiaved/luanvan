@@ -10,7 +10,7 @@ export default function ChangePassword() {
         const { currentPassword, newPassword, renewPassword } = e.target
 
         if (newPassword.value !== renewPassword.value) {
-            return toast.error('Re-enter incorrect password')
+            return toast.error('Nhập lại mật khẩu không chính xác!')
         }
 
         const token = sessionStorage.getItem('token')

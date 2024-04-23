@@ -17,7 +17,7 @@ exports.createRegister = async (req, res, next) => {
     })
 
     await registerModel.create({ topic, student, lecturer, status: false })
-        .then(() => res.json({ status: true, message: 'Created' }))
+        .then(() => res.json({ status: true, message: 'Bạn đã đăng ký đề tài!' }))
         .catch(next)
 }
 
@@ -55,7 +55,7 @@ exports.acceptRegister = async (req, res, next) => {
     })
 
     await registerModel.updateOne({ _id }, { status: true })
-        .then(() => res.json({ status: true, message: 'Accepted' }))
+        .then(() => res.json({ status: true, message: 'Bạn đã chấp nhận đăng ký!' }))
         .catch(next)
 }
 
@@ -76,7 +76,7 @@ exports.refuseRegister = async (req, res, next) => {
     })
 
     await registerModel.findOneAndDelete({ _id })
-        .then(() => res.json({ status: true, message: 'Refused' }))
+        .then(() => res.json({ status: true, message: 'Bạn đã từ chối đăng ký!' }))
         .catch(next)
 }
 
@@ -134,6 +134,6 @@ exports.finalTopic = async (req, res, next) => {
             reader: register.student,
             status: false
         }))
-        .then(() => res.json({ status: true, message: final ? 'Finished' : 'Terminated' }))
+        .then(() => res.json({ status: true, message: final ? 'Bạn đã xác nhận hoàn thành!' : 'Bạn đã chấm dứt đề tài!' }))
         .catch(next)
 }

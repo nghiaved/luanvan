@@ -25,7 +25,7 @@ exports.uploadFile = async (req, res, next) => {
     await taskModel.updateOne({ _id: task }, { status: true })
 
     await fileModel.create(file)
-        .then(() => res.json({ status: true, message: 'Uploaded' }))
+        .then(() => res.json({ status: true, message: 'Bạn đã đăng tải nội dung!' }))
         .catch(next)
 }
 

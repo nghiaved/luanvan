@@ -19,7 +19,7 @@ export default function CreateTask() {
         if (!description
             .replaceAll("<p>", "").replaceAll("</p>", "")
             .replaceAll("<br>", "").replaceAll("<br/>", "").trim())
-            return toast.error('Vui lòng thêm mô tả công việc')
+            return toast.error('Vui lòng thêm mô tả công việc!')
 
         const token = sessionStorage.getItem('token')
         const data = {
@@ -47,7 +47,7 @@ export default function CreateTask() {
         if (!description
             .replaceAll("<p>", "").replaceAll("</p>", "")
             .replaceAll("<br>", "").replaceAll("<br/>", "").trim())
-            return toast.error('Vui lòng thêm mô tả công việc')
+            return toast.error('Vui lòng thêm mô tả công việc!')
 
         const data = {
             title: e.target.title.value,

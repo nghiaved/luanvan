@@ -18,7 +18,7 @@ export default function CreateTopic() {
         if (!description
             .replaceAll("<p>", "").replaceAll("</p>", "")
             .replaceAll("<br>", "").replaceAll("<br/>", "").trim())
-            return toast.error('Vui lòng thêm mô tả đề tài')
+            return toast.error('Vui lòng thêm mô tả đề tài!')
 
         const token = sessionStorage.getItem('token')
         const data = {
@@ -42,7 +42,7 @@ export default function CreateTopic() {
         if (!description
             .replaceAll("<p>", "").replaceAll("</p>", "")
             .replaceAll("<br>", "").replaceAll("<br/>", "").trim())
-            return toast.error('Vui lòng thêm mô tả đề tài')
+            return toast.error('Vui lòng thêm mô tả đề tài!')
 
         const data = {
             title: e.target.title.value,

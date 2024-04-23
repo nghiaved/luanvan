@@ -91,8 +91,8 @@ export default function DetailTopic() {
         const resStudent = await axios.get('http://localhost:8000/api/registers/get-register-by-student/' + jwtDecode(token)._id)
 
         if (resStudent.data.register) {
-            toast.info('You have registered: ' + resStudent.data.register.topic.title)
-            toast.info("Each student is only allowed to register for one topic")
+            toast.info('Bạn đã đăng ký: ' + resStudent.data.register.topic.title)
+            toast.info("Mỗi sinh viên chỉ được phép đăng ký một đề tài!")
             return
         }
 
