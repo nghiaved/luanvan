@@ -1,6 +1,6 @@
 .DS_Store
-client/node_modules/
-client/package-lock.json
-server/node_modules/
-server/package-lock.json
-server/src/uploads
+Back-End/node_modules/
+Back-End/package-lock.json
+Back-End/src/uploads
+Front-End/node_modules/
+Front-End/package-lock.json

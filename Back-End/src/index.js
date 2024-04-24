@@ -15,9 +15,11 @@ const messageRoute = require('./routes/message.route')
 const messRoute = require('./routes/mess.route')
 const adminRoute = require('./routes/admin.route')
 
+require('dotenv').config()
+
 const app = express()
 
-mongoose.connect('mongodb://localhost:27017/luanvan')
+mongoose.connect(process.env.MONGODB)
     .then(() => console.log('Database connection successful!'))
     .catch(err => console.log(err))
 
@@ -41,7 +43,7 @@ app.use('/api/admin', adminRoute)
 
 const server = http.createServer(app)
 
-const io = new Server(server, { cors: { origin: 'http://localhost:3000', methods: ['GET', 'POST'] } })
+const io = new Server(server, { cors: { origin: process.env.CLIENT_URL, methods: ['GET', 'POST'] } })
 
 const userModel = require('./models/user.model')
 
@@ -57,4 +59,4 @@ io.on('connection', socket => {
     socket.on('send-notify', username => io.to(username).emit('receive-notify', username))
 })
 
-server.listen(8000, () => console.log(`Server's listening at http://localhost:8000`))
+server.listen(process.env.PORT, () => console.log(`Server's listening at http://localhost:${process.env.PORT}`))
