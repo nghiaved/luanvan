@@ -81,7 +81,7 @@ export default function Tasks() {
                     <div className="tab-pane fade show active" id="overview">
                         <h3>Tiến độ thực hiện</h3>
                         <div className="row my-4">
-                            <Progress data={grantt.data} />
+                            <Progress data={grantt.data} isAdmin />
                             <div className="mt-2 text-end">
                                 <b className='me-2'>Tổng số công việc hoàn thành:</b>
                                 <i>{grantt.totalCompleted}/{grantt.totalCount}</i>

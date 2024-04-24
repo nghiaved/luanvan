@@ -133,7 +133,7 @@ export default function DetailTopic() {
                                     </div>
                                     <div className='card-body'>
                                         {student.grantt ? (
-                                            <Progress data={student.grantt} />
+                                            <Progress data={student.grantt} isAdmin />
                                         ) : (
                                             <div className='text-center'>Sinh viên hiện chưa có công việc nào.</div>
                                         )}

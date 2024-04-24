@@ -34,7 +34,7 @@ export default function ListTasks({ data, student, isAdmin = false }) {
     return (
         <>
             <h3>Danh sách công việc</h3>
-            <div className="row my-4">
+            <div className="row mt-4">
                 {tasks.map(task => (
                     <div key={task._id} className='col-lg-6 mb-4'>
                         <div onClick={() => setTaskDetail(task)}
