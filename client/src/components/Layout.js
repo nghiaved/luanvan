@@ -62,7 +62,7 @@ export default function Layout({ children, breadcrumb }) {
         }
     }
 
-    const handleDeleteAllMessages = async (id) => {
+    const handleDeleteAllMessages = async () => {
         const res = await axios.delete('http://localhost:8000/api/messages/delete-all-messages/' + jwtDecode(token)._id)
         if (res.data.status === true) {
             toast.success(res.data.message)
@@ -100,7 +100,7 @@ export default function Layout({ children, breadcrumb }) {
                                             onClick={() => handleReadMessage(item._id)}
                                             className={item.status === true ? 'text-secondary' : 'text-primary'}
                                             to={jwtDecode(token).role === 1 ? '/lecturer' : '/student'}>
-                                            {item.sender.fullname + ' ' + item.content}
+                                            {item.sender ? item.sender.fullname + ' ' + item.content : item.content}
                                         </Link>
                                         <i onClick={e => {
                                             e.stopPropagation()
