@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import Layout from '../components/Layout'
+import Layout from '../components/layouts/Layout'
 import { jwtDecode } from 'jwt-decode'
 import axios from 'axios'
-import ProfileInfo from '../components/ProfileInfo'
-import UpdateInfo from '../components/UpdateInfo'
-import ChangePassword from '../components/ChangePassword'
-import Avatar from '../components/Avatar'
-import Status from '../components/Status'
+import ProfileInfo from '../components/profile/ProfileInfo'
+import UpdateInfo from '../components/profile/UpdateInfo'
+import ChangePassword from '../components/profile/ChangePassword'
+import Avatar from '../components/profile/Avatar'
+import Status from '../components/others/Status'
 
 export default function Account() {
     const token = sessionStorage.getItem('token')

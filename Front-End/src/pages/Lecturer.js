@@ -1,7 +1,7 @@
 import React from "react"
-import Layout from "../components/Layout"
-import ListTopics from "../components/ListTopics"
-import ListRegisters from "../components/ListRegisters"
+import Layout from "../components/layouts/Layout"
+import ListTopics from "../components/topics/ListTopics"
+import ListRegisters from "../components/others/ListRegisters"
 
 export default function Lecturer() {
     return (

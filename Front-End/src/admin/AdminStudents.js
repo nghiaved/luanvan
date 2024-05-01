@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react"
-import AdminLayout from '../components/AdminLayout'
-import ModalConfirm from '../components/ModalConfirm'
-import ProfileInfo from "../components/ProfileInfo"
+import AdminLayout from '../components/layouts/AdminLayout'
+import ModalConfirm from '../components/modals/ModalConfirm'
+import ProfileInfo from "../components/profile/ProfileInfo"
 import { toast } from 'react-toastify'
 import axios from "axios"
-import Avatar from "../components/Avatar"
+import Avatar from "../components/profile/Avatar"
 
 export default function AdminStudents() {
   const [students, setStudents] = useState([])

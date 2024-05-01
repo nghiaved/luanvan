@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import Layout from '../components/Layout'
+import Layout from '../components/layouts/Layout'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { useNavigate } from 'react-router-dom'
 import { useGlobal } from '../utils/useGlobal'
-import Progress from '../components/Progress'
-import ListTasks from '../components/ListTasks'
-import TopicInfo from '../components/TopicInfo'
-import Status from '../components/Status'
+import Progress from '../components/tasks/Progress'
+import ListTasks from '../components/tasks/ListTasks'
+import TopicInfo from '../components/topics/TopicInfo'
+import Status from '../components/others/Status'
 
 export default function Student() {
     const [register, setRegister] = useState(null)

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import Layout from "../components/Layout"
+import Layout from "../components/layouts/Layout"
 import axios from "axios"
 import { Link, useNavigate } from 'react-router-dom'
 import { jwtDecode } from 'jwt-decode'

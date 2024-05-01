@@ -1,6 +1,6 @@
 import React from 'react'
-import AuthLayout from '../components/AuthLayout'
-import FormRegister from '../components/FormRegister'
+import AuthLayout from '../components/layouts/AuthLayout'
+import FormRegister from '../components/auth/FormRegister'
 
 export default function Register() {
     return (

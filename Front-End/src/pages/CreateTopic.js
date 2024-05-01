@@ -1,4 +1,4 @@
-import Layout from '../components/Layout'
+import Layout from '../components/layouts/Layout'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
 import { useLocation, useNavigate } from 'react-router-dom'

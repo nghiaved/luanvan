@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import AdminLayout from '../components/AdminLayout'
+import AdminLayout from '../components/layouts/AdminLayout'
 import { jwtDecode } from 'jwt-decode'
 import axios from 'axios'
-import ProfileInfo from '../components/ProfileInfo'
-import UpdateInfo from '../components/UpdateInfo'
-import ChangePassword from '../components/ChangePassword'
-import Avatar from '../components/Avatar'
+import ProfileInfo from '../components/profile/ProfileInfo'
+import UpdateInfo from '../components/profile/UpdateInfo'
+import ChangePassword from '../components/profile/ChangePassword'
+import Avatar from '../components/profile/Avatar'
 
 export default function AdminAccount() {
     const token = sessionStorage.getItem('token')

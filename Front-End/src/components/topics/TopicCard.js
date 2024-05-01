@@ -1,8 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import Avatar from './Avatar'
-import convertDesc from '../utils/convertDesc'
-import checkStatus from '../utils/checkStatus'
+import Avatar from '../profile/Avatar'
+import convertDesc from '../../utils/convertDesc'
+import checkStatus from '../../utils/checkStatus'
 
 export default function TopicCard({ topic }) {
     return (

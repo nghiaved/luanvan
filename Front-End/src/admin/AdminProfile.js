@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import AdminLayout from '../components/AdminLayout'
+import AdminLayout from '../components/layouts/AdminLayout'
 import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
-import Avatar from '../components/Avatar'
-import ProfileInfo from '../components/ProfileInfo'
+import Avatar from '../components/profile/Avatar'
+import ProfileInfo from '../components/profile/ProfileInfo'
 
 export default function AdminProfile() {
     const { username } = useParams()

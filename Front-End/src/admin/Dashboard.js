@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import AdminLayout from '../components/AdminLayout'
+import AdminLayout from '../components/layouts/AdminLayout'
 import { Doughnut, Bar } from 'react-chartjs-2'
 import axios from "axios"
 

@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react"
-import AdminLayout from '../components/AdminLayout'
-import Avatar from '../components/Avatar'
-import ProfileInfo from '../components/ProfileInfo'
-import ModalConfirm from '../components/ModalConfirm'
+import AdminLayout from '../components/layouts/AdminLayout'
+import Avatar from '../components/profile/Avatar'
+import ProfileInfo from '../components/profile/ProfileInfo'
+import ModalConfirm from '../components/modals/ModalConfirm'
 import { toast } from 'react-toastify'
 import axios from "axios"
 

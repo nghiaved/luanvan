@@ -1,10 +1,10 @@
-import AdminLayout from '../components/AdminLayout'
+import AdminLayout from '../components/layouts/AdminLayout'
 import axios from 'axios'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
 import { useGlobal } from '../utils/useGlobal'
-import Progress from '../components/Progress'
-import TopicInfo from '../components/TopicInfo'
+import Progress from '../components/tasks/Progress'
+import TopicInfo from '../components/topics/TopicInfo'
 
 export default function AdminDetailTopic() {
     const token = sessionStorage.getItem('token')

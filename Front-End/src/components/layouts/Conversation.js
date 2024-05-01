@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import { jwtDecode } from 'jwt-decode'
-import { useGlobal } from '../utils/useGlobal'
-import { socket } from '../utils/socket'
+import { useGlobal } from '../../utils/useGlobal'
+import { socket } from '../../utils/socket'
 
 export default function Conversation() {
     const token = sessionStorage.getItem('token')

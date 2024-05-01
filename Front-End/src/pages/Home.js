@@ -1,7 +1,7 @@
-import Layout from "../components/Layout"
+import Layout from "../components/layouts/Layout"
 import React, { useCallback, useEffect, useState } from "react"
 import axios from "axios"
-import TopicCard from "../components/TopicCard"
+import TopicCard from "../components/topics/TopicCard"
 
 export default function Home() {
     const [data, setData] = useState({})

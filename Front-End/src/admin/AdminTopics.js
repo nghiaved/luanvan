@@ -1,7 +1,7 @@
 import React from "react"
-import AdminLayout from '../components/AdminLayout'
-import AdminTopics from '../components/AdminTopics'
-import AdminRegisters from '../components/AdminRegisters'
+import AdminLayout from '../components/layouts/AdminLayout'
+import AdminTopics from '../components/admin/AdminTopics'
+import AdminRegisters from '../components/admin/AdminRegisters'
 
 export default function Topics() {
   return (

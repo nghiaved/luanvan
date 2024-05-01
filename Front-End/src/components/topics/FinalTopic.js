@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import axios from "axios"
 import { toast } from 'react-toastify'
-import { socket } from '../utils/socket'
-import ButtonModalForm from "./ButtonModalForm"
+import { socket } from '../../utils/socket'
+import ButtonModalForm from "../modals/ButtonModalForm"
 
 export default function FinalTopic({ student }) {
     const [final, setFinal] = useState({})

@@ -1,11 +1,11 @@
-import Layout from "../components/Layout"
+import Layout from "../components/layouts/Layout"
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import React, { useCallback, useEffect, useState } from "react"
 import { jwtDecode } from "jwt-decode"
 import axios from "axios"
-import Progress from '../components/Progress'
-import ListTasks from "../components/ListTasks"
-import FinalTopic from "../components/FinalTopic"
+import Progress from '../components/tasks/Progress'
+import ListTasks from "../components/tasks/ListTasks"
+import FinalTopic from "../components/topics/FinalTopic"
 
 export default function Tasks() {
     const token = sessionStorage.getItem('token')

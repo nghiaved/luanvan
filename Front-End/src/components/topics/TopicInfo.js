@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import Description from './Description'
+import Description from '../others/Description'
 
 export default function TopicInfo({ title, desc, lecturer }) {
     return (

@@ -1,12 +1,12 @@
 import axios from 'axios'
 import React, { useCallback, useEffect, useState } from 'react'
-import { socket } from '../utils/socket'
+import { socket } from '../../utils/socket'
 import { jwtDecode } from 'jwt-decode'
 import { toast } from 'react-toastify'
 import { saveAs } from 'file-saver'
-import { useGlobal } from '../utils/useGlobal'
-import Description from './Description'
-import ButtonModalForm from './ButtonModalForm'
+import { useGlobal } from '../../utils/useGlobal'
+import Description from '../others/Description'
+import ButtonModalForm from '../modals/ButtonModalForm'
 
 export default function DetailTask({ data, isAdmin }) {
     const token = sessionStorage.getItem('token')

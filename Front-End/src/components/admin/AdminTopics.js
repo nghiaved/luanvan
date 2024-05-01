@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react"
-import ModalConfirm from '../components/ModalConfirm'
+import ModalConfirm from '../modals/ModalConfirm'
 import { toast } from 'react-toastify'
-import { socket } from '../utils/socket'
+import { socket } from '../../utils/socket'
 import axios from "axios"
 import { Link } from "react-router-dom"
-import Avatar from "../components/Avatar"
-import checkStatus from '../utils/checkStatus'
+import Avatar from "../profile/Avatar"
+import checkStatus from '../../utils/checkStatus'
 
 export default function AdminTopics() {
     const [topics, setTopics] = useState([])

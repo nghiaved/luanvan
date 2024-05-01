@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react"
 import axios from "axios"
-import Avatar from "./Avatar"
+import Avatar from "../profile/Avatar"
 import { Link } from "react-router-dom"
 
 export default function AdminRegisters() {

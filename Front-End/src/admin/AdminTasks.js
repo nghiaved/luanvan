@@ -1,9 +1,9 @@
-import AdminLayout from "../components/AdminLayout"
+import AdminLayout from "../components/layouts/AdminLayout"
 import { useNavigate, useParams } from 'react-router-dom'
 import React, { useCallback, useEffect, useState } from "react"
 import axios from "axios"
-import Progress from '../components/Progress'
-import ListTasks from "../components/ListTasks"
+import Progress from '../components/tasks/Progress'
+import ListTasks from "../components/tasks/ListTasks"
 
 export default function AdminTasks() {
     const token = sessionStorage.getItem('token')

@@ -2,7 +2,7 @@ import axios from 'axios'
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { socket } from '../utils/socket'
+import { socket } from '../../utils/socket'
 
 export default function FormLogin() {
     const navigate = useNavigate()

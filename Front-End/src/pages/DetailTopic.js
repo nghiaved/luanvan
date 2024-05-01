@@ -1,4 +1,4 @@
-import Layout from '../components/Layout'
+import Layout from '../components/layouts/Layout'
 import axios from 'axios'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
@@ -6,9 +6,9 @@ import { jwtDecode } from 'jwt-decode'
 import { toast } from 'react-toastify'
 import { socket } from '../utils/socket'
 import { useGlobal } from '../utils/useGlobal'
-import Progress from '../components/Progress'
-import TopicInfo from '../components/TopicInfo'
-import ButtonModalConfirm from '../components/ButtonModalConfirm'
+import Progress from '../components/tasks/Progress'
+import TopicInfo from '../components/topics/TopicInfo'
+import ButtonModalConfirm from '../components/modals/ButtonModalConfirm'
 
 export default function DetailTopic() {
     const token = sessionStorage.getItem('token')

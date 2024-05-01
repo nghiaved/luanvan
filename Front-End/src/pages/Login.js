@@ -1,6 +1,6 @@
 import React from 'react'
-import AuthLayout from '../components/AuthLayout'
-import FormLogin from '../components/FormLogin'
+import AuthLayout from '../components/layouts/AuthLayout'
+import FormLogin from '../components/auth/FormLogin'
 
 export default function Login() {
     return (

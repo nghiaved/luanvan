@@ -2,11 +2,11 @@ import { Link } from 'react-router-dom'
 import React, { useCallback, useEffect, useState } from "react"
 import { jwtDecode } from "jwt-decode"
 import { toast } from 'react-toastify'
-import { useGlobal } from '../utils/useGlobal'
-import { socket } from '../utils/socket'
-import Avatar from '../components/Avatar'
-import Status from '../components/Status'
-import ModalConfirm from '../components/ModalConfirm'
+import { useGlobal } from '../../utils/useGlobal'
+import { socket } from '../../utils/socket'
+import Avatar from '../profile/Avatar'
+import Status from './Status'
+import ModalConfirm from '../modals/ModalConfirm'
 import axios from "axios"
 
 export default function ListRegisters() {

@@ -2,12 +2,12 @@ import { Link } from 'react-router-dom'
 import React, { useCallback, useEffect, useState } from "react"
 import { jwtDecode } from "jwt-decode"
 import { toast } from 'react-toastify'
-import { useGlobal } from '../utils/useGlobal'
-import convertDesc from '../utils/convertDesc'
-import ModalConfirm from '../components/ModalConfirm'
+import { useGlobal } from '../../utils/useGlobal'
+import convertDesc from '../../utils/convertDesc'
+import ModalConfirm from '../modals/ModalConfirm'
 import axios from "axios"
-import checkStatus from '../utils/checkStatus'
-import Status from './Status'
+import checkStatus from '../../utils/checkStatus'
+import Status from '../others/Status'
 
 export default function ListTopics() {
     const token = sessionStorage.getItem('token')
