@@ -47,6 +47,28 @@ export default function AdminStudents() {
       .catch(err => console.log(err))
   }
 
+  const handleClockStudent = async () => {
+    await axios.patch(`http://localhost:8000/api/admin/clock-user/${student._id}`)
+      .then(res => {
+        if (res.data.status === true) {
+          toast.success(res.data.message)
+          fetchStudents()
+        }
+      })
+      .catch(err => console.log(err))
+  }
+
+  const handleUnclockStudent = async (id) => {
+    await axios.patch(`http://localhost:8000/api/admin/unclock-user/${id}`)
+      .then(res => {
+        if (res.data.status === true) {
+          toast.success(res.data.message)
+          fetchStudents()
+        }
+      })
+      .catch(err => console.log(err))
+  }
+
   const handleFilter = item => {
     if (filter === '1') return item.status === true
     if (filter === '2') return item.status === false
@@ -103,13 +125,26 @@ export default function AdminStudents() {
                     </button>
                     <div>
                       {student.status === true
-                        ? <span className="text-success">Đã xác nhận</span>
+                        ? student.isActive ? <>
+                          <span className="text-success">Hoạt động</span>
+                          <button className='btn btn-sm btn-danger ms-2'
+                            data-bs-toggle="modal" data-bs-target="#clockModal"
+                            onClick={() => setStudent(student)}>
+                            Khoá
+                          </button>
+                        </> : <>
+                          <span className="text-danger">Đang khoá</span>
+                          <button className='btn btn-sm btn-success ms-2'
+                            onClick={() => handleUnclockStudent(student._id)}>
+                            Mở lại
+                          </button>
+                        </>
                         : <>
-                          <button className='btn btn-primary me-2'
+                          <button className='btn btn-sm btn-primary me-2'
                             onClick={() => handleAcceptStudent(student)}>
                             Xác nhận
                           </button>
-                          <button className='btn btn-danger'
+                          <button className='btn btn-sm btn-danger'
                             data-bs-toggle="modal" data-bs-target="#refuseModal"
                             onClick={() => setStudent(student)}>
                             Từ chối
@@ -138,6 +173,14 @@ export default function AdminStudents() {
           title='Xoá sinh viên'
           content='Bạn có chắc chắn muốn xoá sinh viên này?'
           func={handleRefuseStudent}
+        />
+        <ModalConfirm
+          id='clockModal'
+          action='Khoá'
+          type='danger'
+          title='Khoá sinh viên'
+          content='Bạn có chắc chắn muốn khoá sinh viên này?'
+          func={handleClockStudent}
         />
       </> : (
         <div className="mt-4">Chưa có sinh viên.</div>

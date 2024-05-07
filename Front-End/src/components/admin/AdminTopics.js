@@ -50,6 +50,28 @@ export default function AdminTopics() {
             .catch(err => console.log(err))
     }
 
+    const handleClockTopic = async () => {
+        await axios.patch(`http://localhost:8000/api/admin/clock-topic/${topic._id}`)
+            .then(res => {
+                if (res.data.status === true) {
+                    toast.success(res.data.message)
+                    fetchTopics()
+                }
+            })
+            .catch(err => console.log(err))
+    }
+
+    const handleUnclockTopic = async (id) => {
+        await axios.patch(`http://localhost:8000/api/admin/unclock-topic/${id}`)
+            .then(res => {
+                if (res.data.status === true) {
+                    toast.success(res.data.message)
+                    fetchTopics()
+                }
+            })
+            .catch(err => console.log(err))
+    }
+
     const handleFilter = item => {
         if (filter === '1') return item.status === true
         if (filter === '2') return item.status === false
@@ -94,13 +116,26 @@ export default function AdminTopics() {
                                         <Link to={`/detail-topic/${topic.slug}`} className='text-info'>Chi tiết</Link>
                                         <div>
                                             {topic.status === true
-                                                ? <span className="text-success">Đã xác nhận</span>
+                                                ? topic.isActive ? <>
+                                                    <span className="text-success">Hoạt động</span>
+                                                    <button className='btn btn-sm btn-danger ms-2'
+                                                        data-bs-toggle="modal" data-bs-target="#clockModal"
+                                                        onClick={() => setTopic(topic)}>
+                                                        Khoá
+                                                    </button>
+                                                </> : <>
+                                                    <span className="text-danger">Đang khoá</span>
+                                                    <button className='btn btn-sm btn-success ms-2'
+                                                        onClick={() => handleUnclockTopic(topic._id)}>
+                                                        Mở lại
+                                                    </button>
+                                                </>
                                                 : <>
-                                                    <button className='btn btn-primary me-2'
+                                                    <button className='btn btn-sm btn-primary me-2'
                                                         onClick={() => handleAcceptTopic(topic)}>
                                                         Xác nhận
                                                     </button>
-                                                    <button className='btn btn-danger'
+                                                    <button className='btn btn-sm btn-danger'
                                                         data-bs-toggle="modal" data-bs-target="#refuseModal"
                                                         onClick={() => setTopic(topic)}>
                                                         Từ chối
@@ -123,6 +158,14 @@ export default function AdminTopics() {
                     title='Xoá đề tài'
                     content='Bạn có chắc chắn muốn xoá đề tài này?'
                     func={handleRefuseTopic}
+                />
+                <ModalConfirm
+                    id='clockModal'
+                    action='Khoá'
+                    type='danger'
+                    title='Khoá đề tài'
+                    content='Bạn có chắc chắn muốn khoá đề tài này?'
+                    func={handleClockTopic}
                 />
             </> : (
                 <div className="mt-4">Chưa có đề tài.</div>

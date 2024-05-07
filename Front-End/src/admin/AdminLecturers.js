@@ -47,6 +47,28 @@ export default function AdminLecturers() {
       .catch(err => console.log(err))
   }
 
+  const handleClockLecturer = async () => {
+    await axios.patch(`http://localhost:8000/api/admin/clock-user/${lecturer._id}`)
+      .then(res => {
+        if (res.data.status === true) {
+          toast.success(res.data.message)
+          fetchLecturers()
+        }
+      })
+      .catch(err => console.log(err))
+  }
+
+  const handleUnclockLecturer = async (id) => {
+    await axios.patch(`http://localhost:8000/api/admin/unclock-user/${id}`)
+      .then(res => {
+        if (res.data.status === true) {
+          toast.success(res.data.message)
+          fetchLecturers()
+        }
+      })
+      .catch(err => console.log(err))
+  }
+
   const handleFilter = item => {
     if (filter === '1') return item.status === true
     if (filter === '2') return item.status === false
@@ -89,13 +111,26 @@ export default function AdminLecturers() {
                     </button>
                     <div>
                       {lecturer.status === true
-                        ? <span className="text-success">Đã xác nhận</span>
+                        ? lecturer.isActive ? <>
+                          <span className="text-success">Hoạt động</span>
+                          <button className='btn btn-sm btn-danger ms-2'
+                            data-bs-toggle="modal" data-bs-target="#clockModal"
+                            onClick={() => setLecturer(lecturer)}>
+                            Khoá
+                          </button>
+                        </> : <>
+                          <span className="text-danger">Đang khoá</span>
+                          <button className='btn btn-sm btn-success ms-2'
+                            onClick={() => handleUnclockLecturer(lecturer._id)}>
+                            Mở lại
+                          </button>
+                        </>
                         : <>
-                          <button className='btn btn-primary me-2'
+                          <button className='btn btn-sm btn-primary me-2'
                             onClick={() => handleAcceptLecturer(lecturer)}>
                             Xác nhận
                           </button>
-                          <button className='btn btn-danger'
+                          <button className='btn btn-sm btn-danger'
                             data-bs-toggle="modal" data-bs-target="#refuseModal"
                             onClick={() => setLecturer(lecturer)}>
                             Từ chối
@@ -124,6 +159,14 @@ export default function AdminLecturers() {
           title='Xoá giảng viên'
           content='Bạn có chắc chắn muốn xoá giảng viên này?'
           func={handleRefuseLecturer}
+        />
+        <ModalConfirm
+          id='clockModal'
+          action='Khoá'
+          type='danger'
+          title='Khoá giảng viên'
+          content='Bạn có chắc chắn muốn khoá giảng viên này?'
+          func={handleClockLecturer}
         />
       </> : (
         <div className="mt-4">Chưa có giảng viên.</div>

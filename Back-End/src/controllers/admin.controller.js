@@ -59,6 +59,30 @@ exports.refuseUser = async (req, res, next) => {
         .catch(next)
 }
 
+exports.clockUser = async (req, res, next) => {
+    const _id = req.params.id
+
+    if (!_id) {
+        return res.json({ status: false, message: 'Not enough information' })
+    }
+
+    await userModel.findByIdAndUpdate(_id, { isActive: false })
+        .then(() => res.json({ status: true, message: 'Bạn đã khoá người dùng!' }))
+        .catch(next)
+}
+
+exports.unclockUser = async (req, res, next) => {
+    const _id = req.params.id
+
+    if (!_id) {
+        return res.json({ status: false, message: 'Not enough information' })
+    }
+
+    await userModel.findByIdAndUpdate(_id, { isActive: true })
+        .then(() => res.json({ status: true, message: 'Bạn đã mở khoá người dùng!' }))
+        .catch(next)
+}
+
 exports.acceptTopic = async (req, res, next) => {
     const _id = req.params.id
 
@@ -96,5 +120,29 @@ exports.refuseTopic = async (req, res, next) => {
 
     await topicModel.findByIdAndDelete(_id)
         .then(() => res.json({ status: true, message: 'Bạn đã từ chối đề tài!' }))
+        .catch(next)
+}
+
+exports.clockTopic = async (req, res, next) => {
+    const _id = req.params.id
+
+    if (!_id) {
+        return res.json({ status: false, message: 'Not enough information' })
+    }
+
+    await topicModel.findByIdAndUpdate(_id, { isActive: false })
+        .then(() => res.json({ status: true, message: 'Bạn đã khoá đề tài!' }))
+        .catch(next)
+}
+
+exports.unclockTopic = async (req, res, next) => {
+    const _id = req.params.id
+
+    if (!_id) {
+        return res.json({ status: false, message: 'Not enough information' })
+    }
+
+    await topicModel.findByIdAndUpdate(_id, { isActive: true })
+        .then(() => res.json({ status: true, message: 'Bạn đã mở khoá đề tài!' }))
         .catch(next)
 }

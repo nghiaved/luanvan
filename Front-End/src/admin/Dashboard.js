@@ -98,7 +98,7 @@ export default function Dashboard() {
                                 )}
                             </div>
                             <Link to="/topics">
-                                <button className="btn btn-outline-primary">Xem thêm</button>
+                                <button className="btn btn-sm btn-outline-primary">Xem thêm</button>
                             </Link>
                         </div>
                     </div>
@@ -132,7 +132,7 @@ export default function Dashboard() {
                                 )}
                             </div>
                             <Link to="/lecturers">
-                                <button className="btn btn-outline-primary">Xem thêm</button>
+                                <button className="btn btn-sm btn-outline-primary">Xem thêm</button>
                             </Link>
                         </div>
                     </div>
@@ -164,7 +164,7 @@ export default function Dashboard() {
                                 )}
                             </div>
                             <Link to="/students">
-                                <button className="btn btn-outline-primary">Xem thêm</button>
+                                <button className="btn btn-sm btn-outline-primary">Xem thêm</button>
                             </Link>
                         </div>
                     </div>

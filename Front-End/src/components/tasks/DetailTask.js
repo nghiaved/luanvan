@@ -225,7 +225,7 @@ export default function DetailTask({ data, isAdmin }) {
                                 id='extendModal'
                                 action='Gia hạn'
                                 type='info'
-                                title='Nhắc nhở công việc'
+                                title='Gia hạn công việc'
                                 func={handleExtendTask}
                             >
                                 <div className="row">
