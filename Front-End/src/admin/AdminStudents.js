@@ -82,7 +82,7 @@ export default function AdminStudents() {
   return (
     <AdminLayout breadcrumb='Sinh viên'>
       <div className="d-flex justify-content-between align-items-center">
-        <h3>Quản lý sinh viên</h3>
+        <h4>Danh sách sinh viên ({students.filter(item => handleFilter(item)).length})</h4>
         <div className="flex-fill d-flex justify-content-end gap-4">
           <select onChange={(e) => setFilter(e.target.value)} className="form-select home-filter">
             <option defaultChecked value=''>Tất cả</option>

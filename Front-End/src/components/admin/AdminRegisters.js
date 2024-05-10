@@ -36,7 +36,7 @@ export default function AdminRegisters() {
   return (
     <>
       <div className="d-flex justify-content-between align-items-center">
-        <h3>Quản lý đăng ký</h3>
+        <h4>Danh sách đăng ký ({registers.filter(item => handleFilter(item)).length})</h4>
         <div className="flex-fill d-flex justify-content-end gap-4">
           <select onChange={(e) => setFilter(e.target.value)} className="form-select home-filter">
             <option defaultChecked value=''>Tất cả</option>

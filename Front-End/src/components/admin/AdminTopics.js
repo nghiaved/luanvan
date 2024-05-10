@@ -75,6 +75,9 @@ export default function AdminTopics() {
     const handleFilter = item => {
         if (filter === '1') return item.status === true
         if (filter === '2') return item.status === false
+        if (filter === '3') return item.registered === item.limit
+        if (filter === '4') return item.registered < item.limit && item.registered !== 0
+        if (filter === '5') return item.registered === 0
         return filter.toLowerCase() === '' ? item
             : item.title.toLowerCase().includes(filter.toLowerCase())
             || item.lecturer.username.toLowerCase().includes(filter.toLowerCase())
@@ -84,10 +87,13 @@ export default function AdminTopics() {
     return (
         <>
             <div className="d-flex justify-content-between align-items-center">
-                <h3>Quản lý đề tài</h3>
+                <h4>Danh sách đề tài ({topics.filter(item => handleFilter(item)).length})</h4>
                 <div className="flex-fill d-flex justify-content-end gap-4">
                     <select onChange={(e) => setFilter(e.target.value)} className="form-select home-filter">
                         <option defaultChecked value=''>Tất cả</option>
+                        <option value='3'>Số lượng đã đầy</option>
+                        <option value='4'>Còn chỗ đăng ký</option>
+                        <option value='5'>Chưa có đăng ký</option>
                         <option value='1'>Đã xác nhận</option>
                         <option value='2'>Chờ phản hồi</option>
                     </select>
