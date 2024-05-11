@@ -60,6 +60,10 @@ export default function Student() {
                     }
 
                     if (isRegistered) {
+                        if (isRegistered.status === true && !jwtDecode(token).isRegistered) {
+                            const resToken = await axios.get(`http://localhost:8000/api/users/get-token-by-id/${jwtDecode(token)._id}`)
+                            sessionStorage.setItem('token', resToken.data.token)
+                        }
                         fetchTasks(jwtDecode(token)._id, isRegistered.lecturer._id)
                         fetchMesses(isRegistered._id, jwtDecode(token)._id)
                     }

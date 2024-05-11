@@ -1,9 +1,11 @@
 import axios from 'axios'
 import React from 'react'
 import { toast } from 'react-toastify'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function FormRegister() {
+    const navigate = useNavigate()
+
     const handleRegister = async (e) => {
         e.preventDefault()
         await axios.post('http://localhost:8000/api/users/register', {
@@ -16,6 +18,7 @@ export default function FormRegister() {
                 res.data.status === true
                     ? toast.success(res.data.message)
                     : toast.error(res.data.message)
+                navigate('/login')
             })
             .catch(err => console.log(err))
     }

@@ -1,6 +1,7 @@
 const registerModel = require('../models/register.model')
 const messageModel = require('../models/message.model')
 const topicModel = require('../models/topic.model')
+const userModel = require('../models/user.model')
 
 exports.createRegister = async (req, res, next) => {
     const { topic, student, lecturer } = req.body
@@ -46,6 +47,7 @@ exports.acceptRegister = async (req, res, next) => {
 
     const topic = await topicModel.findById(register.topic)
     await topicModel.updateOne({ _id: topic._id }, { registered: topic.registered + 1 })
+    await userModel.updateOne({ _id: register.student }, { isRegistered: true })
 
     await messageModel.create({
         content: 'đã chấp nhận đăng ký.',
