@@ -26,8 +26,10 @@ export default function Tasks() {
                 if (res.data.status === true) {
                     setTasks(res.data.tasks)
                     let totalCompleted = 0
+                    let rateCompleted = 0
                     const initGrantt = res.data.tasks.map(task => {
                         if (task.status === true) ++totalCompleted
+                        if (task.points) rateCompleted += task.points
                         return {
                             start: new Date(task.start),
                             end: new Date(task.end),
@@ -40,7 +42,8 @@ export default function Tasks() {
                     setGrantt({
                         data: initGrantt,
                         totalCount: initGrantt.length,
-                        totalCompleted
+                        totalCompleted,
+                        rateCompleted: rateCompleted ? (rateCompleted / initGrantt.length).toFixed(2) : 0
                     })
                 }
             })
@@ -85,6 +88,10 @@ export default function Tasks() {
                             <div className="mt-2 text-end">
                                 <b className='me-2'>Tổng số công việc hoàn thành:</b>
                                 <i>{grantt.totalCompleted}/{grantt.totalCount}</i>
+                            </div>
+                            <div className="mt-2 text-end">
+                                <b className='me-2'>Tỷ lệ hoàn thành:</b>
+                                <i>{grantt.rateCompleted}%</i>
                             </div>
                         </div>
                     </div>
