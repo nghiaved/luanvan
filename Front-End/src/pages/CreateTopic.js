@@ -23,6 +23,7 @@ export default function CreateTopic() {
         const token = sessionStorage.getItem('token')
         const data = {
             title: e.target.title.value,
+            limit: parseInt(e.target.limit.value),
             description,
             lecturer: jwtDecode(token)._id
         }
@@ -46,6 +47,7 @@ export default function CreateTopic() {
 
         const data = {
             title: e.target.title.value,
+            limit: parseInt(e.target.limit.value),
             description
         }
         await axios.put(`http://localhost:8000/api/topics/update-topic/${topic._id}`, data)
@@ -62,10 +64,17 @@ export default function CreateTopic() {
         <Layout breadcrumb={topic ? 'Cập nhật đề tài' : 'Thêm đề tài'}>
             <h3>{topic ? 'Cập nhật' : 'Thêm'} đề tài</h3>
             <form className='mt-4' onSubmit={topic ? handleUpdateTopic : handleCreateTopic}>
-                <div className="mb-3">
-                    <label htmlFor="title" className="form-label">Tên đề tài</label>
-                    <input type="text" className="form-control" id="title"
-                        defaultValue={topic?.title} name="title" autoComplete="off" required />
+                <div className='d-flex gap-3 mb-3'>
+                    <div className="flex-fill">
+                        <label htmlFor="title" className="form-label">Tên đề tài</label>
+                        <input type="text" className="form-control" id="title"
+                            defaultValue={topic?.title} name="title" autoComplete="off" required />
+                    </div>
+                    <div>
+                        <label htmlFor="limit" className="form-label">Số lượng tối đa</label>
+                        <input type="number" className="form-control" id="limit" min={1} max={4}
+                            defaultValue={topic?.limit || 4} name="limit" autoComplete="off" required />
+                    </div>
                 </div>
                 <div className="mb-3">
                     <label className="form-label">Mô tả đề tài</label>

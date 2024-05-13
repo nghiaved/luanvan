@@ -1,13 +1,13 @@
 const topicModel = require('../models/topic.model')
 
 exports.createTopic = async (req, res, next) => {
-    const { title, description, lecturer } = req.body
+    const { title, limit, description, lecturer } = req.body
 
-    if (!title || !description || !lecturer) {
+    if (!title || !limit || !description || !lecturer) {
         return res.json({ status: false, message: 'Not enough information' })
     }
 
-    await topicModel.create({ title, description, lecturer })
+    await topicModel.create({ title, limit, description, lecturer })
         .then(() => res.json({ status: true, message: 'Bạn đã thêm đề tài mới!' }))
         .catch(next)
 }
@@ -44,13 +44,13 @@ exports.getTopicBySlug = async (req, res, next) => {
 
 exports.updateTopic = async (req, res, next) => {
     const _id = req.params.id
-    const { title, description } = req.body
+    const { title, limit, description } = req.body
 
     if (!_id) {
         return res.json({ status: false, message: 'Not enough information' })
     }
 
-    await topicModel.updateOne({ _id }, { title, description })
+    await topicModel.updateOne({ _id }, { title, limit, description })
         .then(() => res.json({ status: true, message: 'Bạn đã cập nhật đề tài!' }))
         .catch(next)
 }
