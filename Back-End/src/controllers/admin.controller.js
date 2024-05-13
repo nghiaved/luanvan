@@ -5,7 +5,7 @@ const messageModel = require('../models/message.model')
 
 exports.getHome = async (req, res, next) => {
     const students = await userModel.find({ role: 2 })
-    const lecturers = await userModel.find({ role: 1 })
+    const lecturers = await userModel.find({ role: 1, isAdmin: false })
     const topics = await topicModel.find()
     const registers = await registerModel.find({ status: true })
     res.json({ status: true, students, lecturers, topics, registers })
@@ -17,7 +17,7 @@ exports.getAllStudents = async (req, res, next) => {
 }
 
 exports.getAllLecturers = async (req, res, next) => {
-    const lecturers = await userModel.find({ role: 1 })
+    const lecturers = await userModel.find({ role: 1, isAdmin: false })
     res.json({ status: true, lecturers })
 }
 
