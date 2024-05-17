@@ -20,19 +20,23 @@ Before you begin, make sure you have the following software installed:
 If you have already installed Node.js, you can skip this step. If not, download and install Node.js from the official website.
 ## Step 2: Install MongoDB
 If you have already installed MongoDB, you can skip this step. If not, download and install MongoDB Community Edition from the official website.
-## Step 3: Run Project
-```bash
-git clone https://github.com/nghiaved/luanvan.git
-cd luanvan
 
-cd Back-End
-npm install
-
-cd ../Front-end
-npm install
-
-cd ../Back-End
-npm start
-
-cd ../Front-End
-npm start
+## Run Locally
+### 1. Clone repo
+```
+$ git clone https://github.com/nghiaved/luanvan.git
+$ cd luanvan
+```
+### 2. Run Backend
+```
+$ cd Back-End
+$ npm install
+$ npm start
+```
+### 3. Run Frontend
+```
+# open new terminal
+$ cd Front-End
+$ npm install
+$ npm start
+```
